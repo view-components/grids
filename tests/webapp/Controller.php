@@ -136,7 +136,7 @@ class Controller extends AbstractController
             new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
             new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
             new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
-            new PaginationControl($input->option('page'), 10, $provider)
+            new PaginationControl($input->option('page', 1), 5, $provider)
         ]);
         $cfg->setControlPlacingStrategy(new ColumnsStrategy());
         $grid = new Grid($cfg);

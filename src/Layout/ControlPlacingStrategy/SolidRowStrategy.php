@@ -9,6 +9,7 @@ class SolidRowStrategy implements ControlPlacingStrategyInterface
 {
     public function placeControls(GridConfig $config, $forceNewRow = false)
     {
+        ControlPlacingHelper::placePagination($config);
         $views = ControlPlacingHelper::getNotPlacedControlViews($config);
         if (!$forceNewRow && count($views) === 0) {
             return;

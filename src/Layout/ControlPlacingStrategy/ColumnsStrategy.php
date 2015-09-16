@@ -21,6 +21,7 @@ class ColumnsStrategy implements ControlPlacingStrategyInterface
             return;
         }
 
+
         $columns = $config->getColumns();
 
         $row = new Tag('tr');
@@ -60,6 +61,8 @@ class ColumnsStrategy implements ControlPlacingStrategyInterface
         if ($isSolidRowRequired) {
             $strategy = new SolidRowStrategy();
             $strategy->placeControls($config, true);
+        } else {
+            ControlPlacingHelper::placePagination($config);
         }
     }
 
