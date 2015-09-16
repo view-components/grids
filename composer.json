@@ -1,0 +1,37 @@
+{
+  "name": "presentation/grids",
+  "description": "Grids for PHP",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vitalii [Nayjest] Stepanenko",
+      "email": "mail@vitaliy.in",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "presentation/framework": "*@dev"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.6.*",
+    "filp/whoops": "~1",
+    "vlucas/phpdotenv" : "~1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Presentation\\Grids\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Presentation\\Grids\\Test\\": "tests/phpunit",
+      "Presentation\\Grids\\Demo\\": "tests/webapp"
+    }
+  },
+  "support": {
+    "email": "mail@vitaliy.in"
+  },
+  "minimum-stability": "dev"
+}
