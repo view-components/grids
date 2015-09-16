@@ -12,6 +12,9 @@ class TCell extends AbstractTag implements DataAcceptorInterface
     protected $text;
     protected $rowData;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct(['data-role'=>'grid-cell']);
@@ -19,11 +22,18 @@ class TCell extends AbstractTag implements DataAcceptorInterface
         $this->text->attachTo($this);
     }
 
+    /**
+     * @return string
+     */
     public function getTagName()
     {
         return 'td';
     }
 
+    /**
+     * @param $column
+     * @return $this
+     */
     public function setData($column)
     {
         $this->setCurrentColumn($column);
@@ -37,6 +47,9 @@ class TCell extends AbstractTag implements DataAcceptorInterface
         return property_exists($row, $column)?$row->{$column}:'?';
     }
 
+    /**
+     * @return string
+     */
     public function render()
     {
         $this->text->setValue($this->extractData());
@@ -44,7 +57,8 @@ class TCell extends AbstractTag implements DataAcceptorInterface
     }
 
     /**
-     * @param mixed $currentColumn
+     * @param $currentColumn
+     * @return $this
      */
     public function setCurrentColumn($currentColumn)
     {
@@ -53,10 +67,12 @@ class TCell extends AbstractTag implements DataAcceptorInterface
     }
 
     /**
-     * @param mixed $rowData
+     * @param $rowData
+     * @return $this
      */
     public function setRowData($rowData)
     {
         $this->rowData = $rowData;
+        return $this;
     }
 }
