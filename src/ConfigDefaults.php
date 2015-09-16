@@ -7,6 +7,7 @@ use Presentation\Framework\Component\Html\Div;
 use Presentation\Framework\Component\Html\Form;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\Repeater;
+use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\TCell;
 use Presentation\Grids\Component\Tr;
 use Presentation\Grids\Layout\ControlPlacingStrategy\SolidRowStrategy;
@@ -67,6 +68,10 @@ class ConfigDefaults
                     'data-role' => 'grid-submit'
                 ]
             ));
+        }
+
+        if (!$config->getInputSource()) {
+            $config->setInputSource(new InputSource($_GET));
         }
     }
 }
