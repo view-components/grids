@@ -4,18 +4,11 @@ namespace Presentation\Grids;
 
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Base\RepeaterInterface;
-use Presentation\Framework\Component\Html\Div;
-use Presentation\Framework\Component\Html\Form;
-use Presentation\Framework\Component\Html\Tag;
-use Presentation\Framework\Component\Repeater;
 use Presentation\Framework\Control\ControlCollection;
 use Presentation\Framework\Control\ControlInterface;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Input\InputSource;
-use Presentation\Grids\Component\TCell;
-use Presentation\Grids\Component\Tr;
 use Presentation\Grids\Layout\ControlPlacingStrategy\ControlPlacingStrategyInterface;
-use Presentation\Grids\Layout\ControlPlacingStrategy\SolidRowStrategy;
 
 class GridConfig
 {
@@ -34,18 +27,22 @@ class GridConfig
     /** @var ComponentInterface */
     protected $tBody;
 
+    /** @var ComponentInterface */
     protected $submitButton;
 
     /** @var ComponentInterface */
     protected $tRow;
 
+    /** @var ComponentInterface */
     protected $tCell;
 
     /** @var ComponentInterface */
     protected $table;
 
+    /** @var Column[] */
     protected $columns = [];
 
+    /** @var ControlCollection */
     protected $controls;
 
     /** @var  DataProviderInterface */
@@ -57,12 +54,14 @@ class GridConfig
     /** @var  RepeaterInterface */
     protected $columnRepeater;
 
+    /** @var  InputSource */
     protected $inputSource;
 
+    /** @var  ControlPlacingStrategyInterface */
     protected $controlPlacingStrategy;
 
     /**
-     * @return ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getContainer()
     {
@@ -70,17 +69,17 @@ class GridConfig
     }
 
     /**
-     * @param ComponentInterface $container
+     * @param ComponentInterface|null $container
      * @return $this
      */
-    public function setContainer($container)
+    public function setContainer(ComponentInterface $container = null)
     {
         $this->container = $container;
         return $this;
     }
 
     /**
-     * @return ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getForm()
     {
@@ -88,17 +87,17 @@ class GridConfig
     }
 
     /**
-     * @param ComponentInterface $form
+     * @param ComponentInterface|null $form
      * @return $this
      */
-    public function setForm($form)
+    public function setForm(ComponentInterface $form = null)
     {
         $this->form = $form;
         return $this;
     }
 
     /**
-     * @return ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getTHead()
     {
@@ -106,17 +105,17 @@ class GridConfig
     }
 
     /**
-     * @param ComponentInterface $tHead
+     * @param ComponentInterface|null $tHead
      * @return $this
      */
-    public function setTHead($tHead)
+    public function setTHead(ComponentInterface $tHead = null)
     {
         $this->tHead = $tHead;
         return $this;
     }
 
     /**
-     * @return ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getTFoot()
     {
@@ -124,17 +123,17 @@ class GridConfig
     }
 
     /**
-     * @param ComponentInterface $tFoot
+     * @param ComponentInterface|null $tFoot
      * @return $this
      */
-    public function setTFoot($tFoot)
+    public function setTFoot(ComponentInterface $tFoot = null)
     {
         $this->tFoot = $tFoot;
         return $this;
     }
 
     /**
-     * @return ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getTBody()
     {
@@ -142,17 +141,17 @@ class GridConfig
     }
 
     /**
-     * @param ComponentInterface $tBody
+     * @param ComponentInterface|null $tBody
      * @return $this
      */
-    public function setTBody($tBody)
+    public function setTBody(ComponentInterface $tBody = null)
     {
         $this->tBody = $tBody;
         return $this;
     }
 
     /**
-     * @return DataProviderInterface
+     * @return DataProviderInterface|null
      */
     public function getDataProvider()
     {
@@ -160,17 +159,17 @@ class GridConfig
     }
 
     /**
-     * @param DataProviderInterface $dataProvider
+     * @param DataProviderInterface|null $dataProvider
      * @return $this
      */
-    public function setDataProvider($dataProvider)
+    public function setDataProvider(DataProviderInterface $dataProvider = null)
     {
         $this->dataProvider = $dataProvider;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return Column[]
      */
     public function getColumns()
     {
@@ -178,7 +177,7 @@ class GridConfig
     }
 
     /**
-     * @param mixed $columns
+     * @param Column[] $columns
      * @return $this
      */
     public function setColumns($columns)
@@ -209,7 +208,7 @@ class GridConfig
     }
 
     /**
-     * @return ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getTable()
     {
@@ -217,17 +216,17 @@ class GridConfig
     }
 
     /**
-     * @param ComponentInterface $table
+     * @param ComponentInterface|null $table
      * @return $this
      */
-    public function setTable($table)
+    public function setTable(ComponentInterface $table = null)
     {
         $this->table = $table;
         return $this;
     }
 
     /**
-     * @return RepeaterInterface
+     * @return RepeaterInterface|null
      */
     public function getRowRepeater()
     {
@@ -235,17 +234,17 @@ class GridConfig
     }
 
     /**
-     * @param RepeaterInterface $rowRepeater
+     * @param RepeaterInterface|null $rowRepeater
      * @return $this
      */
-    public function setRowRepeater($rowRepeater)
+    public function setRowRepeater(RepeaterInterface $rowRepeater = null)
     {
         $this->rowRepeater = $rowRepeater;
         return $this;
     }
 
     /**
-     * @return ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getTRow()
     {
@@ -253,17 +252,17 @@ class GridConfig
     }
 
     /**
-     * @param ComponentInterface $tRow
+     * @param ComponentInterface|null $tRow
      * @return $this
      */
-    public function setTRow($tRow)
+    public function setTRow(ComponentInterface $tRow = null)
     {
         $this->tRow = $tRow;
         return $this;
     }
 
     /**
-     * @return RepeaterInterface
+     * @return RepeaterInterface|null
      */
     public function getColumnRepeater()
     {
@@ -271,17 +270,17 @@ class GridConfig
     }
 
     /**
-     * @param RepeaterInterface $columnRepeater
+     * @param RepeaterInterface|null $columnRepeater
      * @return $this
      */
-    public function setColumnRepeater($columnRepeater)
+    public function setColumnRepeater(RepeaterInterface $columnRepeater = null)
     {
         $this->columnRepeater = $columnRepeater;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return ComponentInterface|null
      */
     public function getTCell()
     {
@@ -289,74 +288,17 @@ class GridConfig
     }
 
     /**
-     * @param mixed $tCell
+     * @param ComponentInterface|null $tCell
      * @return $this
      */
-    public function setTCell($tCell)
+    public function setTCell(ComponentInterface $tCell = null)
     {
         $this->tCell = $tCell;
         return $this;
     }
 
-    public function initializeDefaults()
-    {
-        if (!$this->form) {
-            $this->form = new Form();
-        }
-
-        if (!$this->container) {
-            $this->container = new Div(['data-role'=> 'grid-container']);
-        }
-
-        if(!$this->columnRepeater) {
-            $this->columnRepeater = new Repeater();
-        }
-
-        if(!$this->rowRepeater) {
-            $this->rowRepeater = new Repeater();
-        }
-
-        if(!$this->tRow) {
-            $this->tRow = new Tr();
-        }
-
-        if (!$this->table) {
-            $this->table = new Tag('table');
-        }
-
-        if (!$this->tHead) {
-            $this->tHead = new Tag('tHead');
-        }
-
-        if (!$this->tBody) {
-            $this->tBody = new Tag('tbody');
-        }
-
-        if (!$this->tFoot) {
-            $this->tFoot = new Tag('tFoot');
-        }
-
-        if (!$this->tCell) {
-            $this->tCell = new TCell();
-        }
-
-        if (!$this->controlPlacingStrategy) {
-            $this->controlPlacingStrategy = new SolidRowStrategy();
-        }
-
-        if (!$this->submitButton && !$this->getControls()->isEmpty()) {
-            $this->submitButton = new Tag(
-                'input',
-                [
-                    'type' => 'submit',
-                    'data-role' => 'grid-submit'
-                ]
-            );
-        }
-    }
-
     /**
-     * @return InputSource
+     * @return InputSource|null
      */
     public function getInputSource()
     {
@@ -364,7 +306,7 @@ class GridConfig
     }
 
     /**
-     * @param InputSource $inputSource
+     * @param InputSource|null $inputSource
      * @return $this
      */
     public function setInputSource(InputSource $inputSource = null)
@@ -374,7 +316,7 @@ class GridConfig
     }
 
     /**
-     * @return ControlPlacingStrategyInterface
+     * @return ControlPlacingStrategyInterface|null
      */
     public function getControlPlacingStrategy()
     {
@@ -382,7 +324,7 @@ class GridConfig
     }
 
     /**
-     * @param mixed $controlPlacingStrategy
+     * @param ControlPlacingStrategyInterface|null $controlPlacingStrategy
      * @return $this
      */
     public function setControlPlacingStrategy(ControlPlacingStrategyInterface $controlPlacingStrategy = null)

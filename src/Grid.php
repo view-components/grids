@@ -24,7 +24,8 @@ class Grid implements ComponentInterface
     public function __construct(GridConfig $config)
     {
         $this->config = $config;
-        $config->initializeDefaults();
+        $defaults = new ConfigDefaults();
+        $defaults->apply($config);
     }
 
     /**
