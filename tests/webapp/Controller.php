@@ -1,11 +1,13 @@
 <?php
 namespace Presentation\Grids\Demo;
 
+use Presentation\Framework\Control\PaginationControl;
 use Presentation\Framework\Input\InputOption;
 use Presentation\Framework\Control\FilterControl;
 use Presentation\Framework\Data\ArrayDataProvider;
 use Presentation\Framework\Data\DbTableDataProvider;
 use Presentation\Framework\Data\Operation\FilterOperation;
+use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Column;
 use Presentation\Grids\Grid;
 use Presentation\Grids\GridConfig;
@@ -59,8 +61,7 @@ class Controller extends AbstractController
             ]);
 
         $grid = new Grid($cfg);
-        $view = $grid;
-        return $this->renderMenu() . $view->render();
+        return $this->page($grid);
     }
 
     /**
@@ -84,8 +85,7 @@ class Controller extends AbstractController
             new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET))
         ]);
         $grid = new Grid($cfg);
-        $view = $grid;
-        return $this->renderMenu() . $view->render();
+        return $this->page($grid);
     }
 
     /**
@@ -110,7 +110,36 @@ class Controller extends AbstractController
         ]);
         $cfg->setControlPlacingStrategy(new ColumnsStrategy());
         $grid = new Grid($cfg);
-        $view = $grid;
-        return $this->renderMenu() . $view->render();
+        return $this->page($grid);
+    }
+
+    /**
+     * Array Data Provider with sorting.
+     *
+     * @return string
+     */
+    public function demo4()
+    {
+        $provider = $this->getDataProvider();
+        $cfg = new GridConfig();
+        $input = new InputSource($_GET);
+        $cfg->setInputSource($input);
+        $cfg
+            ->setDataProvider($provider)
+            ->setColumns([
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+            ]);
+        $cfg->setControls([
+            new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
+            new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
+            new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
+            new PaginationControl($input->option('page'), 10, $provider)
+        ]);
+        $cfg->setControlPlacingStrategy(new ColumnsStrategy());
+        $grid = new Grid($cfg);
+        return $this->page($grid);
     }
 }

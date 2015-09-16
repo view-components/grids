@@ -30,4 +30,9 @@ abstract class AbstractController
     {
         return $this->render('menu/menu');
     }
+
+    protected function page($content)
+    {
+        return $this->render('layout', compact('content'));
+    }
 }

@@ -12,3 +12,8 @@
 .menu li:hover {
     background-color: #000000;
 }
+.menu {
+    position: absolute;
+    right: 10px;
+    top:0;
+}
