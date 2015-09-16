@@ -7,7 +7,6 @@ use Presentation\Grids\Grid;
 
 trait GridComponentTrait
 {
-
     /**
      * @return ObjectCollection
      */

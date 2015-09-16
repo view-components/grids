@@ -10,7 +10,6 @@ use Presentation\Framework\Rendering\ViewTrait;
 
 class SolidRow implements ComponentInterface
 {
-
     use NodeTrait {
         NodeTrait::children as realChildren;
     }
