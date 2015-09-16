@@ -81,7 +81,7 @@ class ColumnsStrategy implements ControlPlacingStrategyInterface
     protected function resolveControlColumn(ControlInterface $control)
     {
 
-        if ($control instanceof FilterControl || method_exists($control, 'getOperation')) {
+        if ($control instanceof FilterControl || method_exists($control, 'getField')) {
             return $control->getField();
         }
         return null;
