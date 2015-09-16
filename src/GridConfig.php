@@ -6,6 +6,7 @@ use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Base\RepeaterInterface;
 use Presentation\Framework\Control\ControlCollection;
 use Presentation\Framework\Control\ControlInterface;
+use Presentation\Framework\Data\DataAcceptorInterface;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Layout\ControlPlacingStrategy\ControlPlacingStrategyInterface;
@@ -244,7 +245,7 @@ class GridConfig
     }
 
     /**
-     * @return ComponentInterface|null
+     * @return ComponentInterface|DataAcceptorInterface|null
      */
     public function getTRow()
     {

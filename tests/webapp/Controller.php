@@ -1,6 +1,7 @@
 <?php
 namespace Presentation\Grids\Demo;
 
+use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Control\PaginationControl;
 use Presentation\Framework\Input\InputOption;
 use Presentation\Framework\Control\FilterControl;
@@ -9,6 +10,7 @@ use Presentation\Framework\Data\DbTableDataProvider;
 use Presentation\Framework\Data\Operation\FilterOperation;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Column;
+use Presentation\Grids\Component\PageTotalsRow;
 use Presentation\Grids\Grid;
 use Presentation\Grids\GridConfig;
 use Presentation\Grids\Layout\ControlPlacingStrategy\ColumnsStrategy;
@@ -65,7 +67,7 @@ class Controller extends AbstractController
     }
 
     /**
-     * Demo1 extended by HtmlBuilder usage.
+     *
      *
      * @return string
      */
@@ -89,7 +91,7 @@ class Controller extends AbstractController
     }
 
     /**
-     * Array Data Provider with sorting.
+     *
      *
      * @return string
      */
@@ -114,7 +116,7 @@ class Controller extends AbstractController
     }
 
     /**
-     * Array Data Provider with sorting.
+     * Pagination
      *
      * @return string
      */
@@ -141,5 +143,37 @@ class Controller extends AbstractController
         $cfg->setControlPlacingStrategy(new ColumnsStrategy());
         $grid = new Grid($cfg);
         return $this->page($grid);
+    }
+
+    /**
+     * Totals
+     *
+     * @return string
+     */
+    public function demo5()
+    {
+        $provider = $this->getDataProvider();
+        $cfg = new GridConfig();
+        $input = new InputSource($_GET);
+        $cfg->setInputSource($input);
+        $cfg
+            ->setDataProvider($provider)
+            ->setColumns([
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+            ]);
+        $cfg->setControls([
+            new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
+            new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
+            new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
+            new PaginationControl($input->option('page', 1), 5, $provider)
+        ]);
+        $cfg->setControlPlacingStrategy(new ColumnsStrategy());
+        $cfg->setTFoot(new Tag('tfoot', [], [new PageTotalsRow()]));
+        $grid = new Grid($cfg);
+
+        return $this->page($grid->render());
     }
 }

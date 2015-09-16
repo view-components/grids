@@ -5,9 +5,11 @@ namespace Presentation\Grids\Component;
 use Presentation\Framework\Base\Html\AbstractTag;
 use Presentation\Framework\Component\Text;
 use Presentation\Framework\Data\DataAcceptorInterface;
+use Presentation\Grids\Column;
 
 class TCell extends AbstractTag implements DataAcceptorInterface
 {
+    /** @var  Column */
     protected $currentColumn;
     protected $text;
     protected $rowData;
@@ -40,11 +42,11 @@ class TCell extends AbstractTag implements DataAcceptorInterface
         return $this;
     }
 
-    private function extractData()
+    public function extractData()
     {
         $row = $this->rowData;
-        $column = (string)$this->currentColumn;
-        return property_exists($row, $column)?$row->{$column}:'?';
+        $columnName = $this->currentColumn->getName();
+        return property_exists($row, $columnName)?$row->{$columnName}:'?';
     }
 
     /**
@@ -60,7 +62,7 @@ class TCell extends AbstractTag implements DataAcceptorInterface
      * @param $currentColumn
      * @return $this
      */
-    public function setCurrentColumn($currentColumn)
+    public function setCurrentColumn(Column $currentColumn = null)
     {
         $this->currentColumn = $currentColumn;
         return $this;
@@ -74,5 +76,13 @@ class TCell extends AbstractTag implements DataAcceptorInterface
     {
         $this->rowData = $rowData;
         return $this;
+    }
+
+    /**
+     * @return Column|null
+     */
+    public function getCurrentColumn()
+    {
+        return $this->currentColumn;
     }
 }

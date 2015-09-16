@@ -7,7 +7,8 @@ use Presentation\Framework\Data\DataAcceptorInterface;
 
 class Tr extends AbstractTag implements DataAcceptorInterface
 {
-    protected $rowData;
+    protected $currentRowData;
+
     protected $tCell;
 
     public function __construct()
@@ -22,7 +23,8 @@ class Tr extends AbstractTag implements DataAcceptorInterface
 
     public function setData($data)
     {
-        $this->setRowData($data);
+        $this->setCurrentRowData($data);
+        return $this;
     }
 
     /**
@@ -45,15 +47,25 @@ class Tr extends AbstractTag implements DataAcceptorInterface
 
     public function render()
     {
-        $this->getTCell()->setRowData($this->rowData);
+        $this->getTCell()->setRowData($this->currentRowData);
         return parent::render();
     }
 
     /**
-     * @param mixed $rowData
+     * @param mixed $currentRowData
+     * @return $this;
      */
-    public function setRowData($rowData)
+    public function setCurrentRowData($currentRowData)
     {
-        $this->rowData = $rowData;
+        $this->currentRowData = $currentRowData;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentRowData()
+    {
+        return $this->currentRowData;
     }
 }

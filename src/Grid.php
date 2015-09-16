@@ -5,10 +5,13 @@ use Nayjest\Tree\NodeTrait;
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Base\ComponentTrait;
 use Presentation\Framework\Rendering\ViewTrait;
+use Presentation\Grids\Component\InitializableInterface;
 
 class Grid implements ComponentInterface
 {
-    use NodeTrait;
+    use NodeTrait {
+        NodeTrait::initializeCollection as private origInitializeCollection;
+    }
     use ViewTrait;
     use ComponentTrait;
 
@@ -22,6 +25,31 @@ class Grid implements ComponentInterface
         $this->config = $config;
         $defaults = new ConfigDefaults();
         $defaults->apply($config);
+    }
+
+    protected function initializeCollection(array $items)
+    {
+        $this->origInitializeCollection($items);
+        $this->initializeComponents();
+    }
+
+    protected function initializeComponent(ComponentInterface $component)
+    {
+        if ($component instanceof InitializableInterface) {
+            $component->initialize($this);
+        }
+        if ($component->children()->isWritable()) {
+            $component->children()->onItemAdd(function($item) {
+                $this->initializeComponent($item);
+            });
+        }
+    }
+
+    protected function initializeComponents()
+    {
+        foreach($this->getChildrenRecursive() as $component) {
+            $this->initializeComponent($component);
+        }
     }
 
     /**
