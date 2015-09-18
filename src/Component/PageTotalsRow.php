@@ -12,7 +12,6 @@ use Presentation\Grids\Grid;
 class PageTotalsRow implements ComponentInterface, InitializableInterface
 {
     use NodeTrait;
-
     use ComponentTrait;
     use ViewTrait;
     use InitializableTrait;
