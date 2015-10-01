@@ -24,8 +24,8 @@ trait InitializableTrait
         if ($this->initialized) {
             return;
         }
-        $this->initializeInternal($grid);
         $this->grid = $grid;
+        $this->initializeInternal($grid);
         $this->enableDeferredInitialization($grid);
         $this->initialized = true;
     }
