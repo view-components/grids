@@ -1,6 +1,7 @@
 <?php
 namespace Presentation\Grids\Demo;
 
+use Presentation\Framework\Base\ComponentInterface;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -31,8 +32,11 @@ abstract class AbstractController
         return $this->render('menu/menu');
     }
 
-    protected function page($content)
+    protected function page($content, $title = '')
     {
-        return $this->render('layout', compact('content'));
+        if ($content instanceof ComponentInterface) {
+            $content = $content->render();
+        }
+        return $this->render('layout', compact('content', 'title'));
     }
 }

@@ -46,7 +46,6 @@ class Controller extends AbstractController
     }
 
     /**
-     * Basic usage of Repeater component.
      *
      * @return string
      */
@@ -63,7 +62,7 @@ class Controller extends AbstractController
             ]);
 
         $grid = new Grid($cfg);
-        return $this->page($grid);
+        return $this->page($grid, 'Basic Grid');
     }
 
     /**
@@ -87,7 +86,7 @@ class Controller extends AbstractController
             new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET))
         ]);
         $grid = new Grid($cfg);
-        return $this->page($grid);
+        return $this->page($grid, 'Filters');
     }
 
     /**
@@ -112,7 +111,7 @@ class Controller extends AbstractController
         ]);
         $cfg->setControlPlacingStrategy(new ColumnsStrategy());
         $grid = new Grid($cfg);
-        return $this->page($grid);
+        return $this->page($grid, 'Filters placed under column headers');
     }
 
     /**
@@ -142,7 +141,7 @@ class Controller extends AbstractController
         ]);
         $cfg->setControlPlacingStrategy(new ColumnsStrategy());
         $grid = new Grid($cfg);
-        return $this->page($grid);
+        return $this->page($grid, 'Pagination');
     }
 
     /**
@@ -174,6 +173,6 @@ class Controller extends AbstractController
         $cfg->setTFoot(new Tag('tfoot', [], [new PageTotalsRow()]));
         $grid = new Grid($cfg);
 
-        return $this->page($grid->render());
+        return $this->page($grid, 'Page Totals');
     }
 }

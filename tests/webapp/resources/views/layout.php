@@ -2,7 +2,7 @@
 <body>
 <?= $this->renderMenu() ?>
 </body>
-<h1>Test App</h1>
+<h1>Test App <?= $title?": <small>$title</small>":'' ?></h1>
 <hr>
 <?= $content ?>
 <style>
