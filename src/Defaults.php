@@ -2,7 +2,6 @@
 
 namespace Presentation\Grids;
 
-
 use Presentation\Framework\Component\HideIfNoChildren;
 use Presentation\Framework\Component\Html\Div;
 use Presentation\Framework\Component\Html\Form;
@@ -12,24 +11,9 @@ use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\SolidControlRow;
 use Presentation\Grids\Component\SolidRow;
 use Presentation\Grids\Component\TCell;
-use Presentation\Grids\Component\Tr;
-use Presentation\Grids\Layout\ControlPlacingStrategy\SolidRowStrategy;
 
 class Defaults
 {
-
-//    public function apply(GridConfig2 $config)
-//    {
-//        $this->applyDefaultComponents($config->getComponents());
-//        if (!$config->getControlPlacingStrategy()) {
-//            $config->setControlPlacingStrategy(new SolidRowStrategy());
-//        }
-//
-//        if (!$config->getInputSource()) {
-//            $config->setInputSource(new InputSource($_GET));
-//        }
-//    }
-
     public function tree()
     {
         return [
