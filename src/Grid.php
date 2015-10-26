@@ -9,7 +9,6 @@ use Presentation\Framework\Control\PaginationControl;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\InitializableInterface;
-use Presentation\Grids\Layout\ControlPlacingStrategy\ControlPlacingStrategyInterface;
 
 class Grid extends CompoundComponent
 {
