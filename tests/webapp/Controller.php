@@ -45,27 +45,7 @@ class Controller extends AbstractController
         return $out;
     }
 
-    /**
-     *
-     * @return string
-     */
     public function demo1()
-    {
-        $provider = $this->getDataProvider();
-        $cfg = new GridConfig();
-        $cfg
-            ->setDataProvider($provider)
-            ->setColumns([
-                new Column('id'),
-                new Column('name'),
-                new Column('role'),
-            ]);
-
-        $grid = new Grid($cfg);
-        return $this->page($grid, 'Basic Grid');
-    }
-
-    public function demo1b()
     {
         $provider = $this->getDataProvider();
         $grid = (new Grid())

@@ -6,10 +6,9 @@ use Presentation\Grids\Grid;
 
 trait InitializableTrait
 {
-
     private $initialized = false;
 
-    abstract protected function initializeInternal($grid);
+    abstract protected function initializeInternal(Grid $grid);
 
     /** @var Grid */
     protected $grid;
@@ -19,7 +18,7 @@ trait InitializableTrait
      */
     abstract protected function children();
 
-    final public function initialize($grid)
+    final public function initialize(Grid $grid)
     {
         if ($this->initialized) {
             return;

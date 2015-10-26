@@ -4,6 +4,7 @@ namespace Presentation\Grids\Component;
 
 use Presentation\Framework\Component\CompoundContainer;
 use Presentation\Framework\Component\Html\Tag;
+use Presentation\Grids\Grid;
 
 class SolidRow extends CompoundContainer implements InitializableInterface
 {
@@ -49,7 +50,7 @@ class SolidRow extends CompoundContainer implements InitializableInterface
         }
     }
 
-    protected function initializeInternal($grid)
+    protected function initializeInternal(Grid $grid)
     {
         $this->provideColspanAttribute();
     }

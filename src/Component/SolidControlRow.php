@@ -19,7 +19,7 @@ class SolidControlRow extends SolidRow
     /**
      * @param Grid $grid
      */
-    protected function initializeInternal($grid)
+    protected function initializeInternal(Grid $grid)
     {
         parent::initializeInternal($grid);
         $submitButton = $grid->components()->getSubmitButton();

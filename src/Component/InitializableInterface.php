@@ -5,7 +5,13 @@ use Presentation\Grids\Grid;
 
 interface InitializableInterface
 {
+    /**
+     * @param Grid $grid
+     */
     public function initialize(Grid $grid);
 
+    /**
+     * @return bool
+     */
     public function isInitialized();
 }

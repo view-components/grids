@@ -82,7 +82,7 @@ class ControlRowWithColumns extends CompoundComponent implements InitializableIn
     /**
      * @param Grid $grid
      */
-    protected function initializeInternal($grid)
+    protected function initializeInternal(Grid $grid)
     {
         $this->createColumns();
 

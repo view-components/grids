@@ -38,7 +38,7 @@ class PageTotalsRow implements ComponentInterface, InitializableInterface
     /**
      * @param Grid $grid
      */
-    protected function initializeInternal($grid)
+    protected function initializeInternal(Grid $grid)
     {
 
         $components = $grid->components();
