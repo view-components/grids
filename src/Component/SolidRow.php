@@ -2,33 +2,26 @@
 
 namespace Presentation\Grids\Component;
 
-use Nayjest\Tree\NodeTrait;
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Base\ComponentTrait;
+use Presentation\Framework\Component\CompoundContainer;
 use Presentation\Framework\Component\Html\Tag;
-use Presentation\Framework\Rendering\ViewTrait;
 
-class SolidRow implements ComponentInterface
+class SolidRow extends CompoundContainer implements InitializableInterface
 {
-    use NodeTrait {
-        NodeTrait::children as realChildren;
-    }
-    use ComponentTrait;
-    use ViewTrait;
-    use GridComponentTrait;
+    use InitializableTrait;
 
-    private $rowTag;
-    private $cellTag;
+    protected $rowTag;
+    protected $cellTag;
 
-    public function __construct($components = null, $cellTagName = 'td', $columnsCount = null)
+    public function __construct($components = [], $cellTagName = 'td', $columnsCount = null)
     {
-        $this->cellTag = new Tag($cellTagName, ['colspan' => $columnsCount]);
-        $this->rowTag = new Tag('tr', [], [$this->cellTag]);
-        $this->initializeCollection([$this->rowTag]);
-        if ($components) {
-            $this->children()->set($components);
-        }
-
+        parent::__construct(
+            ['row'=>['cell']],
+            [
+                'row' => new Tag('tr', ['data-role'=> 'solid-row']),
+                'cell' => new Tag($cellTagName, ['colspan' => $columnsCount], $components)
+            ],
+            'cell'
+        );
     }
 
     /**
@@ -36,7 +29,7 @@ class SolidRow implements ComponentInterface
      */
     public function getCellTag()
     {
-        return $this->cellTag;
+        return $this->components()->get('cell');
     }
 
     /**
@@ -44,24 +37,20 @@ class SolidRow implements ComponentInterface
      */
     public function getRowTag()
     {
-        return $this->rowTag;
-    }
-
-    public function children()
-    {
-        return $this->getCellTag()->children();
+        return $this->components()->get('row');
     }
 
     protected function provideColspanAttribute()
     {
-        if ($this->cellTag->getAttribute('colspan') === null) {
-            $this->cellTag->setAttribute('colspan', count($this->getGridConfig()->getColumns()));
+        /** @var Tag $cell */
+        $cell = $this->getCellTag();
+        if ($cell->getAttribute('colspan') === null) {
+            $cell->setAttribute('colspan', count($this->grid->getColumns()));
         }
     }
-    public function render()
+
+    protected function initializeInternal($grid)
     {
         $this->provideColspanAttribute();
-        return $this->beforeRender()->notify() . $this->getRowTag()->render();
     }
-
 }

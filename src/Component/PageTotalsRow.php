@@ -35,24 +35,27 @@ class PageTotalsRow implements ComponentInterface, InitializableInterface
         }
     }
 
-    protected function initializeInternal(Grid $grid)
+    /**
+     * @param Grid $grid
+     */
+    protected function initializeInternal($grid)
     {
-        $config = $grid->getConfig();
 
+        $components = $grid->components();
         // Observer will collect data from table cells.
         $this->cellObserver = new CallbackObserver(function (TCell $cell) {
             $value = $cell->extractData();
             $field = $cell->getCurrentColumn()->getName();
             $this->pushData($field, $value);
         });
-        $config->getTCell()->beforeRender()->attach($this->cellObserver);
+        $components->getDataCell()->beforeRender()->attach($this->cellObserver);
 
         // Before rendering totals row:
         // 1. Stop collecting data from cells
         // 2. Push collected data to table row and attach it to PageTotalsRow component for rendering.
-        $this->beforeRender()->attachCallback(function () use ($config) {
-            $config->getTCell()->beforeRender()->detach($this->cellObserver);
-            $config->getTRow()
+        $this->beforeRender()->attachCallback(function () use ($components) {
+            $components->getDataCell()->beforeRender()->detach($this->cellObserver);
+            $components->getTableRow()
                 ->setData($this->totalData)
                 ->attachTo($this);
         });

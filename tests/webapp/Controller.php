@@ -1,19 +1,19 @@
 <?php
 namespace Presentation\Grids\Demo;
 
-use Presentation\Framework\Component\Html\Tag;
+use Presentation\Framework\Component\Text;
 use Presentation\Framework\Control\PaginationControl;
 use Presentation\Framework\Input\InputOption;
 use Presentation\Framework\Control\FilterControl;
 use Presentation\Framework\Data\ArrayDataProvider;
 use Presentation\Framework\Data\DbTableDataProvider;
 use Presentation\Framework\Data\Operation\FilterOperation;
-use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Column;
+use Presentation\Grids\Component\ControlRowWithColumns;
 use Presentation\Grids\Component\PageTotalsRow;
+use Presentation\Grids\Component\SolidRow;
 use Presentation\Grids\Grid;
 use Presentation\Grids\GridConfig;
-use Presentation\Grids\Layout\ControlPlacingStrategy\ColumnsStrategy;
 
 class Controller extends AbstractController
 {
@@ -65,6 +65,20 @@ class Controller extends AbstractController
         return $this->page($grid, 'Basic Grid');
     }
 
+    public function demo1b()
+    {
+        $provider = $this->getDataProvider();
+        $grid = (new Grid())
+            ->setDataProvider($provider)
+            ->setColumns([
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+            ]);
+
+        return $this->page($grid->render(), 'Basic Grid');
+    }
+
     /**
      *
      *
@@ -73,45 +87,39 @@ class Controller extends AbstractController
     public function demo2()
     {
         $provider = $this->getDataProvider();
-        $cfg = new GridConfig();
-        $cfg
+        $grid = (new Grid)
             ->setDataProvider($provider)
             ->setColumns([
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
-            ]);
-        $cfg->setControls([
-            new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET)),
-            new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET))
+            ])
+            ->setControls([
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET)),
+                new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET))
         ]);
-        $grid = new Grid($cfg);
-        return $this->page($grid, 'Filters');
+        (new SolidRow([new Text('additional row')]))
+            ->attachTo($grid->components()->getTableHeading())
+            ->setSortPosition(2);
+        return $this->page($grid->render(), 'Filters');
     }
 
-    /**
-     *
-     *
-     * @return string
-     */
     public function demo3()
     {
         $provider = $this->getDataProvider();
-        $cfg = new GridConfig();
-        $cfg
+        $grid = (new Grid())
             ->setDataProvider($provider)
             ->setColumns([
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
+            ])
+            ->setControls([
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET)),
+                new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET))
             ]);
-        $cfg->setControls([
-            new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET)),
-            new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET))
-        ]);
-        $cfg->setControlPlacingStrategy(new ColumnsStrategy());
-        $grid = new Grid($cfg);
-        return $this->page($grid, 'Filters placed under column headers');
+        $grid->components()->setControlRow(new ControlRowWithColumns());
+        return $this->page($grid->render(), 'Filters placed under column headers');
     }
 
     /**
@@ -122,25 +130,23 @@ class Controller extends AbstractController
     public function demo4()
     {
         $provider = $this->getDataProvider();
-        $cfg = new GridConfig();
-        $input = new InputSource($_GET);
-        $cfg->setInputSource($input);
-        $cfg
+        $grid = new Grid();
+        $input = $grid->getInputSource();
+        $grid
             ->setDataProvider($provider)
             ->setColumns([
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
                 new Column('birthday'),
-            ]);
-        $cfg->setControls([
+            ])
+            ->setControls([
             new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
             new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
             new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
-            new PaginationControl($input->option('page', 1), 5, $provider)
+            $p = new PaginationControl($input->option('page', 1), 5, $provider)
         ]);
-        $cfg->setControlPlacingStrategy(new ColumnsStrategy());
-        $grid = new Grid($cfg);
+        $grid->components()->setControlRow(new ControlRowWithColumns());
         return $this->page($grid, 'Pagination');
     }
 
@@ -152,27 +158,23 @@ class Controller extends AbstractController
     public function demo5()
     {
         $provider = $this->getDataProvider();
-        $cfg = new GridConfig();
-        $input = new InputSource($_GET);
-        $cfg->setInputSource($input);
-        $cfg
+        $grid = new Grid();
+        $input = $grid->getInputSource();
+        $grid
             ->setDataProvider($provider)
             ->setColumns([
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
                 new Column('birthday'),
+            ])
+            ->setControls([
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
+                new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
+                new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
+                new PaginationControl($input->option('page', 1), 5, $provider)
             ]);
-        $cfg->setControls([
-            new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
-            new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
-            new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
-            new PaginationControl($input->option('page', 1), 5, $provider)
-        ]);
-        $cfg->setControlPlacingStrategy(new ColumnsStrategy());
-        $cfg->setTFoot(new Tag('tfoot', [], [new PageTotalsRow()]));
-        $grid = new Grid($cfg);
-
+        $grid->components()->getTableFooter()->addChild(new PageTotalsRow());
         return $this->page($grid, 'Page Totals');
     }
 }
