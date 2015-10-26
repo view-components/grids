@@ -27,9 +27,6 @@ class Grid extends CompoundComponent
     /** @var  InputSource */
     protected $inputSource;
 
-    /** @var  ControlPlacingStrategyInterface */
-    protected $controlPlacingStrategy;
-
     protected $defaults;
 
     public function __construct()
