@@ -7,7 +7,7 @@ Project status: pre-alpha.
 This project is a successor of [https://github.com/Nayjest/Grids](nayjest/grids) library for Laravel.
 
 Grids is framework-agnostik in sense of application framework.
-It's based on PHP UI framework called [https://github.com/presentation-framework/presentation-framework](Presentation Framework) (that's actually also in pre-alpha status).
+It's based on PHP UI framework called [Presentation Framework](https://github.com/presentation-framework/presentation-framework) (that's actually also in pre-alpha status).
 
 Bindings for app. frameworks like Laravel, Symfony, Yii, etc. will be available later.
 
