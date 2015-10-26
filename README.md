@@ -4,7 +4,7 @@ Data grids library for PHP
 
 Project status: pre-alpha.
 
-This project is a successor of [https://github.com/Nayjest/Grids](nayjest/grids) library for Laravel.
+This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids) library for Laravel.
 
 Grids is framework-agnostik in sense of application framework.
 It's based on PHP UI framework called [Presentation Framework](https://github.com/presentation-framework/presentation-framework) (that's actually also in pre-alpha status).
