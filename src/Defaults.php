@@ -11,6 +11,7 @@ use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\SolidControlRow;
 use Presentation\Grids\Component\SolidRow;
 use Presentation\Grids\Component\TCell;
+use Presentation\Grids\Component\Tr;
 
 class Defaults
 {
