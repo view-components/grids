@@ -2,11 +2,12 @@
 
 namespace Presentation\Grids\Component;
 
+use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Component\CompoundComponent;
+use Presentation\Framework\Component\ControlView\FilterControlView;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Control\ControlInterface;
 use Presentation\Framework\Control\FilterControl;
-use Presentation\Framework\Control\PaginationControl;
 use Presentation\Grids\Grid;
 
 class ControlRowWithColumns extends CompoundComponent implements InitializableInterface
@@ -94,6 +95,7 @@ class ControlRowWithColumns extends CompoundComponent implements InitializableIn
             $fieldName = $this->resolveControlColumn($control);
             if ($column = $this->getColumn($fieldName)) {
                 $column->addChild($control->getView());
+                $this->removeLabel($control->getView());
             } else {
                 $notPlaced[] = $control->getView();
             }
@@ -113,5 +115,21 @@ class ControlRowWithColumns extends CompoundComponent implements InitializableIn
             return $control->getField();
         }
         return null;
+    }
+
+
+    /**
+     * @param ComponentInterface $controlView
+     */
+    protected function removeLabel($controlView)
+    {
+        if ($controlView instanceof FilterControlView) {
+            $label = $controlView
+                ->children()
+                ->findByProperty('tagName', 'label', true);
+            if ($label) {
+                $label->detach();
+            }
+        }
     }
 }
