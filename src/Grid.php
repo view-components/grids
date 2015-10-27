@@ -161,7 +161,6 @@ class Grid extends CompoundComponent
         $this->applyOperations();
         $components = $this->components();
         $components->getTableRow()->setTCell($components->getDataCell());
-        //$components->getTitleRow()->setTCell($components->getTitleCell());
         $components->getDataRowRepeater()->setIterator($this->dataProvider);
         $components->getBodyColumnRepeater()->setIterator($this->getColumns());
         $components->getHeadingColumnRepeater()->setIterator($this->getColumns());

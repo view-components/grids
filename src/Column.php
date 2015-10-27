@@ -43,7 +43,7 @@ class Column
 
 
     /**
-     * Returns field name.
+     * Returns column name.
      *
      * @return string
      */
@@ -53,7 +53,7 @@ class Column
     }
 
     /**
-     * Sets field name.
+     * Sets column name.
      *
      * @param string $name
      * @return $this

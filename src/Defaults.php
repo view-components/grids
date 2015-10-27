@@ -43,7 +43,6 @@ class Defaults
                                 'pagination_container' => []
                             ]
                         ]
-
                     ]
                 ]
             ]

@@ -2,6 +2,7 @@
 
 namespace Presentation\Grids\Component;
 
+use Presentation\Framework\Control\ControlInterface;
 use Presentation\Framework\Control\PaginationControl;
 use Presentation\Grids\Grid;
 
@@ -9,7 +10,12 @@ class SolidControlRow extends SolidRow
 {
     public function render()
     {
-        if ($this->grid->controls()->isEmpty()) {
+        $controls = $this->grid->controls()->filter(
+            function (ControlInterface $control) {
+                return !$control instanceof PaginationControl;
+            }
+        );
+        if ($controls->isEmpty()) {
             return '';
         } else {
             return parent::render();

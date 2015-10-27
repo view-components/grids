@@ -8,6 +8,7 @@ use Presentation\Framework\Component\ControlView\FilterControlView;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Control\ControlInterface;
 use Presentation\Framework\Control\FilterControl;
+use Presentation\Framework\Control\PaginationControl;
 use Presentation\Grids\Grid;
 
 class ControlRowWithColumns extends CompoundComponent implements InitializableInterface
@@ -27,9 +28,18 @@ class ControlRowWithColumns extends CompoundComponent implements InitializableIn
 
     public function render()
     {
+        $controls = $this->grid->controls()->filter(
+            function (ControlInterface $control) {
+                return !$control instanceof PaginationControl;
+            }
+        );
         /** @var Tag $row2 */
         $row2 = $this->components()->get('row2');
-        if ($this->grid->controls()->isEmpty() && (!$row2 || $row2->children()->isEmpty())) {
+
+        $isRow2Empty = $row2 ? $row2->children()->filter(function (ComponentInterface $component) {
+                return $component !== $this->grid->components()->getSubmitButton();
+            })->isEmpty() : true;
+        if ($controls->isEmpty() && (!$row2 || $isRow2Empty)) {
             return '';
         } else {
             return parent::render();

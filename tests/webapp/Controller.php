@@ -157,4 +157,30 @@ class Controller extends AbstractController
         $grid->components()->getTableFooter()->addChild(new PageTotalsRow());
         return $this->page($grid, 'Page Totals');
     }
+
+
+    /**
+     * No controls, only pagination, controls row hide check
+     *
+     * @return string
+     */
+    public function demo6()
+    {
+        $provider = $this->getDataProvider();
+        $grid = new Grid();
+        $input = $grid->getInputSource();
+        $grid
+            ->setDataProvider($provider)
+            ->setColumns([
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+            ])
+            ->setControls([
+                new PaginationControl($input->option('page', 1), 5, $provider)
+            ]);
+        $grid->components()->setControlRow(new ControlRowWithColumns());
+        return $this->page($grid, 'Page Totals');
+    }
 }
