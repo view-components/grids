@@ -15,6 +15,9 @@ class Registry extends BaseRegistry
         return $this->get('cell');
     }
 
+    /**
+     * @return Tag
+     */
     public function getRow()
     {
         return $this->get('row');

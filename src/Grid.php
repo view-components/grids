@@ -1,8 +1,8 @@
 <?php
 namespace Presentation\Grids;
 
+use Presentation\Framework\Base\RepeaterInterface;
 use Presentation\Framework\Component\CompoundComponent;
-use Presentation\Framework\Component\Text;
 use Presentation\Framework\Control\ControlCollection;
 use Presentation\Framework\Control\ControlInterface;
 use Presentation\Framework\Control\PaginationControl;
@@ -13,9 +13,6 @@ use Presentation\Grids\Component\InitializableInterface;
 class Grid extends CompoundComponent
 {
     private $isOperationsApplied = false;
-
-    /** @var Column[] */
-    protected $columns = [];
 
     /** @var ControlCollection */
     protected $controlCollection;
@@ -28,12 +25,17 @@ class Grid extends CompoundComponent
 
     protected $defaults;
 
+    protected $currentRow;
+
+    /** @var ColumnCollection|Column[]  */
+    protected $columnCollection;
+
     public function __construct()
     {
         $this->controlCollection = new ControlCollection();
+        $this->columnCollection = new ColumnCollection($this);
         // @todo instantiate defaults only by request (not in constructor)
         parent::__construct($this->getDefaults()->tree(), $this->getDefaults()->getComponents());
-
     }
 
     protected function getDefaults()
@@ -42,6 +44,22 @@ class Grid extends CompoundComponent
             $this->defaults = new Defaults();
         }
         return $this->defaults;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentRow()
+    {
+        return $this->currentRow;
+    }
+
+    /**
+     * @param mixed $currentRow
+     */
+    public function setCurrentRow($currentRow)
+    {
+        $this->currentRow = $currentRow;
     }
 
     /**
@@ -72,11 +90,11 @@ class Grid extends CompoundComponent
     }
 
     /**
-     * @return Column[]
+     * @return Column[]|ColumnCollection
      */
     public function getColumns()
     {
-        return $this->columns;
+        return $this->columnCollection;
     }
 
     /**
@@ -85,7 +103,7 @@ class Grid extends CompoundComponent
      */
     public function setColumns($columns)
     {
-        $this->columns = $columns;
+        $this->columnCollection->set($columns);
         return $this;
     }
 
@@ -160,16 +178,13 @@ class Grid extends CompoundComponent
     {
         $this->applyOperations();
         $components = $this->components();
-        $components->getTableRow()->setTCell($components->getDataCell());
-        $components->getDataRowRepeater()->setIterator($this->dataProvider);
-        $components->getBodyColumnRepeater()->setIterator($this->getColumns());
-        $components->getHeadingColumnRepeater()->setIterator($this->getColumns());
         $this->placePagination();
-
-
-        $components->getHeadingColumnRepeater()->setCallback(function($repeater, Column $column) use ($components) {
-            $components->getTitleCell()->setChildren([new Text($column->getLabel())]);
-        });
+        $this->columnCollection->updateGridInternal();
+        $components->getRepeater()
+            ->setIterator($this->dataProvider)
+            ->setCallback(function(RepeaterInterface $repeater, $dataRow){
+                $this->setCurrentRow($dataRow);
+            });
 
         return parent::buildTree();
     }

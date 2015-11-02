@@ -12,13 +12,23 @@ use Presentation\Grids\Grid;
 class PageTotalsRow implements ComponentInterface, InitializableInterface
 {
     use NodeTrait;
-    use ComponentTrait;
+    use ComponentTrait {
+        ComponentTrait::render as private renderInternal;
+    }
     use ViewTrait;
     use InitializableTrait;
 
     protected $totalData;
 
     protected $cellObserver;
+
+    public function render()
+    {
+        // clone totalData to avoid pushing data to totals one more time
+        $this->grid->setCurrentRow(clone $this->totalData);
+        $this->grid->components()->getTableRow()->attachTo($this);
+        return $this->renderInternal();
+    }
 
     protected function pushData($field, $value)
     {
@@ -40,24 +50,11 @@ class PageTotalsRow implements ComponentInterface, InitializableInterface
      */
     protected function initializeInternal(Grid $grid)
     {
-
-        $components = $grid->components();
-        // Observer will collect data from table cells.
-        $this->cellObserver = new CallbackObserver(function (TCell $cell) {
-            $value = $cell->extractData();
-            $field = $cell->getCurrentColumn()->getName();
-            $this->pushData($field, $value);
-        });
-        $components->getDataCell()->beforeRender()->attach($this->cellObserver);
-
-        // Before rendering totals row:
-        // 1. Stop collecting data from cells
-        // 2. Push collected data to table row and attach it to PageTotalsRow component for rendering.
-        $this->beforeRender()->attachCallback(function () use ($components) {
-            $components->getDataCell()->beforeRender()->detach($this->cellObserver);
-            $components->getTableRow()
-                ->setData($this->totalData)
-                ->attachTo($this);
+        // @todo will not work if replace TR after adding PageTotalsRow
+        $grid->components()->getTableRow()->onRender(function(){
+            foreach($this->grid->getColumns() as $column) {
+                $this->pushData($column->getDataFieldName(), $column->extractValueFromCurrentRow());
+            }
         });
     }
 }

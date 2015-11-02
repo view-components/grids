@@ -2,8 +2,9 @@
 
 namespace Presentation\Grids;
 
-use Presentation\Framework\Control\ControlCollection;
-use Traversable;
+use Presentation\Framework\Base\ComponentInterface;
+use Presentation\Framework\Component\Html\Tag;
+use Presentation\Framework\Component\Text;
 
 class Column
 {
@@ -23,7 +24,23 @@ class Column
 
     protected $controls;
 
-//    protected $headerView;
+    /** @var  ComponentInterface */
+    protected $dataCell;
+
+    /** @var  ComponentInterface */
+    protected $titleCell;
+
+    /** @var  Grid|null */
+    protected $grid;
+
+    /** @var ComponentInterface */
+    protected $titleView;
+
+    /** @var ComponentInterface */
+    protected $dataView;
+
+    /** @var  string|null */
+    protected $dataFieldName;
 
     /**
      * Constructor.
@@ -31,16 +48,112 @@ class Column
      * @param string|null $name column unique name for internal usage
      * @param string|null $label column label
      */
-    public function __construct($name = null, $label = null)
+    public function __construct($name, $label = null)
     {
-        if ($name !== null) {
-            $this->setName($name);
+        $this->setName($name);
+        $this->setLabel($label);
+        $this->titleView = (new Text())
+            ->setValue([$this, 'getLabel']);
+
+        $this->dataView = (new Text())
+            ->setValue([$this, 'extractValueFromCurrentRow']);
+    }
+
+    /**
+     * @return ComponentInterface
+     */
+    public function getDataCell()
+    {
+        if ($this->dataCell === null) {
+            $this->setDataCell(
+                new Tag('td')
+            );
         }
-        if ($label !== null) {
-            $this->setLabel($label);
+        return $this->dataCell;
+    }
+
+    public function extractValueFromCurrentRow()
+    {
+        $row = $this->grid->getCurrentRow();
+        $fieldName = $this->getDataFieldName();
+        return property_exists($row, $fieldName) ? $row->{$fieldName} : '?';
+    }
+
+    /**
+     * @return Text
+     */
+    public function getDataView()
+    {
+        return $this->dataView;
+    }
+
+    /**
+     * @return Text
+     */
+    public function getTitleView()
+    {
+        return $this->titleView;
+    }
+
+    /**
+     * @param string|null $dataFieldName
+     * @return $this
+     */
+    public function setDataFieldName($dataFieldName)
+    {
+        $this->dataFieldName = $dataFieldName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataFieldName()
+    {
+        return $this->dataFieldName ?: $this->getName();
+    }
+
+    protected function updateGrid()
+    {
+        if ($this->grid) {
+            $this->grid->getColumns()->updateGridInternal();
         }
     }
 
+    public function setDataCell(ComponentInterface $cell)
+    {
+        $this->dataCell = $cell;
+        $this->dataCell->children()->add($this->dataView, true);
+        $this->updateGrid();
+        return $this;
+    }
+
+    /**
+     * @return ComponentInterface
+     */
+    public function getTitleCell()
+    {
+        if ($this->titleCell === null) {
+            $this->setTitleCell(new Tag('th'));
+        }
+        return $this->titleCell;
+    }
+
+    public function setTitleCell(ComponentInterface $cell)
+    {
+        $this->titleCell = $cell;
+        $this->titleCell->children()->add($this->titleView, true);
+        $this->updateGrid();
+        return $this;
+    }
+
+    /**
+     * @param Grid $grid
+     */
+    public function setGridInternal(Grid $grid)
+    {
+        $this->grid = $grid;
+    }
 
     /**
      * Returns column name.
@@ -61,6 +174,8 @@ class Column
     public function setName($name)
     {
         $this->name = $name;
+        // @todo remove column with old name (?)
+        $this->updateGrid();
         return $this;
     }
 
@@ -71,13 +186,13 @@ class Column
      */
     public function getLabel()
     {
-        return $this->label ? : ucwords(str_replace(array('-', '_', '.'), ' ', $this->name));
+        return $this->label ?: ucwords(str_replace(array('-', '_', '.'), ' ', $this->name));
     }
 
     /**
      * Sets text label that will be rendered in table header.
      *
-     * @param string $label
+     * @param string|null $label
      * @return $this
      */
     public function setLabel($label)
@@ -85,52 +200,4 @@ class Column
         $this->label = $label;
         return $this;
     }
-
-    /**
-     * @todo remove this
-     */
-    public function __toString()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return ControlCollection
-     */
-    public function getControls()
-    {
-        if ($this->controls === null) {
-            $this->controls = new ControlCollection();
-        }
-        return $this->controls;
-    }
-
-    /**
-     * @param array|Traversable $controls
-     * @return $this
-     */
-    public function setControls($controls)
-    {
-        $this->getControls()->set($controls);
-        return $this;
-    }
-//
-//    /**
-//     * @return ComponentInterface|null
-//     */
-//    public function getHeaderView()
-//    {
-//        return $this->headerView;
-//    }
-//
-//    /**
-//     * @param mixed $headerView
-//     * @return $this
-//     */
-//    public function setHeaderView($headerView)
-//    {
-//        $this->headerView = $headerView;
-//        return $this;
-//    }
-
 }

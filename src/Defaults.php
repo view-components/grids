@@ -11,7 +11,6 @@ use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\SolidControlRow;
 use Presentation\Grids\Component\SolidRow;
 use Presentation\Grids\Component\TCell;
-use Presentation\Grids\Component\Tr;
 
 class Defaults
 {
@@ -23,18 +22,12 @@ class Defaults
                     'table' => [
                         'table_heading' => [
                             'title_row' => [
-                                'heading_column_repeater' => [
-                                    'title_cell' => []
-                                ]
                             ],
                             'control_row' => []
                         ],
                         'table_body' => [
-                            'data_row_repeater' => [
+                            'repeater' => [
                                 'table_row' => [
-                                    'body_column_repeater' => [
-                                        'data_cell' => []
-                                    ]
                                 ]
                             ]
                         ],
@@ -82,7 +75,7 @@ class Defaults
                 return new Tag('tfoot');
             },
             'table_row' => function() {
-                return new Tr();
+                return new Tag('tr');
             },
             'title_row' => function() {
                 return new Tag('tr');
@@ -90,17 +83,8 @@ class Defaults
             'heading_column_repeater' => function() {
                 return new Repeater();
             },
-            'title_cell' => function() {
-                return new Tag('th');
-            },
-            'data_row_repeater' => function() {
+            'repeater' => function() {
                 return new Repeater();
-            },
-            'body_column_repeater' => function() {
-                return new Repeater();
-            },
-            'data_cell' => function() {
-                return new TCell();
             },
             'control_row' => function() {
                 return new SolidControlRow();

@@ -5,11 +5,7 @@ namespace Presentation\Grids;
 use Closure;
 use Nayjest\Collection\Extended\Registry as BaseRegistry;
 use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Base\RepeaterInterface;
 use Presentation\Framework\Component\Repeater;
-use Presentation\Framework\Component\Text;
-use Presentation\Grids\Component\TCell;
-use Presentation\Grids\Component\Tr;
 
 class Registry extends BaseRegistry
 {
@@ -36,7 +32,7 @@ class Registry extends BaseRegistry
         return parent::toArray();
     }
     /**
-     * @return null|ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getContainer()
     {
@@ -53,7 +49,7 @@ class Registry extends BaseRegistry
     }
 
     /**
-     * @return null|ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getForm()
     {
@@ -105,7 +101,7 @@ class Registry extends BaseRegistry
     }
 
     /**
-     * @return null|ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getTableBody()
     {
@@ -122,7 +118,7 @@ class Registry extends BaseRegistry
     }
 
     /**
-     * @return null|ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getTableFooter()
     {
@@ -139,7 +135,7 @@ class Registry extends BaseRegistry
     }
 
     /**
-     * @return Tr
+     * @return ComponentInterface|null
      */
     public function getTitleRow()
     {
@@ -156,61 +152,25 @@ class Registry extends BaseRegistry
     }
 
     /**
-     * @return RepeaterInterface
+     * @return Repeater|null
      */
-    public function getHeadingColumnRepeater()
+    public function getRepeater()
     {
-        return $this->get('heading_column_repeater');
-    }
-
-    /**
-     * @param RepeaterInterface|null $component
-     * @return $this
-     */
-    public function setHeadingColumnRepeater(RepeaterInterface $component = null)
-    {
-        return $this->set('heading_column_repeater', $component);
-    }
-
-
-    /**
-     * @return ComponentInterface
-     */
-    public function getTitleCell()
-    {
-        return $this->get('title_cell');
+        return $this->get('repeater');
     }
 
     /**
      * @param ComponentInterface|null $component
      * @return $this
      */
-    public function setTitleCell(ComponentInterface $component = null)
+    public function setRepeater(ComponentInterface $component = null)
     {
-        return $this->set('title_cell', $component);
+        return $this->set('repeater', $component);
     }
 
 
     /**
-     * @return Repeater
-     */
-    public function getDataRowRepeater()
-    {
-        return $this->get('data_row_repeater');
-    }
-
-    /**
-     * @param ComponentInterface|null $component
-     * @return $this
-     */
-    public function setDataRowRepeater(ComponentInterface $component = null)
-    {
-        return $this->set('data_row_repeater', $component);
-    }
-
-
-    /**
-     * @return Tr
+     * @return ComponentInterface|null
      */
     public function getTableRow()
     {
@@ -226,77 +186,8 @@ class Registry extends BaseRegistry
         return $this->set('table_row', $component);
     }
 
-
     /**
-     * @return Repeater
-     */
-    public function getBodyColumnRepeater()
-    {
-        return $this->get('body_column_repeater');
-    }
-
-    /**
-     * @param ComponentInterface|null $component
-     * @return $this
-     */
-    public function setBodyColumnRepeater(ComponentInterface $component = null)
-    {
-        return $this->set('body_column_repeater', $component);
-    }
-
-    /**
-     * @return TCell
-     */
-    public function getDataCell()
-    {
-        return $this->get('data_cell');
-    }
-
-    /**
-     * @param ComponentInterface|null $component
-     * @return $this
-     */
-    public function setDataCell(ComponentInterface $component = null)
-    {
-        return $this->set('data_cell', $component);
-    }
-
-    /**
-     * @return Text
-     */
-    public function getTitleText()
-    {
-        return $this->get('title_text');
-    }
-
-    /**
-     * @param Text $component
-     * @return $this
-     */
-    public function setTitleText(Text $component)
-    {
-        return $this->set('title_text', $component);
-    }
-
-    /**
-     * @return Text
-     */
-    public function getDataText()
-    {
-        return $this->get('data_text');
-    }
-
-    /**
-     * @param Text $component
-     * @return $this
-     */
-    public function setDataText(Text $component)
-    {
-        return $this->set('data_text', $component);
-    }
-
-    /**
-     * @return null|ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getControlRow()
     {
@@ -313,11 +204,11 @@ class Registry extends BaseRegistry
     }
 
     #---------------------------------------------------------------------
-    #  NOT PLACED
+    #  NOT PLACED TO TREE
     #---------------------------------------------------------------------
 
     /**
-     * @return null|ComponentInterface
+     * @return ComponentInterface|null
      */
     public function getSubmitButton()
     {
