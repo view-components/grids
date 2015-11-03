@@ -80,9 +80,6 @@ class Defaults
             'title_row' => function() {
                 return new Tag('tr');
             },
-            'heading_column_repeater' => function() {
-                return new Repeater();
-            },
             'repeater' => function() {
                 return new Repeater();
             },
