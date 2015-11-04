@@ -5,6 +5,7 @@ namespace Presentation\Framework\Demo;
 require __DIR__ . '/../vendor/autoload.php';
 
 define('FIXTURES_DIR', __DIR__ . '/fixtures');
+define('GRIDS_LIB_DIR', dirname(__DIR__));
 
 use Dotenv;
 use PDO;

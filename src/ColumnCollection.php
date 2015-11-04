@@ -20,9 +20,10 @@ class ColumnCollection extends ObjectCollection
      */
     public function add($item, $prepend = false)
     {
+        parent::add($item, $prepend);
         $item->setGridInternal($this->grid);
-        return parent::add($item, $prepend);
-
+        $this->updateGridInternal();
+        return $this;
     }
 
     public function updateGridInternal()
@@ -32,7 +33,7 @@ class ColumnCollection extends ObjectCollection
         $columns = $this->items();
         foreach($columns as $column) {
             $grid->compose('title_row', 'column_' . $column->getName() . '_title', $column->getTitleCell());
-            $grid->compose('table_row', 'column_' . $column->getName() . '_data_cell', $column->getDataCell());
+            $grid->compose('record_view', 'column_' . $column->getName() . '_data_cell', $column->getDataCell());
         }
     }
 }

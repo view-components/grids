@@ -2,65 +2,45 @@
 
 namespace Presentation\Grids;
 
-use Closure;
-use Nayjest\Collection\Extended\Registry as BaseRegistry;
 use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Component\Repeater;
+use Presentation\Framework\Component\ConditionalCompoundContainer;
+use Presentation\Framework\Component\Html\Tag;
+use Presentation\Framework\Component\ManagedList\Control\ControlInterface;
+use Presentation\Framework\Component\ManagedList\Registry as BaseRegistry;
+use Presentation\Framework\Component\RenderIf;
+use Presentation\Grids\Component\SolidControlRow;
+use Presentation\Grids\Component\SolidRow;
 
 class Registry extends BaseRegistry
 {
 
-    public $defaults = [];
-
-    public function get($name)
+    public function useDefaults()
     {
-        $item = parent::get($name);
-        if ($item && $item instanceof Closure) {
-            $this->items()[$name] = $item = $item();
-        }
-        return $item;
-    }
 
-
-    public function toArray()
-    {
-        foreach($this->items() as &$item) {
-            if ($item && $item instanceof Closure) {
-                $item = $item();
-            }
-        }
-        return parent::toArray();
-    }
-    /**
-     * @return ComponentInterface|null
-     */
-    public function getContainer()
-    {
-        return $this->get('container');
+        $this->has('record_view') || $this->setRecordView(new Tag('tr'));
+        $this->has('table') || $this->setTable(new Tag('table'));
+        $this->has('table_heading') || $this->setTableHeading(new Tag('thead'));
+        $this->has('table_body') || $this->setTableBody(new Tag('tbody'));
+        $this->has('table_footer') || $this->setTableFooter(new Tag('tfoot'));
+        $this->has('title_row') || $this->setTitleRow(new Tag('tr'));
+        $this->has('control_row_hider') || $this->set(
+            'control_row_hider',
+            new RenderIf(
+                function (RenderIf $component) {
+                    return !$component->getChildrenRecursive()->filterByType(ControlInterface::class)->isEmpty();
+                }
+            )
+        );
+        $this->has('control_row') || $this->setControlRow(new SolidRow());
+        $this->has('pagination_container') || $this->set('pagination_container', new SolidRow());
+        parent::useDefaults();
     }
 
     /**
      * @param ComponentInterface|null $component
      * @return $this
      */
-    public function setContainer(ComponentInterface $component = null)
-    {
-        return $this->set('container', $component);
-    }
-
-    /**
-     * @return ComponentInterface|null
-     */
-    public function getForm()
-    {
-        return $this->get('form');
-    }
-
-    /**
-     * @param ComponentInterface|null $component
-     * @return $this
-     */
-    public function setForm(ComponentInterface $component = null)
+    public function setForm(ComponentInterface $component)
     {
         return $this->set('form', $component);
     }
@@ -151,30 +131,13 @@ class Registry extends BaseRegistry
         return $this->set('title_row', $component);
     }
 
-    /**
-     * @return Repeater|null
-     */
-    public function getRepeater()
-    {
-        return $this->get('repeater');
-    }
-
-    /**
-     * @param ComponentInterface|null $component
-     * @return $this
-     */
-    public function setRepeater(ComponentInterface $component = null)
-    {
-        return $this->set('repeater', $component);
-    }
-
 
     /**
      * @return ComponentInterface|null
      */
     public function getTableRow()
     {
-        return $this->get('table_row');
+        return $this->getRecordView();
     }
 
     /**
@@ -183,7 +146,7 @@ class Registry extends BaseRegistry
      */
     public function setTableRow(ComponentInterface $component = null)
     {
-        return $this->set('table_row', $component);
+        return $this->setRecordView($component);
     }
 
     /**
@@ -201,26 +164,5 @@ class Registry extends BaseRegistry
     public function setControlRow(ComponentInterface $component = null)
     {
         return $this->set('control_row', $component);
-    }
-
-    #---------------------------------------------------------------------
-    #  NOT PLACED TO TREE
-    #---------------------------------------------------------------------
-
-    /**
-     * @return ComponentInterface|null
-     */
-    public function getSubmitButton()
-    {
-        return $this->get('submit_button');
-    }
-
-    /**
-     * @param ComponentInterface|null $component
-     * @return $this
-     */
-    public function setSubmitButton(ComponentInterface $component = null)
-    {
-        return $this->set('submit_button', $component);
     }
 }
