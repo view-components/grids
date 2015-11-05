@@ -6,6 +6,9 @@ use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\Text;
 
+/**
+ * Grid column.
+ */
 class Column
 {
     /**
@@ -18,11 +21,9 @@ class Column
     /**
      * Text label that will be rendered in table header.
      *
-     * @var string
+     * @var string|null
      */
     protected $label;
-
-    protected $controls;
 
     /** @var  ComponentInterface */
     protected $dataCell;

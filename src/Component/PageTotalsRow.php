@@ -5,7 +5,6 @@ namespace Presentation\Grids\Component;
 use Nayjest\Tree\NodeTrait;
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Base\ComponentTrait;
-use Presentation\Framework\Event\CallbackObserver;
 use Presentation\Framework\Rendering\ViewTrait;
 use Presentation\Grids\Grid;
 

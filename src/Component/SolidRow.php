@@ -2,10 +2,18 @@
 
 namespace Presentation\Grids\Component;
 
+use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Component\CompoundContainer;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Grids\Grid;
 
+/**
+ * Table row containing one cell with colspan attribute equal to grid's columns count.
+ *
+ * This component hides it's internal structure from accessing via children() method and provides direct access to
+ * it's "cell" component children.
+ *
+ */
 class SolidRow extends CompoundContainer implements InitializableInterface
 {
     use InitializableTrait;
@@ -13,6 +21,15 @@ class SolidRow extends CompoundContainer implements InitializableInterface
     protected $rowTag;
     protected $cellTag;
 
+    /**
+     * SolidRow constructor.
+     *
+     * If columns count argument is specified, SolidRow will use it instead of real grid's columns count.
+     *
+     * @param ComponentInterface[] $components
+     * @param string $cellTagName
+     * @param int|null $columnsCount
+     */
     public function __construct($components = [], $cellTagName = 'td', $columnsCount = null)
     {
         parent::__construct(

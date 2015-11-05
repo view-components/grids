@@ -4,16 +4,28 @@ namespace Presentation\Grids;
 
 use Nayjest\Collection\Extended\ObjectCollection;
 
+/**
+ * Collection of grid columns.
+ */
 class ColumnCollection extends ObjectCollection
 {
+    /** @var Grid  */
     protected $grid;
 
+    /**
+     * ColumnCollection constructor.
+     * @param Grid $grid
+     */
     public function __construct(Grid $grid)
     {
         $this->grid = $grid;
     }
 
     /**
+     * Adds column to collection.
+     *
+     * This method is overriden to update grid structure after adding new column.
+     *
      * @param Column $item
      * @param bool|false $prepend
      * @return $this
@@ -26,6 +38,9 @@ class ColumnCollection extends ObjectCollection
         return $this;
     }
 
+    /**
+     * Updates grid structure with columns.
+     */
     public function updateGridInternal()
     {
         $grid = $this->grid;

@@ -3,17 +3,18 @@
 namespace Presentation\Grids;
 
 use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Component\ConditionalCompoundContainer;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\ManagedList\Control\ControlInterface;
 use Presentation\Framework\Component\ManagedList\Registry as BaseRegistry;
 use Presentation\Framework\Component\RenderIf;
-use Presentation\Grids\Component\SolidControlRow;
 use Presentation\Grids\Component\SolidRow;
 
 class Registry extends BaseRegistry
 {
 
+    /**
+     * Fills registry with required components if it's absent.
+     */
     public function useDefaults()
     {
 
@@ -32,11 +33,16 @@ class Registry extends BaseRegistry
             )
         );
         $this->has('control_row') || $this->setControlRow(new SolidRow());
-        $this->has('pagination_container') || $this->set('pagination_container', new SolidRow());
         parent::useDefaults();
     }
 
     /**
+     * Sets 'form' component.
+     *
+     * This method is overriden,
+     * becouse registry for gris does not requires specific
+     * controls reattaching logic of managed list's registry
+     *
      * @param ComponentInterface|null $component
      * @return $this
      */

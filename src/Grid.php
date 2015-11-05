@@ -1,21 +1,34 @@
 <?php
+
 namespace Presentation\Grids;
 
-use Presentation\Framework\Component\ManagedList\Control\PaginationControl;
+use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Component\ManagedList\ManagedList;
+use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\InitializableInterface;
+use Traversable;
 
+/**
+ * Grid component.
+ */
 class Grid extends ManagedList
 {
     /** @var  InputSource */
     protected $inputSource;
 
+    /** @var  mixed|null */
     protected $currentRow;
 
     /** @var ColumnCollection|Column[] */
     protected $columnCollection;
 
+    /**
+     * Grid constructor.
+     *
+     * @param DataProviderInterface|null $dataProvider
+     * @param Column[] $columns empty by default
+     */
     public function __construct($dataProvider = null, array $columns = [])
     {
         parent::__construct($dataProvider);
@@ -23,6 +36,11 @@ class Grid extends ManagedList
         $this->setColumns($columns);
     }
 
+    /**
+     * Returns default grid structure.
+     *
+     * @return array
+     */
     public function getDefaultTreeConfig()
     {
         return [
@@ -54,6 +72,9 @@ class Grid extends ManagedList
     }
 
     /**
+     * Returns current grid row, used internally for grid rendering.
+     *
+     * @internal
      * @return mixed
      */
     public function getCurrentRow()
@@ -62,16 +83,22 @@ class Grid extends ManagedList
     }
 
     /**
+     * Sets current grid row for rendering, used internally for grid rendering.
+     *
+     * @internal
      * @param mixed $currentRow
+     * @return $this
      */
     public function setCurrentRow($currentRow)
     {
         $this->currentRow = $currentRow;
+        return $this;
     }
 
     /**
+     * Returns registry of compound components.
      *
-     * @return Registry
+     * @return Registry|ComponentInterface[]
      */
     public function components()
     {
@@ -79,6 +106,8 @@ class Grid extends ManagedList
     }
 
     /**
+     * Returns collection of grid columns.
+     *
      * @return Column[]|ColumnCollection
      */
     public function getColumns()
@@ -87,7 +116,9 @@ class Grid extends ManagedList
     }
 
     /**
-     * @param Column[] $columns
+     * Sets grid columns
+     *
+     * @param Column[]|Traversable $columns
      * @return $this
      */
     public function setColumns($columns)
@@ -96,6 +127,12 @@ class Grid extends ManagedList
         return $this;
     }
 
+    /**
+     * Creates components registry.
+     *
+     * @param array $components
+     * @return Registry
+     */
     protected function makeComponentRegistry(array $components = [])
     {
         return new Registry($components, $this);

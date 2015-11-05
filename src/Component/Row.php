@@ -6,6 +6,9 @@ use Presentation\Framework\Component\CompoundComponent;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Grids\Grid;
 
+/**
+ * Grid row with automatically generated columns based on grid columns configuration.
+ */
 class Row extends CompoundComponent implements InitializableInterface
 {
     use InitializableTrait;
