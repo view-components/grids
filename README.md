@@ -40,9 +40,20 @@ Do not close terminal.
 
 ## Testing
 
+#### Overview
+
+The package bundled with phpunit tests and web-application for integration/acceptance tests using codeception.
+
+#### Running Unit Tests
+
+Just execute phpunit from package folder.
+
 ```bash
 phpunit
 ```
+Package dependencies must be installed via composer (just run composer install).
+
+
 ## License
 
 © 2015 Vitalii Stepanenko
