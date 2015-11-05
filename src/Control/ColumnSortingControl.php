@@ -13,7 +13,6 @@ use Presentation\Framework\Input\InputOption;
 
 class ColumnSortingControl extends ViewAggregate implements ControlInterface
 {
-
     const DELIMITER = '-dir-';
     /**
      * @var
@@ -77,6 +76,11 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
         return compact('asc','desc');
     }
 
+    /**
+     * Renders component.
+     *
+     * @return string
+     */
     public function render()
     {
         $this->getView()->setData([
@@ -85,6 +89,4 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
         ]);
         return parent::render();
     }
-
-
 }
