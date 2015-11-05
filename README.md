@@ -13,14 +13,36 @@ Bindings for app. frameworks like Laravel, Symfony, Yii, etc. will be available 
 
 ## Demo Application
 
-To start demo application, clone this repository, install dependencies via composer and run following command: 
+1. Clone this repository
 
 ```bash
-php -S localhost:9000 tests\webapp\index.php
+git clone https://github.com/presentation-framework/grids.git
+cd grids
+```
+
+2. Install [Composer](https://getcomposer.org/) if it's not installed
+
+3. Install Composer dependencies
+
+ ```bash
+ composer install
+ ```
+
+3. Create .env file
+
+```bash
+cp tests/.env.example tests/.env
+
+```
+
+4.  Start built-in php web server
+
+```bash
+php -S localhost:9000 tests/webapp/index.php
 ```
 Do not close terminal.
 
-Now open [http://localhost:9000/](http://localhost:9000/) in browser.
+5. Now open [http://localhost:9000/](http://localhost:9000/) in browser
 
 ## Testing
 
