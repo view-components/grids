@@ -173,8 +173,7 @@ class Controller extends AbstractController
 
 
     /**
-     *
-     * @return string
+     * Pagination inside table footer
      */
     public function demo6()
     {
@@ -192,6 +191,8 @@ class Controller extends AbstractController
     }
 
     /**
+     * Column sorting
+     *
      * @return string
      */
     public function demo7()
@@ -200,7 +201,7 @@ class Controller extends AbstractController
         $grid = new Grid($provider, [
             new Column('id'),
             new Column('name'),
-            $roleColumn = new Column('role'),
+            new Column('role'),
             new Column('birthday'),
         ]);
 
