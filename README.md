@@ -18,7 +18,6 @@ Bindings for app. frameworks like Laravel, Symfony, Yii, etc. will be available 
 git clone https://github.com/presentation-framework/grids.git
 cd grids
 ```
-
 2. Install [Composer](https://getcomposer.org/) if it's not installed
 
 3. Install Composer dependencies
@@ -31,7 +30,6 @@ cd grids
 cp tests/.env.example tests/.env
 
 ```
-
 5.  Start built-in php web server
 ```bash
 php -S localhost:9000 tests/webapp/index.php
