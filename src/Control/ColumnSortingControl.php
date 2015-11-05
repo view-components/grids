@@ -17,7 +17,7 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
     /**
      * @var string
      */
-    protected $columnName;
+    protected $fieldName;
     /**
      * @var InputOption
      */
@@ -34,20 +34,20 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
             return null;
         }
         list($columnName, $direction) = explode(static::DELIMITER, $this->inputOption->getValue());
-        if ($columnName !== $this->columnName) {
+        if ($columnName !== $this->fieldName) {
             return null;
         }
         return $direction;
     }
 
     /**
-     * @param string $columnName
+     * @param string $fieldName
      * @param InputOption $input
      * @param ComponentInterface|null $view
      */
-    public function __construct($columnName, InputOption $input, ComponentInterface $view = null)
+    public function __construct($fieldName, InputOption $input, ComponentInterface $view = null)
     {
-        $this->columnName = $columnName;
+        $this->fieldName = $fieldName;
         $this->inputOption = $input;
         parent::__construct($view);
     }
@@ -63,7 +63,7 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
         if ($direction === null) {
             return new DummyOperation();
         }
-        return new SortOperation($this->columnName, $direction);
+        return new SortOperation($this->fieldName, $direction);
     }
 
     /**
@@ -83,10 +83,10 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
     {
         $url = Url::createFromServer($_SERVER);
         $asc = $url->mergeQuery(
-            Query::createFromArray([$this->inputOption->getKey() => $this->columnName . static::DELIMITER . SortOperation::ASC])
+            Query::createFromArray([$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::ASC])
         );
         $desc = $url->mergeQuery(
-            Query::createFromArray([$this->inputOption->getKey() => $this->columnName . static::DELIMITER . SortOperation::DESC])
+            Query::createFromArray([$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::DESC])
         );
         return compact('asc','desc');
     }

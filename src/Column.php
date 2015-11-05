@@ -12,7 +12,7 @@ use Presentation\Framework\Component\Text;
 class Column
 {
     /**
-     * Field name.
+     * Column name.
      *
      * @var string
      */
@@ -46,12 +46,12 @@ class Column
     /**
      * Constructor.
      *
-     * @param string|null $name column unique name for internal usage
+     * @param string|null $columnName column unique name for internal usage
      * @param string|null $label column label
      */
-    public function __construct($name, $label = null)
+    public function __construct($columnName, $label = null)
     {
-        $this->setName($name);
+        $this->setName($columnName);
         $this->setLabel($label);
         $this->titleView = (new Text())
             ->setValue([$this, 'getLabel']);
