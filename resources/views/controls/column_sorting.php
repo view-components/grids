@@ -5,7 +5,7 @@
         <?php if($order === 'asc'): ?>
             style="text-decoration: none; color: green;"
         <?php else: ?>
-            style="text-decoration: none;"
+            style="text-decoration: none; color:dodgerblue;"
             href="<?= $links['asc'] ?>"
         <?php endif ?>
         >
@@ -16,7 +16,7 @@
         <?php if($order === 'desc'): ?>
             style="text-decoration: none; color: green;"
         <?php else: ?>
-            style="text-decoration: none;"
+            style="text-decoration: none; color:dodgerblue;"
             href="<?= $links['desc'] ?>"
         <?php endif ?>
         >
