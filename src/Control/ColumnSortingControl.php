@@ -15,7 +15,7 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
 {
     const DELIMITER = '-dir-';
     /**
-     * @var
+     * @var string
      */
     protected $columnName;
     /**
@@ -23,6 +23,11 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
      */
     private $inputOption;
 
+    /**
+     * Returns sorting direction for attached column if specified in input.
+     *
+     * @return string|null 'asc', 'desc' or null
+     */
     protected function getDirection()
     {
         if (!$this->inputOption->hasValue()) {
@@ -47,6 +52,11 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
         parent::__construct($view);
     }
 
+    /**
+     * Creates operation for data provider.
+     *
+     * @return DummyOperation|SortOperation
+     */
     public function getOperation()
     {
         $direction = $this->getDirection();
@@ -64,7 +74,12 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
         return parent::getView();
     }
 
-    protected function getLinks()
+    /**
+     * Build links for sorting based on current URL's.
+     *
+     * @return array resulting array contains 'asc' and 'desc' keys with corresponding URL's for sorting.
+     */
+    protected function makeLinks()
     {
         $url = Url::createFromServer($_SERVER);
         $asc = $url->mergeQuery(
@@ -85,7 +100,7 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
     {
         $this->getView()->setData([
             'order' => $this->getDirection(),
-            'links' => $this->getLinks()
+            'links' => $this->makeLinks()
         ]);
         return parent::render();
     }
