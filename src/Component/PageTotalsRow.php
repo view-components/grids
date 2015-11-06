@@ -4,19 +4,11 @@ namespace Presentation\Grids\Component;
 
 use Closure;
 use LogicException;
-use Nayjest\Tree\NodeTrait;
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Base\ComponentTrait;
-use Presentation\Framework\Rendering\ViewTrait;
+use Presentation\Framework\Base\AbstractComponent;
 use Presentation\Grids\Grid;
 
-class PageTotalsRow implements ComponentInterface, InitializableInterface
+class PageTotalsRow extends AbstractComponent implements  InitializableInterface
 {
-    use NodeTrait;
-    use ComponentTrait {
-        ComponentTrait::render as private renderInternal;
-    }
-    use ViewTrait;
     use InitializableTrait;
 
     const OPERATION_SUM = 'sum';
@@ -92,7 +84,7 @@ class PageTotalsRow implements ComponentInterface, InitializableInterface
             });
         }
 
-        $output = $this->renderInternal();
+        $output = parent::render();
 
         // restore column value calculators & formatters
         foreach ($this->grid->getColumns() as $column) {
