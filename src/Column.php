@@ -2,6 +2,7 @@
 
 namespace Presentation\Grids;
 
+use Nayjest\Manipulator\Manipulator;
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\Text;
@@ -43,6 +44,12 @@ class Column
     /** @var  string|null */
     protected $dataFieldName;
 
+    /** @var  callable|null */
+    protected $valueCalculator;
+
+    /** @var  callable|null */
+    protected $valueFormatter;
+
     /**
      * Constructor.
      *
@@ -57,7 +64,7 @@ class Column
             ->setValue([$this, 'getLabel']);
 
         $this->dataView = (new Text())
-            ->setValue([$this, 'extractValueFromCurrentRow']);
+            ->setValue([$this, 'getCurrentValueFormatted']);
     }
 
     /**
@@ -73,11 +80,41 @@ class Column
         return $this->dataCell;
     }
 
-    public function extractValueFromCurrentRow()
+    /**
+     * Returns formatted value of current data cell.
+     *
+     * @return string
+     */
+    public function getCurrentValueFormatted()
     {
-        $row = $this->grid->getCurrentRow();
-        $fieldName = $this->getDataFieldName();
-        return property_exists($row, $fieldName) ? $row->{$fieldName} : '?';
+        return $this->formatValue($this->getCurrentValue());
+    }
+
+    /**
+     * Formats value extracted from data row.
+     *
+     * @param $value
+     * @return string
+     */
+    public function formatValue($value)
+    {
+        $formatter = $this->getValueFormatter();
+        return (string)($formatter ? call_user_func($formatter, $value): $value);
+    }
+
+    /**
+     * Returns current data cell value.
+     *
+     * @return mixed
+     */
+    public function getCurrentValue()
+    {
+        $func = $this->getValueCalculator();
+        if ($func !== null) {
+            return call_user_func($func, $this->grid->getCurrentRow());
+        } else {
+            return Manipulator::getValue($this->grid->getCurrentRow(), $this->getDataFieldName());
+        }
     }
 
     /**
@@ -112,6 +149,42 @@ class Column
     public function getDataFieldName()
     {
         return $this->dataFieldName ?: $this->getName();
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getValueCalculator()
+    {
+        return $this->valueCalculator;
+    }
+
+    /**
+     * @param $valueCalculator
+     * @return $this
+     */
+    public function setValueCalculator(callable $valueCalculator = null)
+    {
+        $this->valueCalculator = $valueCalculator;
+        return $this;
+    }
+
+    /**
+     * @param callable|null $valueFormatter
+     * @return Column
+     */
+    public function setValueFormatter($valueFormatter)
+    {
+        $this->valueFormatter = $valueFormatter;
+        return $this;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getValueFormatter()
+    {
+        return $this->valueFormatter;
     }
 
     protected function updateGrid()

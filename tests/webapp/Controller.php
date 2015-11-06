@@ -1,6 +1,7 @@
 <?php
 namespace Presentation\Grids\Demo;
 
+use DateTime;
 use Presentation\Framework\Component\ManagedList\Control\FilterControl;
 use Presentation\Framework\Component\ManagedList\Control\PaginationControl;
 use Presentation\Framework\Component\Text;
@@ -145,32 +146,44 @@ class Controller extends AbstractController
         return $this->page($grid, 'Pagination');
     }
 
+
     /**
-     * Totals
+     * Column: custom value + PageTotalsRow
      *
      * @return string
      */
     public function demo5()
     {
         $provider = $this->getDataProvider();
-
-        $input = new InputSource($_GET);
         $grid = new Grid($provider, [
             new Column('id'),
             new Column('name'),
             new Column('role'),
             new Column('birthday'),
-        ]);
-        $grid->components()->getControlRow()->addChildren([
-            new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
-            new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
-            new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
-        ]);
-        $grid->compose('container', 'pagination', new PaginationControl($input->option('page', 1), 5, $provider));
-        $grid->components()->getTableFooter()->addChild(new PageTotalsRow());
-        return $this->page($grid, 'Page Totals');
-    }
+            (new Column('age'))
+                ->setValueCalculator(function ($row) {
+                    return DateTime
+                        ::createFromFormat('Y-m-d', $row->birthday)
+                        ->diff(new DateTime('now'))
+                        ->y;
 
+                })
+                ->setValueFormatter(function($val) {return "$val years";})
+            ,
+            (new Column('random_number'))
+                ->setValueCalculator(function() {return rand(1,100);})
+        ]);
+
+        $grid->components()->getTableFooter()->addChildren([
+            new PageTotalsRow([
+                'id' => function() {return 'Totals:';},
+                'age' => PageTotalsRow::OPERATION_AVG
+            ]),
+            new SolidRow([new PaginationControl(new InputOption('p', $_GET, 1), 5, $provider)])
+        ]);
+
+        return $this->page($grid, 'Column: custom value + PageTotalsRow');
+    }
 
     /**
      * Pagination inside table footer
@@ -205,7 +218,7 @@ class Controller extends AbstractController
             new Column('birthday'),
         ]);
 
-        foreach($grid->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $column->getTitleCell()->addChild(
                 new ColumnSortingControl(
                     $column->getName(),
