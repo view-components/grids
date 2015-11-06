@@ -61,12 +61,19 @@ class PageTotalsRow implements ComponentInterface, InitializableInterface
     {
         $grid = $this->grid;
         $tr = $grid->components()->getTableRow();
+
+        // remove listener to avoid calculation for total_row itself
         $tr->removeListener('render', $this->dataCollectingCallback);
+
+        // set total_row as current grid row
         $lastRow = $grid->getCurrentRow();
         $grid->setCurrentRow($this->totalData);
+
+        // attach TR here
         $trParent = $tr->parent();
         $tr->attachTo($this);
 
+        // modify columns
         $valueCalculators = [];
         $valueFormatters = [];
         foreach ($this->grid->getColumns() as $column) {
