@@ -17,6 +17,11 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
     private $exitFunction;
 
     /**
+     * Sets exit function.
+     *
+     * You may specify custom exit function to finish application cleanly.
+     * 'exit' will be called after rendering CSV if no exit function specified.
+     *
      * @param callable|null $exitFunction
      * @return $this
      */
