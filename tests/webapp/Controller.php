@@ -12,6 +12,7 @@ use Presentation\Framework\Data\Operation\FilterOperation;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Framework\Rendering\SimpleRenderer;
 use Presentation\Grids\Column;
+use Presentation\Grids\Component\CsvExport;
 use Presentation\Grids\Component\PageTotalsRow;
 use Presentation\Grids\Component\Row;
 use Presentation\Grids\Component\SolidRow;
@@ -102,12 +103,18 @@ class Controller extends AbstractController
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
+                new Column('action')
             ]);
-        $grid->compose('control_row_hider', 'row1', $row = new Row());
+        // clean control_row children in tree config (becouse we can't attach submit_button directly to row as it's readonly)
+        // & updates registry
+        $grid->compose('table_heading', 'control_row', $row = new Row);
+        $submitButton = $grid->components()->getSubmitButton();
+
         $nameFilter = new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET));
         $roleFilter = new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET));
         $row->getCell('name')->addChild($nameFilter);
         $row->getCell('role')->addChild($roleFilter);
+        $row->getCell('action')->addChild($submitButton);
 
         $nameFilter->getView()->setLabel('');
         $roleFilter->getView()->setLabel('');
@@ -233,5 +240,32 @@ class Controller extends AbstractController
         );
 
         return $this->page($grid, 'column sorting');
+    }
+
+    public function demo8()
+    {
+        $provider = $this->getDataProvider();
+        $grid = new Grid($provider, [
+            new Column('id'),
+            new Column('name'),
+            new Column('role'),
+        ]);
+        $grid->components()->getControlRow()->addChild(new CsvExport(new InputOption('csv',$_GET)));
+        return $this->page($grid->render(), 'CSV Export');
+    }
+
+    public function demo9()
+    {
+        $provider = $this->getDataProvider();
+        $grid = new Grid($provider, [
+            new Column('id'),
+            new Column('name'),
+            new Column('role'),
+        ]);
+        $grid->components()->getControlRow()->addChildren([
+            new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET)),
+            new CsvExport(new InputOption('csv',$_GET))
+        ]);
+        return $this->page($grid->render(), 'CSV Export & Filter');
     }
 }

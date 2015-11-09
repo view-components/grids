@@ -3,6 +3,7 @@
 namespace Presentation\Grids;
 
 use Presentation\Framework\Base\ComponentInterface;
+use Presentation\Framework\Component\ManagedList\Control\ControlInterface;
 use Presentation\Framework\Component\ManagedList\ManagedList;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Input\InputSource;
@@ -50,10 +51,8 @@ class Grid extends ManagedList
                         'table_heading' => [
                             'title_row' => [
                             ],
-                            'control_row_hider' => [
-                                'control_row' => [
-                                    'submit_button' => []
-                                ]
+                            'control_row' => [
+                                'submit_button' => []
                             ]
 
                         ],
@@ -155,7 +154,29 @@ class Grid extends ManagedList
 
     protected function buildTree()
     {
+        $tree = parent::buildTree();
         $this->components()->getRepeater()->setCallback([$this, 'setCurrentRow']);
-        return parent::buildTree();
+        $this->manageControlRow();
+        return $tree;
+
+    }
+
+    /**
+     * Hides submit button if control row doesn't contains controls.
+     * Then hides control row if there is no visible components.
+     */
+    protected function manageControlRow()
+    {
+        $controlRow = $this->components()->getControlRow();
+        if ($controlRow) {
+            $submitButton = $this->components()->getSubmitButton();
+            $children = $controlRow->getChildrenRecursive();
+            if ($submitButton && $children->filterByType(ControlInterface::class)->isEmpty()) {
+                $submitButton->hide();
+            }
+            if ($children->filterByProperty('visible', true, true)->isEmpty()) {
+                $controlRow->hide();
+            }
+        }
     }
 }

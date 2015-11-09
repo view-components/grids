@@ -4,14 +4,11 @@ namespace Presentation\Grids;
 
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Component\Html\Tag;
-use Presentation\Framework\Component\ManagedList\Control\ControlInterface;
 use Presentation\Framework\Component\ManagedList\Registry as BaseRegistry;
-use Presentation\Framework\Component\RenderIf;
 use Presentation\Grids\Component\SolidRow;
 
 class Registry extends BaseRegistry
 {
-
     /**
      * Fills registry with required components if it's absent.
      */
@@ -24,14 +21,6 @@ class Registry extends BaseRegistry
         $this->has('table_body') || $this->setTableBody(new Tag('tbody'));
         $this->has('table_footer') || $this->setTableFooter(new Tag('tfoot'));
         $this->has('title_row') || $this->setTitleRow(new Tag('tr'));
-        $this->has('control_row_hider') || $this->set(
-            'control_row_hider',
-            new RenderIf(
-                function (RenderIf $component) {
-                    return !$component->getChildrenRecursive()->filterByType(ControlInterface::class)->isEmpty();
-                }
-            )
-        );
         $this->has('control_row') || $this->setControlRow(new SolidRow());
         parent::useDefaults();
     }
