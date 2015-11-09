@@ -2,9 +2,15 @@
 
 namespace Presentation\Grids\Component;
 
+use League\Url\Query;
+use League\Url\Url;
+use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Base\ViewAggregate;
+use Presentation\Framework\Component\Html\Tag;
+use Presentation\Framework\Component\Text;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Data\Operation\PaginateOperation;
+use Presentation\Framework\Input\InputOption;
 use Presentation\Grids\Grid;
 
 
@@ -15,6 +21,34 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
     private $fileName = 'data.csv';
     private $csvDelimiter = ';';
     private $exitFunction;
+    /**
+     * @var InputOption
+     */
+    private $inputOption;
+
+    public function __construct(InputOption $inputOption = null, ComponentInterface $controlView = null)
+    {
+        $this->inputOption = $inputOption;
+        parent::__construct($controlView);
+    }
+
+    /**
+     * @param InputOption $inputOption
+     * @return CsvExport
+     */
+    public function setInputOption($inputOption)
+    {
+        $this->inputOption = $inputOption;
+        return $this;
+    }
+
+    /**
+     * @return InputOption
+     */
+    public function getInputOption()
+    {
+        return $this->inputOption;
+    }
 
     /**
      * Sets exit function.
@@ -76,7 +110,10 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
 
     protected function initializeInternal(Grid $grid)
     {
-        $grid->onRender([$this, 'renderCsv']);
+        $grid->onRender(function() {
+            if ($this->inputOption->hasValue())
+            $this->renderCsv();
+        });
     }
 
     protected function removePagination(DataProviderInterface $provider)
@@ -133,5 +170,22 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
             exit;
         }
         call_user_func($this->getExitFunction());
+    }
+
+    public function getExportUrl()
+    {
+        $baseUrl = Url::createFromServer($_SERVER);
+        $url = $baseUrl->mergeQuery(
+            Query::createFromArray([$this->inputOption->getKey() => 1])
+        );
+        return $url;
+    }
+
+    protected function makeDefaultView()
+    {
+        $href = $this->getExportUrl();
+        return new Tag('button', [
+            'onclick' => "window.location='$href'; return false;"
+        ], [new Text('CSV Export')]);
     }
 }
