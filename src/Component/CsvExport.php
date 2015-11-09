@@ -185,6 +185,7 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
     {
         $href = $this->getExportUrl();
         return new Tag('button', [
+            'type' => 'button',
             'onclick' => "window.location='$href'; return false;"
         ], [new Text('CSV Export')]);
     }
