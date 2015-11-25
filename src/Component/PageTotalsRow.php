@@ -4,9 +4,14 @@ namespace Presentation\Grids\Component;
 
 use Closure;
 use LogicException;
+use Nayjest\TreeInit\InitializableTrait;
+use Nayjest\TreeInit\InitializableInterface;
 use Presentation\Framework\Base\AbstractComponent;
 use Presentation\Grids\Grid;
 
+/**
+ * Class PageTotalsRow
+ */
 class PageTotalsRow extends AbstractComponent implements  InitializableInterface
 {
     use InitializableTrait;
@@ -41,7 +46,9 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
         $this->operations = $operations;
         $this->dataCollectingCallback = function () {
             $this->rowsProcessed++;
-            foreach ($this->grid->getColumns() as $column) {
+            /** @var Grid $grid */
+            $grid = $this->getInitializer();
+            foreach ($grid->getColumns() as $column) {
                 $this->pushData($column->getName(), $column->getCurrentValue());
             }
         };
@@ -51,8 +58,9 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
 
     public function render()
     {
-        $grid = $this->grid;
-        $tr = $grid->components()->getTableRow();
+        /** @var Grid $grid */
+        $grid = $this->getInitializer();
+        $tr = $grid->getTableRow();
 
         // remove listener to avoid calculation for total_row itself
         $tr->removeListener('render', $this->dataCollectingCallback);
@@ -63,12 +71,13 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
 
         // attach TR here
         $trParent = $tr->parent();
+        $tr->unlock();
         $tr->attachTo($this);
 
         // modify columns
         $valueCalculators = [];
         $valueFormatters = [];
-        foreach ($this->grid->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $valueCalculators[$column->getName()] = $column->getValueCalculator();
             $valueFormatters[$column->getName()] = $prevFormatter = $column->getValueFormatter();
             $column->setValueCalculator(null);
@@ -87,7 +96,7 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
         $output = parent::render();
 
         // restore column value calculators & formatters
-        foreach ($this->grid->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $column->setValueCalculator($valueCalculators[$column->getName()]);
             $column->setValueFormatter($valueFormatters[$column->getName()]);
         }
@@ -95,7 +104,7 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
         // restore last data row
         $grid->setCurrentRow($lastRow);
         // restore TR parent
-        $tr->attachTo($trParent);
+        $tr->attachTo($trParent)->lock();
 
         return $output;
     }
@@ -166,12 +175,14 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
 
     /**
      * @param Grid $grid
+     * @return bool
      */
-    protected function initializeInternal(Grid $grid)
+    protected function initializeInternal($grid)
     {
         // attach event handler to TR inside grid.onRender to guarantee that TR will not be changed.
         $grid->onRender(function (Grid $grid) {
-            $grid->components()->getTableRow()->onRender($this->dataCollectingCallback);
+            $grid->getTableRow()->onRender($this->dataCollectingCallback);
         });
+        return true;
     }
 }

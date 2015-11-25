@@ -12,6 +12,8 @@ class ColumnCollection extends ObjectCollection
     /** @var Grid  */
     protected $grid;
 
+    private $isUpdateRunning = false;
+
     /**
      * ColumnCollection constructor.
      * @param Grid $grid
@@ -37,18 +39,58 @@ class ColumnCollection extends ObjectCollection
         $this->updateGridInternal();
         return $this;
     }
-
+//
+//    protected function addColumnToGrid(Column $column)
+//    {
+//        $grid = $this->grid;
+//        $titleComponentName = 'column_' . $column->getName() . '_title';
+//        $grid->appendComponent(
+//                'title_row',
+//                $titleComponentName,
+//                $column->getTitleCell()
+//        );
+//        $dataCellComponentName = 'column_' . $column->getName() . '_data_cell';
+//        $grid->appendComponent(
+//                'title_row',
+//                $dataCellComponentName,
+//                $column->getDataCell()
+//        );
+//    }
     /**
      * Updates grid structure with columns.
      */
     public function updateGridInternal()
     {
+        if ($this->isUpdateRunning) {
+            return;
+        }
+        $this->isUpdateRunning = true;
         $grid = $this->grid;
         /** @var Column[] $columns */
         $columns = $this->items();
         foreach($columns as $column) {
-            $grid->compose('title_row', 'column_' . $column->getName() . '_title', $column->getTitleCell());
-            $grid->compose('record_view', 'column_' . $column->getName() . '_data_cell', $column->getDataCell());
+            $titleComponentName = 'column_' . $column->getName() . '_title';
+            if ($grid->hasComponent($titleComponentName)) {
+                $grid->setComponent($titleComponentName, $column->getTitleCell());
+            } else {
+                $grid->appendComponent(
+                    'title_row',
+                    $titleComponentName,
+                    $column->getTitleCell()
+                );
+            }
+
+            $dataCellComponentName = 'column_' . $column->getName() . '_data_cell';
+            if ($grid->hasComponent($dataCellComponentName)) {
+                $grid->setComponent($dataCellComponentName, $column->getDataCell());
+            } else {
+                $grid->appendComponent(
+                    'record_view',
+                    $dataCellComponentName,
+                    $column->getDataCell()
+                );
+            }
         }
+        $this->isUpdateRunning = false;
     }
 }

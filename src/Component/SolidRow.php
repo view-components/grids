@@ -14,13 +14,8 @@ use Presentation\Grids\Grid;
  * it's "cell" component children.
  *
  */
-class SolidRow extends CompoundContainer implements InitializableInterface
+class SolidRow extends CompoundContainer
 {
-    use InitializableTrait;
-
-    protected $rowTag;
-    protected $cellTag;
-
     /**
      * SolidRow constructor.
      *
@@ -33,12 +28,12 @@ class SolidRow extends CompoundContainer implements InitializableInterface
     public function __construct($components = [], $cellTagName = 'td', $columnsCount = null)
     {
         parent::__construct(
-            ['row'=>['cell']],
+            ['row_tag' => ['cell_tag' => []]],
             [
-                'row' => new Tag('tr', ['data-role'=> 'solid-row']),
-                'cell' => new Tag($cellTagName, ['colspan' => $columnsCount], $components)
+                'row_tag' => new Tag('tr', ['data-role' => 'solid-row']),
+                'cell_tag' => new Tag($cellTagName, ['colspan' => $columnsCount], $components)
             ],
-            'cell'
+            'cell_tag'
         );
     }
 
@@ -47,7 +42,7 @@ class SolidRow extends CompoundContainer implements InitializableInterface
      */
     public function getCellTag()
     {
-        return $this->components()->get('cell');
+        return $this->getComponent('cell_tag');
     }
 
     /**
@@ -55,20 +50,24 @@ class SolidRow extends CompoundContainer implements InitializableInterface
      */
     public function getRowTag()
     {
-        return $this->components()->get('row');
+        return $this->getComponent('row_tag');
     }
 
-    protected function provideColspanAttribute()
+    private function provideColspanAttribute()
     {
         /** @var Tag $cell */
         $cell = $this->getCellTag();
-        if ($cell->getAttribute('colspan') === null) {
-            $cell->setAttribute('colspan', count($this->grid->getColumns()));
+        if (
+            ($cell->getAttribute('colspan') === null)
+            && ($grid = $this->parents()->findByType(Grid::class))
+        ) {
+            $cell->setAttribute('colspan', count($grid->getColumns()));
         }
     }
 
-    protected function initializeInternal(Grid $grid)
+    public function render()
     {
         $this->provideColspanAttribute();
+        return parent::render();
     }
 }

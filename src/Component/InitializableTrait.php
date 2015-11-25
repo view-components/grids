@@ -4,7 +4,7 @@ namespace Presentation\Grids\Component;
 use Nayjest\Tree\NodeCollection;
 use Presentation\Grids\Grid;
 
-trait InitializableTrait
+trait InitializableTrait1
 {
     private $initialized = false;
 
@@ -13,37 +13,26 @@ trait InitializableTrait
     /** @var Grid */
     protected $grid;
 
-    /**
-     * @return NodeCollection
-     */
-    abstract protected function children();
-
     final public function initialize(Grid $grid)
     {
         if ($this->initialized) {
             return;
         }
         $this->grid = $grid;
-        $this->enableDeferredInitialization($grid);
         $this->initializeInternal($grid);
         $this->initialized = true;
-    }
-
-    final protected function enableDeferredInitialization($grid)
-    {
-        $collection = $this->children();
-        if (!$collection->isWritable()) {
-            $collection = $this->collection;
-        }
-        $collection->onItemAdd(function($item) use($grid) {
-            if ($item instanceof InitializableInterface) {
-                $item->initialize($grid);
-            }
-        });
     }
 
     final public function isInitialized()
     {
         return $this->initialized;
     }
+//
+//    public function render()
+//    {
+//        if ($grid = $this->parents()->findByType(Grid::class)) {
+//            $this->initialize($grid);
+//        }
+//        return parent::render();
+//    }
 }

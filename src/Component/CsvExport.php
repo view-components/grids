@@ -4,6 +4,8 @@ namespace Presentation\Grids\Component;
 
 use League\Url\Query;
 use League\Url\Url;
+use Nayjest\TreeInit\InitializableTrait;
+use Nayjest\TreeInit\InitializableInterface;
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Base\ViewAggregate;
 use Presentation\Framework\Component\Html\Tag;
@@ -12,7 +14,6 @@ use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Data\Operation\PaginateOperation;
 use Presentation\Framework\Input\InputOption;
 use Presentation\Grids\Grid;
-
 
 class CsvExport extends ViewAggregate implements  InitializableInterface
 {
@@ -108,12 +109,17 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
         return $this->fileName;
     }
 
-    protected function initializeInternal(Grid $grid)
+    /**
+     * @param Grid $grid
+     * @return bool
+     */
+    protected function initializeInternal($grid)
     {
         $grid->onRender(function() {
             if ($this->inputOption->hasValue())
             $this->renderCsv();
         });
+        return true;
     }
 
     protected function removePagination(DataProviderInterface $provider)
@@ -123,6 +129,7 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
             $provider->operations()->remove($pagination);
         }
     }
+
     protected function renderCsv()
     {
         $file = fopen('php://output', 'w');
@@ -130,14 +137,15 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
         header('Content-Disposition: attachment; filename="'. $this->getFileName() .'"');
         header('Pragma: no-cache');
         set_time_limit(0);
-
-        $provider = $this->grid->getDataProvider();
+        /** @var Grid $grid */
+        $grid = $this->getInitializer();
+        $provider = $grid->getDataProvider();
         $this->renderHeadingRow($file);
         $this->removePagination($provider);
         foreach($provider as $row) {
             $output = [];
-            $this->grid->setCurrentRow($row);
-            foreach ($this->grid->getColumns() as $column) {
+            $grid->setCurrentRow($row);
+            foreach ($grid->getColumns() as $column) {
                     $output[] = $this->escapeString($column->getCurrentValueFormatted());
 
             }
@@ -158,7 +166,9 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
     protected function renderHeadingRow($file)
     {
         $output = [];
-        foreach ($this->grid->getColumns() as $column) {
+        /** @var Grid $grid */
+        $grid = $this->getInitializer();
+        foreach ($grid->getColumns() as $column) {
                 $output[] = $this->escapeString($column->getLabel());
         }
         fputcsv($file, $output, $this->getCsvDelimiter());

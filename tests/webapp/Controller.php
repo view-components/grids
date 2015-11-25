@@ -84,11 +84,11 @@ class Controller extends AbstractController
                 new Column('name'),
                 new Column('role'),
             ]);
-        $grid->components()->getControlRow()->addChildren([
+        $grid->getControlContainer()->addChildren([
             new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET)),
             new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET))
         ]);
-        $grid->components()->getTableHeading()->addChild(
+        $grid->getComponent('table_heading')->addChild(
             (new SolidRow([new Text('additional row')]))->setSortPosition(2)
         );
         return $this->page($grid->render(), 'Filters');
@@ -105,15 +105,15 @@ class Controller extends AbstractController
                 new Column('role'),
                 new Column('action')
             ]);
-        // clean control_row children in tree config (becouse we can't attach submit_button directly to row as it's readonly)
-        // & updates registry
-        $grid->compose('table_heading', 'control_row', $row = new Row);
-        $submitButton = $grid->components()->getSubmitButton();
+        $grid->appendComponent('table_heading', 'control_row2', $row= new Row());
 
         $nameFilter = new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET));
         $roleFilter = new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET));
         $row->getCell('name')->addChild($nameFilter);
         $row->getCell('role')->addChild($roleFilter);
+        $submitButton = $grid->getSubmitButton();
+        $grid->removeComponent('submit_button');
+        $grid->removeComponent('control_row');
         $row->getCell('action')->addChild($submitButton);
 
         $nameFilter->getView()->setLabel('');
@@ -123,34 +123,99 @@ class Controller extends AbstractController
     }
 
     /**
-     * Pagination
-     *
-     * @return string
-     */
+ * Pagination
+ *
+ * @return string
+ */
     public function demo4()
     {
         $provider = $this->getDataProvider();
-        $grid = new Grid();
         $input = new InputSource($_GET);
-        $grid
-            ->setDataProvider($provider)
-            ->setColumns([
+
+        $grid = new Grid(
+            $provider,
+            [
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
                 new Column('birthday'),
-            ]);
-        $grid->components()->getControlRow()->addChildren([
-            new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
-            new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
-            new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
-        ]);
-
-        $p = new PaginationControl($input->option('page', 1), 5, $provider);
-        $p->setSortPosition(2);
-        $grid->components()->getContainer()->addChild($p);
-
+            ],
+            [
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
+                new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
+                new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
+                new PaginationControl($input->option('page', 1), 5, $provider)
+            ]
+        );
         return $this->page($grid, 'Pagination');
+    }
+
+    /**
+     * Pagination in table footer, multiple grids
+     *
+     * @return string
+     */
+    public function demo5()
+    {
+        $input = new InputSource($_GET);
+        # Solution A
+        # Attach pagination to grid, then move it to another part of tree using Tree API
+        $provider = $this->getDataProvider();
+        $grid1 = new Grid(
+            $provider,
+            [
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+            ],
+            [
+                $p = new PaginationControl($input->option('g1_page', 1), 5, $provider)
+            ]
+        );
+        $grid1->appendComponent('table_footer', 'footer_row', new SolidRow);
+        $grid1->moveComponent($p->getComponentName(), 'footer_row');
+
+        # Solution B
+        $provider = $this->getDataProvider();
+        $grid2 = new Grid(
+            $provider,
+            [
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+            ]
+        );
+        (new SolidRow)
+            ->addChild(
+                new PaginationControl($input->option('g2_page', 1), 5, $provider)
+            )
+            ->attachTo($grid2->getTableFooter());
+
+        # Solution C
+        $provider = $this->getDataProvider();
+        $grid3 = new Grid(
+            $provider,
+            [
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+            ]
+        );
+        # SolidRow will be accessible via $grid->getComponent('footer_row')
+        # It would be convenient if you are planning to work with that component later
+        $grid3->appendComponent(
+            'table_footer',
+            'footer_row',
+            (new SolidRow)
+                ->addChild(
+                    new PaginationControl($input->option('g3_page', 1), 5, $provider)
+                )
+        );
+
+        return $this->page("$grid1 <hr> $grid2 <hr> $grid3", ' Pagination in table footer, multiple grids');
     }
 
 
@@ -159,7 +224,7 @@ class Controller extends AbstractController
      *
      * @return string
      */
-    public function demo5()
+    public function demo6()
     {
         $provider = $this->getDataProvider();
         $grid = new Grid($provider, [
@@ -181,7 +246,7 @@ class Controller extends AbstractController
                 ->setValueCalculator(function() {return rand(1,100);})
         ]);
 
-        $grid->components()->getTableFooter()->addChildren([
+        $grid->getComponent('table_footer')->addChildren([
             new PageTotalsRow([
                 'id' => function() {return 'Totals:';},
                 'age' => PageTotalsRow::OPERATION_AVG
@@ -192,23 +257,6 @@ class Controller extends AbstractController
         return $this->page($grid, 'Column: custom value + PageTotalsRow');
     }
 
-    /**
-     * Pagination inside table footer
-     */
-    public function demo6()
-    {
-        $provider = $this->getDataProvider();
-        $grid = new Grid($provider, [
-            new Column('id'),
-            new Column('name'),
-            new Column('role'),
-            new Column('birthday'),
-        ]);
-        $grid->components()->getTableFooter()->addChild(
-            new SolidRow([new PaginationControl(new InputOption('p', $_GET, 1), 5, $provider)])
-        );
-        return $this->page($grid, 'Pagination inside table footer');
-    }
 
     /**
      * Column sorting
@@ -218,12 +266,15 @@ class Controller extends AbstractController
     public function demo7()
     {
         $provider = $this->getDataProvider();
-        $grid = new Grid($provider, [
+        $grid = new Grid($provider,
+            [
             new Column('id'),
             new Column('name'),
             new Column('role'),
             new Column('birthday'),
-        ]);
+        ],
+            [new PaginationControl(new InputOption('p', $_GET, 1), 5, $provider)]
+        );
 
         foreach ($grid->getColumns() as $column) {
             $column->getTitleCell()->addChild(
@@ -234,11 +285,6 @@ class Controller extends AbstractController
                 )
             );
         }
-
-        $grid->components()->getTableFooter()->addChild(
-            new SolidRow([new PaginationControl(new InputOption('p', $_GET, 1), 5, $provider)])
-        );
-
         return $this->page($grid, 'column sorting');
     }
 
@@ -250,22 +296,26 @@ class Controller extends AbstractController
             new Column('name'),
             new Column('role'),
         ]);
-        $grid->components()->getControlRow()->addChild(new CsvExport(new InputOption('csv',$_GET)));
+        $grid->getControlRow()->addChild(new CsvExport(new InputOption('csv',$_GET)));
         return $this->page($grid->render(), 'CSV Export');
     }
 
     public function demo9()
     {
         $provider = $this->getDataProvider();
-        $grid = new Grid($provider, [
-            new Column('id'),
-            new Column('name'),
-            new Column('role'),
-        ]);
-        $grid->components()->getControlRow()->addChildren([
-            new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET)),
-            new CsvExport(new InputOption('csv',$_GET))
-        ]);
+        $input = new InputSource($_GET);
+        $grid = new Grid($provider,
+            [
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+            ],
+            [
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
+                new PaginationControl($input->option('page', 1), 5, $provider),
+                new CsvExport($input->option('csv')),
+            ]
+        );
         return $this->page($grid->render(), 'CSV Export & Filter');
     }
 }

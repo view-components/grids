@@ -23,6 +23,11 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
      */
     private $inputOption;
 
+    public function isManualFormSubmitRequired()
+    {
+        return false;
+    }
+
     /**
      * Returns sorting direction for attached column if specified in input.
      *

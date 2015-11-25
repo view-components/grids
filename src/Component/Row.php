@@ -9,10 +9,8 @@ use Presentation\Grids\Grid;
 /**
  * Grid row with automatically generated columns based on grid columns configuration.
  */
-class Row extends CompoundComponent implements InitializableInterface
+class Row extends CompoundComponent
 {
-    use InitializableTrait;
-
     public function __construct()
     {
         parent::__construct(
@@ -29,7 +27,7 @@ class Row extends CompoundComponent implements InitializableInterface
      */
     protected function getTr()
     {
-        return $this->components()->get('tr');
+        return $this->getComponent('tr');
     }
 
     /**
@@ -38,38 +36,35 @@ class Row extends CompoundComponent implements InitializableInterface
      */
     public function getCell($columnName)
     {
-        $column = $this->components()->get('column-' . $columnName);
+        $column = $this->getComponent('column-' . $columnName);
         return $column ?: $this->createColumn($columnName);
     }
 
     protected function createColumn($name)
     {
-        $tree = $this->getTreeConfig();
         $name = 'column-' . $name;
-        if (!array_key_exists($name, $tree['tr'])) {
-            $tree['tr'][$name] = [];
-        }
-        $column = new Tag('td');
-        $this->components()->set($name, $column);
-        $this->setTreeConfig($tree);
+        $this->appendComponent('tr', $name, $column = new Tag('td'));
         return $column;
 
     }
 
-    protected function createCells()
+    private function updateColumns()
     {
+        /** @var Grid $grid */
+        $grid = $this->parents()->findByType(Grid::class);
+        if (!$grid) {
+            return;
+        }
         $i = 1;
-        foreach ($this->grid->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $this->getCell($column->getName())->setSortPosition($i);
             $i++;
         }
     }
 
-    /**
-     * @param Grid $grid
-     */
-    protected function initializeInternal(Grid $grid)
+    public function render()
     {
-        $this->createCells();
+        $this->updateColumns();
+        return parent::render();
     }
 }

@@ -2,19 +2,26 @@
 
 namespace Presentation\Grids;
 
+use Nayjest\TreeInit\InitializerInterface;
+use Nayjest\TreeInit\InitializerTrait;
 use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Component\ManagedList\Control\ControlInterface;
+use Presentation\Framework\Base\RepeaterInterface;
+use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\ManagedList\ManagedList;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\InitializableInterface;
+use Presentation\Grids\Component\SolidRow;
 use Traversable;
 
 /**
  * Grid component.
  */
-class Grid extends ManagedList
+class Grid extends ManagedList implements InitializerInterface
 {
+    use GridPartsAccessTrait;
+    use InitializerTrait;
+
     /** @var  InputSource */
     protected $inputSource;
 
@@ -29,10 +36,11 @@ class Grid extends ManagedList
      *
      * @param DataProviderInterface|null $dataProvider
      * @param Column[] $columns empty by default
+     * @param ComponentInterface[] $components empty by default
      */
-    public function __construct($dataProvider = null, array $columns = [])
+    public function __construct($dataProvider = null, array $columns = [], array $components = [])
     {
-        parent::__construct($dataProvider);
+        parent::__construct($dataProvider, null, $components);
         $this->columnCollection = new ColumnCollection($this);
         $this->setColumns($columns);
     }
@@ -42,23 +50,27 @@ class Grid extends ManagedList
      *
      * @return array
      */
-    public function getDefaultTreeConfig()
+    protected function makeDefaultHierarchy()
     {
         return [
             'container' => [
+                'title' => [],
                 'form' => [
                     'table' => [
                         'table_heading' => [
                             'title_row' => [
                             ],
                             'control_row' => [
-                                'submit_button' => []
+                                'control_container' => [],
+                                'submit_button' => [],
                             ]
 
                         ],
                         'table_body' => [
-                            'repeater' => [
-                                'record_view' => [
+                            'list_container' => [
+                                'repeater' => [
+                                    'record_view' => [
+                                    ]
                                 ]
                             ]
                         ],
@@ -68,6 +80,43 @@ class Grid extends ManagedList
                 ]
             ]
         ];
+    }
+
+    protected function makeDefaultComponents()
+    {
+        $components =  array_merge(
+            parent::makeDefaultComponents(),
+            [
+                'record_view' => new Tag('tr'), //override
+                'table' => new Tag('table'),
+                'table_heading' => new Tag('thead'),
+                'table_body' => new Tag('tbody'),
+                'table_footer' => new Tag('tfoot'),
+                'title_row' => new Tag('tr'),
+                'control_row' => new SolidRow(),
+            ]
+        );
+        /** @var RepeaterInterface $repeater */
+        $repeater = $components['repeater'];
+        $repeater->setCallback([$this, 'setCurrentRow']);
+        return $components;
+    }
+
+    /**
+     * @return ComponentInterface|null
+     */
+    public function getTableRow()
+    {
+        return $this->getRecordView();
+    }
+
+    /**
+     * @param ComponentInterface|null $component
+     * @return $this
+     */
+    public function setTableRow(ComponentInterface $component = null)
+    {
+        return $this->setRecordView($component);
     }
 
     /**
@@ -95,16 +144,6 @@ class Grid extends ManagedList
     }
 
     /**
-     * Returns registry of compound components.
-     *
-     * @return Registry|ComponentInterface[]
-     */
-    public function components()
-    {
-        return parent::components();
-    }
-
-    /**
      * Returns collection of grid columns.
      *
      * @return Column[]|ColumnCollection
@@ -126,57 +165,15 @@ class Grid extends ManagedList
         return $this;
     }
 
-    /**
-     * Creates components registry.
-     *
-     * @param array $components
-     * @return Registry
-     */
-    protected function makeComponentRegistry(array $components = [])
-    {
-        return new Registry($components, $this);
-    }
-
     protected function initializeCollection(array $items)
     {
         parent::initializeCollection($items);
-        $this->initializeComponents();
+        $this->startInitialization();
     }
 
-    protected function initializeComponents()
+    protected function prepare()
     {
-        foreach ($this->getChildrenRecursive() as $component) {
-            if ($component instanceof InitializableInterface) {
-                $component->initialize($this);
-            }
-        }
-    }
-
-    protected function buildTree()
-    {
-        $tree = parent::buildTree();
-        $this->components()->getRepeater()->setCallback([$this, 'setCurrentRow']);
-        $this->manageControlRow();
-        return $tree;
-
-    }
-
-    /**
-     * Hides submit button if control row doesn't contains controls.
-     * Then hides control row if there is no visible components.
-     */
-    protected function manageControlRow()
-    {
-        $controlRow = $this->components()->getControlRow();
-        if ($controlRow) {
-            $submitButton = $this->components()->getSubmitButton();
-            $children = $controlRow->getChildrenRecursive();
-            if ($submitButton && $children->filterByType(ControlInterface::class)->isEmpty()) {
-                $submitButton->hide();
-            }
-            if ($children->filterByProperty('visible', true, true)->isEmpty()) {
-                $controlRow->hide();
-            }
-        }
+        parent::prepare();
+        $this->getRepeater()->setCallback([$this, 'setCurrentRow']);
     }
 }

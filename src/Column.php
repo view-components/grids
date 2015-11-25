@@ -2,7 +2,7 @@
 
 namespace Presentation\Grids;
 
-use Nayjest\Manipulator\Manipulator;
+use mp;
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\Text;
@@ -113,7 +113,7 @@ class Column
         if ($func !== null) {
             return call_user_func($func, $this->grid->getCurrentRow());
         } else {
-            return Manipulator::getValue($this->grid->getCurrentRow(), $this->getDataFieldName());
+            return mp\getValue($this->grid->getCurrentRow(), $this->getDataFieldName());
         }
     }
 

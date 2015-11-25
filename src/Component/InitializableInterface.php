@@ -3,7 +3,7 @@ namespace Presentation\Grids\Component;
 
 use Presentation\Grids\Grid;
 
-interface InitializableInterface
+interface InitializableInterface1
 {
     /**
      * @param Grid $grid
