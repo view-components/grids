@@ -10,7 +10,6 @@ use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\ManagedList\ManagedList;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Input\InputSource;
-use Presentation\Grids\Component\InitializableInterface;
 use Presentation\Grids\Component\SolidRow;
 use Traversable;
 
