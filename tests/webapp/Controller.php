@@ -375,6 +375,17 @@ class Controller extends AbstractController
                 new PaginationControl($input('page', 1), 5, $provider),
             ]
         );
+
+        foreach ($grid->getColumns() as $column) {
+            $column->getTitleCell()->addChild(
+                new ColumnSortingControl(
+                    $column->getName(),
+                    new InputOption('sort', $_GET),
+                    new ColumnSortingView($this->getRenderer())
+                )
+            );
+        }
+
         $styling = new BootstrapStyling($this->getResourceManager());
         $styling->apply($grid);
         $this->disableStandardCss = true;
