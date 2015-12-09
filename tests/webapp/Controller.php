@@ -6,12 +6,16 @@ use Presentation\Framework\Component\ManagedList\Control\FilterControl;
 use Presentation\Framework\Component\ManagedList\Control\PageSizeSelectControl;
 use Presentation\Framework\Component\ManagedList\Control\PaginationControl;
 use Presentation\Framework\Component\Text;
+use Presentation\Framework\Customization\Bootstrap\BootstrapStyling;
 use Presentation\Framework\Input\InputOption;
 use Presentation\Framework\Data\ArrayDataProvider;
 use Presentation\Framework\Data\DbTableDataProvider;
 use Presentation\Framework\Data\Operation\FilterOperation;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Framework\Rendering\SimpleRenderer;
+use Presentation\Framework\Resource\AliasRegistry;
+use Presentation\Framework\Resource\IncludedResourcesRegistry;
+use Presentation\Framework\Resource\ResourceManager;
 use Presentation\Grids\Column;
 use Presentation\Grids\Component\CsvExport;
 use Presentation\Grids\Component\PageTotalsRow;
@@ -23,6 +27,8 @@ use Presentation\Grids\Grid;
 
 class Controller extends AbstractController
 {
+    public $disableStandardCss = false;
+
     protected function getUsersData()
     {
         return include(dirname(__DIR__) . '/fixtures/users.php');
@@ -34,6 +40,17 @@ class Controller extends AbstractController
             __DIR__ . '/resources/views',
             dirname(dirname(__DIR__)) . '/resources/views'
         ]);
+    }
+
+    protected function getResourceManager()
+    {
+        return new ResourceManager(
+            new AliasRegistry([
+                'jquery' => '//code.jquery.com/jquery-2.1.4.min.js'
+            ]),
+            new AliasRegistry(),
+            new IncludedResourcesRegistry()
+        );
     }
 
     protected function getDataProvider($operations = [])
@@ -340,5 +357,27 @@ class Controller extends AbstractController
         );
         //$grid->addChild(new PaginationControl($input->option('page', 1), 5, $provider));
         return $this->page($grid->render(), 'PageSizeSelectControl');
+    }
+
+    public function demo11()
+    {
+        $input = new InputSource($_GET);
+        $grid = new Grid($provider = $this->getDataProvider(),
+            [
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+            ],
+            [
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, $input('role')),
+                new PageSizeSelectControl($input('ps', 4), [2,4,10,100]),
+                new CsvExport($input('csv')),
+                new PaginationControl($input('page', 1), 5, $provider),
+            ]
+        );
+        $styling = new BootstrapStyling($this->getResourceManager());
+        $styling->apply($grid);
+        $this->disableStandardCss = true;
+        return $this->page($grid->render(), 'BootstrapStyling');
     }
 }

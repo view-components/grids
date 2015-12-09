@@ -1,9 +1,11 @@
 <html>
-<body>
+<body class="container">
 <?= $this->renderMenu() ?>
 <h1>Test App <?= $title?": <small>$title</small>":'' ?></h1>
 <hr>
 <?= $content ?>
+<?php if (!$this->disableStandardCss): ?>
+</div>
 <style>
     /* TABLES */
     td, th {
@@ -42,6 +44,7 @@
         border: 1px solid gray;
     }
 </style>
+<?php endif ?>
 <?php
 $diff = round((microtime(true) - $_SERVER['start_time']), 4);
 echo '<br>Generation Time: ' . $diff;
