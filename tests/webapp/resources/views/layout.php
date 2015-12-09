@@ -1,7 +1,6 @@
 <html>
 <body>
 <?= $this->renderMenu() ?>
-</body>
 <h1>Test App <?= $title?": <small>$title</small>":'' ?></h1>
 <hr>
 <?= $content ?>
@@ -43,4 +42,9 @@
         border: 1px solid gray;
     }
 </style>
+<?php
+$diff = round((microtime(true) - $_SERVER['start_time']), 4);
+echo '<br>Generation Time: ' . $diff;
+?>
+</body>
 </html>

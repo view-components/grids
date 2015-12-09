@@ -4,24 +4,31 @@ namespace Presentation\Grids\Component;
 
 use League\Url\Query;
 use League\Url\Url;
-use Nayjest\TreeInit\InitializableTrait;
-use Nayjest\TreeInit\InitializableInterface;
 use Presentation\Framework\Base\ComponentInterface;
+use Presentation\Framework\Base\CompoundPartInterface;
+use Presentation\Framework\Base\CompoundPartTrait;
 use Presentation\Framework\Base\ViewAggregate;
+use Presentation\Framework\Component\CompoundComponent;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\Text;
 use Presentation\Framework\Data\DataProviderInterface;
 use Presentation\Framework\Data\Operation\PaginateOperation;
+use Presentation\Framework\Initialization\InitializableInterface;
+use Presentation\Framework\Initialization\InitializableTrait;
 use Presentation\Framework\Input\InputOption;
 use Presentation\Grids\Grid;
 
-class CsvExport extends ViewAggregate implements  InitializableInterface
+class CsvExport extends ViewAggregate implements  InitializableInterface, CompoundPartInterface
 {
-    use InitializableTrait;
+    use InitializableTrait {
+        InitializableTrait::initialize as private initializeInternal;
+    }
+    use CompoundPartTrait;
 
     private $fileName = 'data.csv';
     private $csvDelimiter = ';';
     private $exitFunction;
+
     /**
      * @var InputOption
      */
@@ -31,6 +38,11 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
     {
         $this->inputOption = $inputOption;
         parent::__construct($controlView);
+    }
+
+    public function resolveParentName(CompoundComponent $root)
+    {
+        return 'control_container';
     }
 
     /**
@@ -110,11 +122,12 @@ class CsvExport extends ViewAggregate implements  InitializableInterface
     }
 
     /**
-     * @param Grid $grid
+     * @param Grid|ComponentInterface $grid
      * @return bool
      */
-    protected function initializeInternal($grid)
+    public function initialize(ComponentInterface $grid)
     {
+        $this->initializeInternal($grid);
         $grid->onRender(function() {
             if ($this->inputOption->hasValue())
             $this->renderCsv();

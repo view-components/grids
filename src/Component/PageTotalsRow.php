@@ -4,9 +4,10 @@ namespace Presentation\Grids\Component;
 
 use Closure;
 use LogicException;
-use Nayjest\TreeInit\InitializableTrait;
-use Nayjest\TreeInit\InitializableInterface;
 use Presentation\Framework\Base\AbstractComponent;
+use Presentation\Framework\Base\ComponentInterface;
+use Presentation\Framework\Initialization\InitializableInterface;
+use Presentation\Framework\Initialization\InitializableTrait;
 use Presentation\Grids\Grid;
 
 /**
@@ -14,7 +15,9 @@ use Presentation\Grids\Grid;
  */
 class PageTotalsRow extends AbstractComponent implements  InitializableInterface
 {
-    use InitializableTrait;
+    use InitializableTrait {
+        InitializableTrait::initialize as private initializeInternal;
+    }
 
     const OPERATION_SUM = 'sum';
     const OPERATION_AVG = 'avg';
@@ -174,11 +177,12 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
     }
 
     /**
-     * @param Grid $grid
+     * @param ComponentInterface|Grid $grid
      * @return bool
      */
-    protected function initializeInternal($grid)
+    public function initialize(ComponentInterface $grid)
     {
+        $this->initializeInternal($grid);
         // attach event handler to TR inside grid.onRender to guarantee that TR will not be changed.
         $grid->onRender(function (Grid $grid) {
             $grid->getTableRow()->onRender($this->dataCollectingCallback);

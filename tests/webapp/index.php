@@ -14,4 +14,5 @@ $whoops->register();
 
 $controller = new Controller;
 $method = str_replace('/', '', $_SERVER['SCRIPT_NAME'])?:'index';
+$_SERVER['start_time'] = microtime(true);
 echo $controller->{$method}();

@@ -2,13 +2,12 @@
 
 namespace Presentation\Grids;
 
-use Nayjest\TreeInit\InitializerInterface;
-use Nayjest\TreeInit\InitializerTrait;
 use Presentation\Framework\Base\ComponentInterface;
 use Presentation\Framework\Base\RepeaterInterface;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\ManagedList\ManagedList;
 use Presentation\Framework\Data\DataProviderInterface;
+use Presentation\Framework\Initialization\InitializerTrait;
 use Presentation\Framework\Input\InputSource;
 use Presentation\Grids\Component\SolidRow;
 use Traversable;
@@ -16,7 +15,7 @@ use Traversable;
 /**
  * Grid component.
  */
-class Grid extends ManagedList implements InitializerInterface
+class Grid extends ManagedList
 {
     use GridPartsAccessTrait;
     use InitializerTrait;
@@ -99,23 +98,6 @@ class Grid extends ManagedList implements InitializerInterface
         $repeater = $components['repeater'];
         $repeater->setCallback([$this, 'setCurrentRow']);
         return $components;
-    }
-
-    /**
-     * @return ComponentInterface|null
-     */
-    public function getTableRow()
-    {
-        return $this->getRecordView();
-    }
-
-    /**
-     * @param ComponentInterface|null $component
-     * @return $this
-     */
-    public function setTableRow(ComponentInterface $component = null)
-    {
-        return $this->setRecordView($component);
     }
 
     /**

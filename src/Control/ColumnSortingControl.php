@@ -72,11 +72,14 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
     }
 
     /**
-     * @return ComponentInterface|DataAcceptorInterface
+     * Returns view component.
+     *
+     * @param bool $useDefault optional, false by default; pass true to use default view
+     * @return ComponentInterface|DataAcceptorInterface|null
      */
-    public function getView()
+    public function getView($useDefault = false)
     {
-        return parent::getView();
+        return parent::getView($useDefault);
     }
 
     /**

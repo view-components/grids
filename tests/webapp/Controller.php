@@ -3,6 +3,7 @@ namespace Presentation\Grids\Demo;
 
 use DateTime;
 use Presentation\Framework\Component\ManagedList\Control\FilterControl;
+use Presentation\Framework\Component\ManagedList\Control\PageSizeSelectControl;
 use Presentation\Framework\Component\ManagedList\Control\PaginationControl;
 use Presentation\Framework\Component\Text;
 use Presentation\Framework\Input\InputOption;
@@ -116,8 +117,8 @@ class Controller extends AbstractController
         $grid->removeComponent('control_row');
         $row->getCell('action')->addChild($submitButton);
 
-        $nameFilter->getView()->setLabel('');
-        $roleFilter->getView()->setLabel('');
+        $nameFilter->getView(true)->setLabel('');
+        $roleFilter->getView(true)->setLabel('');
 
         return $this->page($grid->render(), 'Filters placed under column headers');
     }
@@ -317,5 +318,27 @@ class Controller extends AbstractController
             ]
         );
         return $this->page($grid->render(), 'CSV Export & Filter');
+    }
+
+    public function demo10()
+    {
+        $provider = $this->getDataProvider();
+        $input = new InputSource($_GET);
+        $grid = new Grid($provider,
+            [
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+            ],
+            [
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
+                new PageSizeSelectControl($input->option('ps', 4), [2,4,10,100]),
+                new CsvExport($input->option('csv')),
+                new PaginationControl($input->option('page', 1), 5, $provider),
+
+            ]
+        );
+        //$grid->addChild(new PaginationControl($input->option('page', 1), 5, $provider));
+        return $this->page($grid->render(), 'PageSizeSelectControl');
     }
 }

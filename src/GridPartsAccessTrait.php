@@ -18,6 +18,10 @@ trait GridPartsAccessTrait
      */
     abstract public function setComponent($name, ComponentInterface $component = null);
 
+    abstract public function setRecordView(ComponentInterface $component);
+
+    abstract public function getRecordView();
+
     public function getTable()
     {
         return $this->getComponent('table');
@@ -76,5 +80,23 @@ trait GridPartsAccessTrait
     public function setTableFooter(ComponentInterface $table)
     {
         return $this->setComponent('table_footer', $table);
+    }
+
+
+    /**
+     * @return ComponentInterface|null
+     */
+    public function getTableRow()
+    {
+        return $this->getRecordView();
+    }
+
+    /**
+     * @param ComponentInterface|null $component
+     * @return $this
+     */
+    public function setTableRow(ComponentInterface $component = null)
+    {
+        return $this->setRecordView($component);
     }
 }
