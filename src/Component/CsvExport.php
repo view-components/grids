@@ -9,6 +9,7 @@ use Presentation\Framework\Base\CompoundPartInterface;
 use Presentation\Framework\Base\CompoundPartTrait;
 use Presentation\Framework\Base\ViewAggregate;
 use Presentation\Framework\Component\CompoundComponent;
+use Presentation\Framework\Component\Container;
 use Presentation\Framework\Component\Html\Tag;
 use Presentation\Framework\Component\Text;
 use Presentation\Framework\Data\DataProviderInterface;
@@ -18,7 +19,7 @@ use Presentation\Framework\Initialization\InitializableTrait;
 use Presentation\Framework\Input\InputOption;
 use Presentation\Grids\Grid;
 
-class CsvExport extends ViewAggregate implements  InitializableInterface, CompoundPartInterface
+class CsvExport extends ViewAggregate implements InitializableInterface, CompoundPartInterface
 {
     use InitializableTrait {
         InitializableTrait::initialize as private initializeInternal;
@@ -113,6 +114,7 @@ class CsvExport extends ViewAggregate implements  InitializableInterface, Compou
         $this->fileName = $name;
         return $this;
     }
+
     /**
      * @return string
      */
@@ -128,9 +130,9 @@ class CsvExport extends ViewAggregate implements  InitializableInterface, Compou
     public function initialize(ComponentInterface $grid)
     {
         $this->initializeInternal($grid);
-        $grid->onRender(function() {
+        $grid->onRender(function () {
             if ($this->inputOption->hasValue())
-            $this->renderCsv();
+                $this->renderCsv();
         });
         return true;
     }
@@ -147,7 +149,7 @@ class CsvExport extends ViewAggregate implements  InitializableInterface, Compou
     {
         $file = fopen('php://output', 'w');
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="'. $this->getFileName() .'"');
+        header('Content-Disposition: attachment; filename="' . $this->getFileName() . '"');
         header('Pragma: no-cache');
         set_time_limit(0);
         /** @var Grid $grid */
@@ -155,11 +157,11 @@ class CsvExport extends ViewAggregate implements  InitializableInterface, Compou
         $provider = $grid->getDataProvider();
         $this->renderHeadingRow($file);
         $this->removePagination($provider);
-        foreach($provider as $row) {
+        foreach ($provider as $row) {
             $output = [];
             $grid->setCurrentRow($row);
             foreach ($grid->getColumns() as $column) {
-                    $output[] = $this->escapeString($column->getCurrentValueFormatted());
+                $output[] = $this->escapeString($column->getCurrentValueFormatted());
 
             }
             fputcsv($file, $output, $this->getCsvDelimiter());
@@ -182,7 +184,7 @@ class CsvExport extends ViewAggregate implements  InitializableInterface, Compou
         /** @var Grid $grid */
         $grid = $this->getInitializer();
         foreach ($grid->getColumns() as $column) {
-                $output[] = $this->escapeString($column->getLabel());
+            $output[] = $this->escapeString($column->getLabel());
         }
         fputcsv($file, $output, $this->getCsvDelimiter());
     }
@@ -207,10 +209,19 @@ class CsvExport extends ViewAggregate implements  InitializableInterface, Compou
     protected function makeDefaultView()
     {
         $href = $this->getExportUrl();
-        return new Tag('button', [
-            // required to avoid emitting 'click' on pressing enter
-            'type' => 'button',
-            'onclick' => "window.location='$href'; return false;"
-        ], [new Text('CSV Export')]);
+        return new Container(
+            [
+                new Tag('button',
+                    [
+                        // required to avoid emitting 'click' on pressing enter
+                        'type' => 'button',
+                        'onclick' => "window.location='$href'; return false;"
+                    ],
+                    [new Text('CSV Export')]
+                )
+            ],
+            ' ',
+            ' '
+        );
     }
 }
