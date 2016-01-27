@@ -56,7 +56,7 @@ Package dependencies must be installed via composer (just run composer install).
 
 ## License
 
-© 2015 Vitalii Stepanenko
+© 2015—2016 Vitalii Stepanenko
 
 Licensed under the MIT License.
 
