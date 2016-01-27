@@ -12,8 +12,8 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "presentation/framework": "^0.16.2",
-    "nayjest/tree": "^2"
+    "presentation/framework": "^0.16.5",
+    "nayjest/tree": "^3"
 
   },
   "require-dev": {
