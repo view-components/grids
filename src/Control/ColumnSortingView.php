@@ -7,8 +7,8 @@ use Presentation\Framework\Rendering\RendererInterface;
 
 class ColumnSortingView extends TemplateView
 {
-    public function __construct(RendererInterface $renderer)
+    public function __construct(RendererInterface $renderer = null)
     {
-        parent::__construct($renderer, 'controls/column_sorting');
+        parent::__construct('controls/column_sorting', [], $renderer);
     }
 }
