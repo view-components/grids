@@ -182,11 +182,13 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
      */
     public function initialize(ComponentInterface $grid)
     {
-        $this->initializeInternal($grid);
-        // attach event handler to TR inside grid.onRender to guarantee that TR will not be changed.
-        $grid->onRender(function (Grid $grid) {
-            $grid->getTableRow()->onRender($this->dataCollectingCallback);
-        });
+        if ($this->getInitializer() === null) {
+            $this->initializeInternal($grid);
+            // attach event handler to TR inside grid.onRender to guarantee that TR will not be changed.
+            $grid->onRender(function (Grid $grid) {
+                $grid->getTableRow()->onRender($this->dataCollectingCallback);
+            });
+        }    
         return true;
     }
 }
