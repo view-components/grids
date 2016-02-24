@@ -341,7 +341,7 @@ class Controller extends AbstractController
             ]
         );
 
-        $styling = new BootstrapStyling(Services::resourceManager());
+        $styling = new BootstrapStyling();
         $styling->apply($grid);
         $this->disableStandardCss = true;
         return $this->page($grid->render(), 'BootstrapStyling');
