@@ -1,6 +1,6 @@
 # Grids
 
-Data grids library for PHP
+Data grids for PHP
 
 Project status: **alpha** *since 2016-02-24*
 
