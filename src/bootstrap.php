@@ -1,7 +1,6 @@
 <?php
-namespace Presentation\Framework\Charts;
-use Presentation\Grids\ServiceProvider;
-use Presentation\Framework\Service\Bootstrap;
+namespace ViewComponents\ViewComponents\Grids;
+use ViewComponents\Grids\ServiceProvider;
+use ViewComponents\ViewComponents\Service\Bootstrap;
 
 Bootstrap::registerServiceProvider(ServiceProvider::class);
-

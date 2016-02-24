@@ -1,17 +1,16 @@
 <?php
-namespace Presentation\Grids\Control;
+namespace ViewComponents\Grids\Component;
 
-use League\Url\Query;
-use League\Url\Url;
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Base\ViewAggregate;
-use Presentation\Framework\Component\ManagedList\Control\ControlInterface;
-use Presentation\Framework\Data\DataAcceptorInterface;
-use Presentation\Framework\Data\Operation\DummyOperation;
-use Presentation\Framework\Data\Operation\SortOperation;
-use Presentation\Framework\Input\InputOption;
+use ViewComponents\ViewComponents\Base\ComponentInterface;
+use ViewComponents\ViewComponents\Base\Control\ControlInterface;
+use ViewComponents\ViewComponents\Component\Part;
+use League\Uri\Schemes\Http as HttpUri;
+use ViewComponents\ViewComponents\Component\TemplateView;
+use ViewComponents\ViewComponents\Data\Operation\DummyOperation;
+use ViewComponents\ViewComponents\Data\Operation\SortOperation;
+use ViewComponents\ViewComponents\Input\InputOption;
 
-class ColumnSortingControl extends ViewAggregate implements ControlInterface
+class ColumnSortingControl extends Part implements ControlInterface
 {
     const DELIMITER = '-dir-';
     /**
@@ -54,7 +53,7 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
     {
         $this->fieldName = $fieldName;
         $this->inputOption = $input;
-        parent::__construct($view);
+        parent::__construct($view, "column-$fieldName-sorting", "column-{$fieldName}-title-cell");
     }
 
     /**
@@ -71,30 +70,23 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
         return new SortOperation($this->fieldName, $direction);
     }
 
-    /**
-     * Returns view component.
-     *
-     * @param bool $useDefault optional, false by default; pass true to use default view
-     * @return ComponentInterface|DataAcceptorInterface|null
-     */
-    public function getView($useDefault = false)
-    {
-        return parent::getView($useDefault);
-    }
-
-    /**
-     * Build links for sorting based on current URL's.
-     *
-     * @return array resulting array contains 'asc' and 'desc' keys with corresponding URL's for sorting.
-     */
     protected function makeLinks()
     {
-        $url = Url::createFromServer($_SERVER);
-        $asc = $url->mergeQuery(
-            Query::createFromArray([$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::ASC])
+        $url = HttpUri::createFromServer($_SERVER);
+
+        $asc = (string)$url->withQuery(
+            (string)$url->query->merge(
+                http_build_query(
+                    [$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::ASC]
+                )
+            )
         );
-        $desc = $url->mergeQuery(
-            Query::createFromArray([$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::DESC])
+        $desc = (string)$url->withQuery(
+            (string)$url->query->merge(
+                http_build_query(
+                    [$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::DESC]
+                )
+            )
         );
         return compact('asc','desc');
     }
@@ -106,6 +98,9 @@ class ColumnSortingControl extends ViewAggregate implements ControlInterface
      */
     public function render()
     {
+        if ($this->getView() === null) {
+            $this->setView(new TemplateView('controls/column_sorting'));
+        }
         $this->getView()->setData([
             'order' => $this->getDirection(),
             'links' => $this->makeLinks()

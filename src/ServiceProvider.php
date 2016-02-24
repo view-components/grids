@@ -1,23 +1,25 @@
 <?php
 
-namespace Presentation\Grids;
+namespace ViewComponents\Grids;
 
 use Interop\Container\ContainerInterface;
-use Presentation\Framework\Rendering\RendererInterface;
-use Presentation\Framework\Rendering\SimpleRenderer;
-use Presentation\Framework\Service\Container\WritableContainerInterface;
-use Presentation\Framework\Service\ServiceName;
-use Presentation\Framework\Service\ServiceProviderInterface;
+use RuntimeException;
+use ViewComponents\ViewComponents\Rendering\RendererInterface;
+use ViewComponents\ViewComponents\Rendering\SimpleRenderer;
+use ViewComponents\ViewComponents\Service\ServiceContainer;
+use ViewComponents\ViewComponents\Service\ServiceName;
+use ViewComponents\ViewComponents\Service\ServiceProviderInterface;
 
 class ServiceProvider implements ServiceProviderInterface
 {
-    public function register(WritableContainerInterface $container)
+    public function register(ServiceContainer $container)
     {
         $container->extend(ServiceName::RENDERER, function(RendererInterface $renderer, ContainerInterface $container) {
             if (!$renderer instanceof SimpleRenderer) {
-                throw new \RuntimeException('Charts supports only SimpleRenderer. You have ' . get_class($renderer));
+                throw new RuntimeException('Grids supports only SimpleRenderer. You have ' . get_class($renderer));
             }
             $renderer->registerViewsPath(dirname(__DIR__) . '/resources/views');
+            return $renderer;
         });
     }
 }

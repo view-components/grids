@@ -1,103 +1,80 @@
 <?php
 
-namespace Presentation\Grids;
+namespace ViewComponents\Grids;
 
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Base\RepeaterInterface;
-use Presentation\Framework\Component\Html\Tag;
-use Presentation\Framework\Component\ManagedList\ManagedList;
-use Presentation\Framework\Data\DataProviderInterface;
-use Presentation\Framework\Initialization\InitializerTrait;
-use Presentation\Framework\Input\InputSource;
-use Presentation\Grids\Component\SolidRow;
-use Traversable;
+use RuntimeException;
+use ViewComponents\Grids\Component\Column;
+use ViewComponents\ViewComponents\Base\ComponentInterface;
+use ViewComponents\ViewComponents\Component\CollectionView;
+use ViewComponents\ViewComponents\Component\Container;
+use ViewComponents\ViewComponents\Component\Html\Tag;
+use ViewComponents\ViewComponents\Component\ManagedList;
+use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
+use ViewComponents\ViewComponents\Component\Part;
+use ViewComponents\Grids\Component\SolidRow;
+
 
 /**
  * Grid component.
  */
 class Grid extends ManagedList
 {
-    use GridPartsAccessTrait;
-    use InitializerTrait;
-
-    /** @var  InputSource */
-    protected $inputSource;
-
     /** @var  mixed|null */
     protected $currentRow;
 
-    /** @var ColumnCollection|Column[] */
-    protected $columnCollection;
-
-    /**
-     * Grid constructor.
-     *
-     * @param DataProviderInterface|null $dataProvider
-     * @param Column[] $columns empty by default
-     * @param ComponentInterface[] $components empty by default
-     */
-    public function __construct($dataProvider = null, array $columns = [], array $components = [])
-    {
-        parent::__construct($dataProvider, null, $components);
-        $this->columnCollection = new ColumnCollection($this);
-        $this->setColumns($columns);
-    }
-
-    /**
-     * Returns default grid structure.
-     *
-     * @return array
-     */
-    protected function makeDefaultHierarchy()
+    protected function makeDefaultComponents()
     {
         return [
-            'container' => [
-                'title' => [],
-                'form' => [
-                    'table' => [
-                        'table_heading' => [
-                            'title_row' => [
-                            ],
-                            'control_row' => [
-                                'control_container' => [],
-                                'submit_button' => [],
-                            ]
+            new Part(new Tag('div'), 'container', 'root'),
+            new Part(new Tag('form'), 'form', 'container'),
 
-                        ],
-                        'table_body' => [
-                            'list_container' => [
-                                'repeater' => [
-                                    'record_view' => [
-                                    ]
-                                ]
-                            ]
-                        ],
-                        'table_footer' => [
-                        ]
-                    ]
-                ]
-            ]
+            new Part(new Tag('table'), 'table', 'form'),
+            new Part(new Tag('thead'), 'table_heading', 'table'),
+            new Part(new Tag('tr'), 'title_row', 'table_heading'),
+            new Part(new SolidRow(), 'control_row', 'table_heading'),
+            new Part(new Tag('span'), 'control_container', 'control_row'),
+            new Part(new Tag('input', ['type' => 'submit']), 'submit_button', 'control_row'),
+            new Part(new Tag('tbody'), 'table_body', 'table'),
+            new Part(new Container(), 'list_container', 'table_body'),
+            new Part(new CollectionView(), 'collection_view', 'list_container'),
+            new RecordView(new Tag('tr')),
+            new Part(new Tag('tfoot'), 'table_footer', 'table'),
         ];
     }
 
-    protected function makeDefaultComponents()
+    /**
+     * @return Column[]
+     */
+    public function getColumns()
     {
-        $components =  array_merge(
-            parent::makeDefaultComponents(),
-            [
-                'record_view' => new Tag('tr'), //override
-                'table' => new Tag('table'),
-                'table_heading' => new Tag('thead'),
-                'table_body' => new Tag('tbody'),
-                'table_footer' => new Tag('tfoot'),
-                'title_row' => new Tag('tr'),
-                'control_row' => new SolidRow(),
-            ]
-        );
-        /** @var RepeaterInterface $repeater */
-        $repeater = $components['repeater'];
-        $repeater->setCallback([$this, 'setCurrentRow']);
-        return $components;
+        return $this->getComponents()->filterByType(Column::class);
+    }
+
+    public function getColumn($id)
+    {
+        $column = $this->getComponent($id);
+        if (!$column) {
+            throw new RuntimeException("Column '$id' is not defined.");
+        }
+        if (!$column instanceof Column) {
+            throw new RuntimeException("'$id' is not a column.");
+        }
+        return $column;
+    }
+
+    public function setControlContainer(ComponentInterface $component)
+    {
+        return $this->setComponent($component, 'control_container', 'control_row');
+    }
+
+    public function setSubmitButton(ComponentInterface $component)
+    {
+        return $this->setComponent($component, 'submit_button', 'control_row');
+    }
+
+    public function setListContainer(ComponentInterface $component)
+    {
+        return $this->setComponent($component, 'list_container', 'table_body');
     }
 
     /**
@@ -124,37 +101,8 @@ class Grid extends ManagedList
         return $this;
     }
 
-    /**
-     * Returns collection of grid columns.
-     *
-     * @return Column[]|ColumnCollection
-     */
-    public function getColumns()
+    protected function makeDataInjector()
     {
-        return $this->columnCollection;
-    }
-
-    /**
-     * Sets grid columns
-     *
-     * @param Column[]|Traversable $columns
-     * @return $this
-     */
-    public function setColumns($columns)
-    {
-        $this->columnCollection->set($columns);
-        return $this;
-    }
-
-    protected function initializeCollection(array $items)
-    {
-        parent::initializeCollection($items);
-        $this->startInitialization();
-    }
-
-    protected function prepare()
-    {
-        parent::prepare();
-        $this->getRepeater()->setCallback([$this, 'setCurrentRow']);
+        return [$this, 'setCurrentRow'];
     }
 }

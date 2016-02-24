@@ -1,6 +1,6 @@
 <?php
 
-namespace Presentation\Grids\Demo;
+namespace ViewComponents\Grids\Demo;
 
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;

@@ -1,23 +1,28 @@
 <?php
 
-namespace Presentation\Grids\Component;
+namespace ViewComponents\Grids\Component;
 
 use Closure;
 use LogicException;
-use Presentation\Framework\Base\AbstractComponent;
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Initialization\InitializableInterface;
-use Presentation\Framework\Initialization\InitializableTrait;
-use Presentation\Grids\Grid;
+use Nayjest\Tree\ChildNodeTrait;
+use ViewComponents\ViewComponents\Base\Compound\PartInterface;
+use ViewComponents\ViewComponents\Base\Compound\PartTrait;
+use ViewComponents\ViewComponents\Base\ViewComponentInterface;
+use ViewComponents\ViewComponents\Component\CollectionView;
+use ViewComponents\ViewComponents\Component\Compound;
+use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Rendering\ViewTrait;
 
 /**
  * Class PageTotalsRow
  */
-class PageTotalsRow extends AbstractComponent implements  InitializableInterface
+class PageTotalsRow implements PartInterface, ViewComponentInterface
 {
-    use InitializableTrait {
-        InitializableTrait::initialize as private initializeInternal;
+    use PartTrait {
+        PartTrait::attachToCompound as attachToCompoundInternal;
     }
+    use ChildNodeTrait;
+    use ViewTrait;
 
     const OPERATION_SUM = 'sum';
     const OPERATION_AVG = 'avg';
@@ -39,6 +44,12 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
     protected $rowsProcessed = 0;
 
     private $dataCollectingCallback;
+
+    private $stopDataCollecting = false;
+
+    /** @var  Grid|null */
+    protected $grid;
+
     /**
      * @var string
      */
@@ -46,49 +57,57 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
 
     public function __construct(array $operations = [], $defaultOperation = self::OPERATION_SUM)
     {
+        $this->id = 'page_totals_row';
+        $this->destinationParentId = 'list_container';
         $this->operations = $operations;
         $this->dataCollectingCallback = function () {
+            if ($this->stopDataCollecting) {
+                return;
+            }
             $this->rowsProcessed++;
             /** @var Grid $grid */
-            $grid = $this->getInitializer();
+            $grid = $this->grid;
             foreach ($grid->getColumns() as $column) {
-                $this->pushData($column->getName(), $column->getCurrentValue());
+                $this->pushData($column->getId(), $column->getCurrentValue());
             }
         };
 
         $this->defaultOperation = $defaultOperation;
     }
 
+    public function attachToCompound(Compound $root)
+    {
+        /** @var Grid $root */
+        $this->grid = $root;
+        $this->attachToCompoundInternal($root);
+        /** @var CollectionView $collectionView */
+        $collectionView = $root->getComponent('collection_view');
+        $collectionView->setDataInjector(function($dataRow, $collectionView) use ($root) {
+            call_user_func([$root, 'setCurrentRow'], $dataRow, $collectionView);
+            call_user_func($this->dataCollectingCallback);
+        });
+    }
     public function render()
     {
-        /** @var Grid $grid */
-        $grid = $this->getInitializer();
-        $tr = $grid->getTableRow();
-
-        // remove listener to avoid calculation for total_row itself
-        $tr->removeListener('render', $this->dataCollectingCallback);
+        $this->stopDataCollecting = true;
+        $tr = $this->grid->getRecordView();
 
         // set total_row as current grid row
-        $lastRow = $grid->getCurrentRow();
-        $grid->setCurrentRow($this->totalData);
-
-        // attach TR here
-        $trParent = $tr->parent();
-        $tr->unlock();
-        $tr->attachTo($this);
+        $lastRow = $this->grid->getCurrentRow();
+        $this->grid->setCurrentRow($this->totalData);
 
         // modify columns
         $valueCalculators = [];
         $valueFormatters = [];
-        foreach ($grid->getColumns() as $column) {
-            $valueCalculators[$column->getName()] = $column->getValueCalculator();
-            $valueFormatters[$column->getName()] = $prevFormatter = $column->getValueFormatter();
+        foreach ($this->grid->getColumns() as $column) {
+            $valueCalculators[$column->getId()] = $column->getValueCalculator();
+            $valueFormatters[$column->getId()] = $prevFormatter = $column->getValueFormatter();
             $column->setValueCalculator(null);
             $column->setValueFormatter(function($value) use ($prevFormatter, $column) {
                 if ($prevFormatter) {
                     $value = call_user_func($prevFormatter, $value);
                 }
-                $operation = $this->getOperation($column->getName());
+                $operation = $this->getOperation($column->getId());
                 if ($value !== null && is_string($operation) && array_key_exists($operation, $this->valuePrefixes)) {
                     $value = $this->valuePrefixes[$operation] . '&nbsp;' . $value;
                 }
@@ -96,19 +115,15 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
             });
         }
 
-        $output = parent::render();
+        $output = $tr->render();
 
         // restore column value calculators & formatters
-        foreach ($grid->getColumns() as $column) {
-            $column->setValueCalculator($valueCalculators[$column->getName()]);
-            $column->setValueFormatter($valueFormatters[$column->getName()]);
+        foreach ($this->grid->getColumns() as $column) {
+            $column->setValueCalculator($valueCalculators[$column->getId()]);
+            $column->setValueFormatter($valueFormatters[$column->getId()]);
         }
-
         // restore last data row
-        $grid->setCurrentRow($lastRow);
-        // restore TR parent
-        $tr->attachTo($trParent)->lock();
-
+        $this->grid->setCurrentRow($lastRow);
         return $output;
     }
 
@@ -174,21 +189,5 @@ class PageTotalsRow extends AbstractComponent implements  InitializableInterface
     {
         $this->valuePrefixes = $valuePrefixes;
         return $this;
-    }
-
-    /**
-     * @param ComponentInterface|Grid $grid
-     * @return bool
-     */
-    public function initialize(ComponentInterface $grid)
-    {
-        if ($this->getInitializer() === null) {
-            $this->initializeInternal($grid);
-            // attach event handler to TR inside grid.onRender to guarantee that TR will not be changed.
-            $grid->onRender(function (Grid $grid) {
-                $grid->getTableRow()->onRender($this->dataCollectingCallback);
-            });
-        }    
-        return true;
     }
 }

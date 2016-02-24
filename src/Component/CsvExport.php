@@ -1,49 +1,36 @@
 <?php
 
-namespace Presentation\Grids\Component;
+namespace ViewComponents\Grids\Component;
 
-use League\Url\Query;
-use League\Url\Url;
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Base\CompoundPartInterface;
-use Presentation\Framework\Base\CompoundPartTrait;
-use Presentation\Framework\Base\ViewAggregate;
-use Presentation\Framework\Component\CompoundComponent;
-use Presentation\Framework\Component\Container;
-use Presentation\Framework\Component\Html\Tag;
-use Presentation\Framework\Component\Text;
-use Presentation\Framework\Data\DataProviderInterface;
-use Presentation\Framework\Data\Operation\PaginateOperation;
-use Presentation\Framework\Initialization\InitializableInterface;
-use Presentation\Framework\Initialization\InitializableTrait;
-use Presentation\Framework\Input\InputOption;
-use Presentation\Grids\Grid;
+use League\Uri\Schemes\Http as HttpUri;
+use ViewComponents\ViewComponents\Base\ViewComponentInterface;
+use ViewComponents\ViewComponents\Component\Compound;
+use ViewComponents\ViewComponents\Component\DataView;
+use ViewComponents\ViewComponents\Component\Html\Tag;
+use ViewComponents\ViewComponents\Component\Part;
+use ViewComponents\ViewComponents\Data\DataProviderInterface;
+use ViewComponents\ViewComponents\Data\Operation\PaginateOperation;
+use ViewComponents\ViewComponents\Input\InputOption;
+use ViewComponents\Grids\Grid;
 
-class CsvExport extends ViewAggregate implements InitializableInterface, CompoundPartInterface
+class CsvExport extends Part
 {
-    use InitializableTrait {
-        InitializableTrait::initialize as private initializeInternal;
-    }
-    use CompoundPartTrait;
 
     private $fileName = 'data.csv';
     private $csvDelimiter = ';';
     private $exitFunction;
+
+    private $grid;
 
     /**
      * @var InputOption
      */
     private $inputOption;
 
-    public function __construct(InputOption $inputOption = null, ComponentInterface $controlView = null)
+    public function __construct(InputOption $inputOption = null, ViewComponentInterface $controlView = null)
     {
         $this->inputOption = $inputOption;
-        parent::__construct($controlView);
-    }
-
-    public function resolveParentName(CompoundComponent $root)
-    {
-        return 'control_container';
+        parent::__construct($controlView ?: $this->makeDefaultView(), 'csv_export', 'control_container');
     }
 
     /**
@@ -123,18 +110,15 @@ class CsvExport extends ViewAggregate implements InitializableInterface, Compoun
         return $this->fileName;
     }
 
-    /**
-     * @param Grid|ComponentInterface $grid
-     * @return bool
-     */
-    public function initialize(ComponentInterface $grid)
+    public function attachToCompound(Compound $root)
     {
-        $this->initializeInternal($grid);
-        $grid->onRender(function () {
-            if ($this->inputOption->hasValue())
+        $root->children()->add(new DataView(function () {
+            if ($this->inputOption->hasValue()) {
                 $this->renderCsv();
-        });
-        return true;
+            }
+        }), true);
+        $this->grid = $root;
+        parent::attachToCompound($root);
     }
 
     protected function removePagination(DataProviderInterface $provider)
@@ -153,7 +137,7 @@ class CsvExport extends ViewAggregate implements InitializableInterface, Compoun
         header('Pragma: no-cache');
         set_time_limit(0);
         /** @var Grid $grid */
-        $grid = $this->getInitializer();
+        $grid = $this->grid;
         $provider = $grid->getDataProvider();
         $this->renderHeadingRow($file);
         $this->removePagination($provider);
@@ -182,7 +166,7 @@ class CsvExport extends ViewAggregate implements InitializableInterface, Compoun
     {
         $output = [];
         /** @var Grid $grid */
-        $grid = $this->getInitializer();
+        $grid = $this->grid;
         foreach ($grid->getColumns() as $column) {
             $output[] = $this->escapeString($column->getLabel());
         }
@@ -199,29 +183,21 @@ class CsvExport extends ViewAggregate implements InitializableInterface, Compoun
 
     public function getExportUrl()
     {
-        $baseUrl = Url::createFromServer($_SERVER);
-        $url = $baseUrl->mergeQuery(
-            Query::createFromArray([$this->inputOption->getKey() => 1])
-        );
-        return $url;
+        $url = HttpUri::createFromServer($_SERVER);
+        $query = $url->query->merge(http_build_query([$this->inputOption->getKey() => 1]));
+        return (string)$url->withQuery((string)$query);
     }
 
     protected function makeDefaultView()
     {
         $href = $this->getExportUrl();
-        return new Container(
+        return new Tag('button',
             [
-                new Tag('button',
-                    [
-                        // required to avoid emitting 'click' on pressing enter
-                        'type' => 'button',
-                        'onclick' => "window.location='$href'; return false;"
-                    ],
-                    [new Text('CSV Export')]
-                )
+                // required to avoid emitting 'click' on pressing enter
+                'type' => 'button',
+                'onclick' => "window.location='$href'; return false;"
             ],
-            ' ',
-            ' '
+            [new DataView('CSV Export')]
         );
     }
 }

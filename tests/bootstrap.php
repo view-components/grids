@@ -1,6 +1,6 @@
 <?php
 
-namespace Presentation\Framework\Demo;
+namespace ViewComponents\Grids\Demo;
 
 require __DIR__ . '/../vendor/autoload.php';
 

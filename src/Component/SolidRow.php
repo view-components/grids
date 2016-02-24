@@ -1,11 +1,11 @@
 <?php
 
-namespace Presentation\Grids\Component;
+namespace ViewComponents\Grids\Component;
 
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Component\CompoundContainer;
-use Presentation\Framework\Component\Html\Tag;
-use Presentation\Grids\Grid;
+use ViewComponents\ViewComponents\Base\ComponentInterface;
+use ViewComponents\ViewComponents\Component\Container;
+use ViewComponents\ViewComponents\Component\Html\Tag;
+use ViewComponents\Grids\Grid;
 
 /**
  * Table row containing one cell with colspan attribute equal to grid's columns count.
@@ -14,8 +14,11 @@ use Presentation\Grids\Grid;
  * it's "cell" component children.
  *
  */
-class SolidRow extends CompoundContainer
+class SolidRow extends Container
 {
+    private $cellTag;
+    private $rowTag;
+
     /**
      * SolidRow constructor.
      *
@@ -27,14 +30,15 @@ class SolidRow extends CompoundContainer
      */
     public function __construct($components = [], $cellTagName = 'td', $columnsCount = null)
     {
-        parent::__construct(
-            ['row_tag' => ['cell_tag' => []]],
-            [
-                'row_tag' => new Tag('tr', ['data-role' => 'solid-row']),
-                'cell_tag' => new Tag($cellTagName, ['colspan' => $columnsCount], $components)
-            ],
-            'cell_tag'
+        $this->cellTag = new Tag(
+            $cellTagName,
+            $columnsCount ? ['colspan' => $columnsCount] : [],
+            $components
         );
+        $this->rowTag = new Tag('tr', [], [$this->cellTag]);
+
+        parent::__construct([$this->rowTag]);
+
     }
 
     /**
@@ -42,7 +46,7 @@ class SolidRow extends CompoundContainer
      */
     public function getCellTag()
     {
-        return $this->getComponent('cell_tag');
+        return $this->cellTag;
     }
 
     /**
@@ -50,24 +54,29 @@ class SolidRow extends CompoundContainer
      */
     public function getRowTag()
     {
-        return $this->getComponent('row_tag');
-    }
-
-    private function provideColspanAttribute()
-    {
-        /** @var Tag $cell */
-        $cell = $this->getCellTag();
-        if (
-            ($cell->getAttribute('colspan') === null)
-            && ($grid = $this->parents()->findByType(Grid::class))
-        ) {
-            $cell->setAttribute('colspan', count($grid->getColumns()));
-        }
+        return $this->rowTag;
     }
 
     public function render()
     {
         $this->provideColspanAttribute();
-        return parent::render();
+        return $this->rowTag->render();
+    }
+
+    private function provideColspanAttribute()
+    {
+        if ($this->cellTag->getAttribute('colspan') !== null) {
+            return;
+        }
+        $grid = $this->parents()->findByType(Grid::class);
+        if (!$grid) {
+            return;
+        }
+        $this->cellTag->setAttribute('colspan', count($grid->getColumns()));
+    }
+
+    public function children()
+    {
+        return $this->cellTag->children();
     }
 }

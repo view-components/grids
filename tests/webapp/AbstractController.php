@@ -1,7 +1,7 @@
 <?php
-namespace Presentation\Grids\Demo;
+namespace ViewComponents\Grids\Demo;
 
-use Presentation\Framework\Base\ComponentInterface;
+use ViewComponents\ViewComponents\Base\ComponentInterface;
 use ReflectionClass;
 use ReflectionMethod;
 

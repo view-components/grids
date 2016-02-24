@@ -1,23 +1,29 @@
 <?php
 
-namespace Presentation\Grids;
+namespace ViewComponents\Grids\Component;
 
 use mp;
-use Presentation\Framework\Base\ComponentInterface;
-use Presentation\Framework\Component\Html\Tag;
-use Presentation\Framework\Component\Text;
+use Nayjest\Tree\ChildNodeTrait;
+use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Base\ComponentInterface;
+use ViewComponents\ViewComponents\Base\Compound\PartInterface;
+use ViewComponents\ViewComponents\Base\Compound\PartTrait;
+use ViewComponents\ViewComponents\Base\ContainerComponentInterface;
+use ViewComponents\ViewComponents\Base\DataViewComponentInterface;
+use ViewComponents\ViewComponents\Component\Compound;
+use ViewComponents\ViewComponents\Component\Html\Tag;
+use ViewComponents\ViewComponents\Component\DataView;
+use ViewComponents\ViewComponents\Component\Part;
 
 /**
  * Grid column.
  */
-class Column
+class Column implements PartInterface
 {
-    /**
-     * Column name.
-     *
-     * @var string
-     */
-    protected $name;
+    use PartTrait {
+        PartTrait::attachToCompound as attachToCompoundInternal;
+    }
+    use ChildNodeTrait;
 
     /**
      * Text label that will be rendered in table header.
@@ -32,14 +38,20 @@ class Column
     /** @var  ComponentInterface */
     protected $titleCell;
 
-    /** @var  Grid|null */
-    protected $grid;
-
     /** @var ComponentInterface */
     protected $titleView;
 
     /** @var ComponentInterface */
     protected $dataView;
+
+    /** @var  Part|null */
+    protected $titleCellPart;
+
+    /** @var  Part|null */
+    protected $dataCellPart;
+
+    /** @var  Grid|null */
+    protected $grid;
 
     /** @var  string|null */
     protected $dataFieldName;
@@ -53,18 +65,16 @@ class Column
     /**
      * Constructor.
      *
-     * @param string|null $columnName column unique name for internal usage
+     * @param string|null $columnId column unique name for internal usage
      * @param string|null $label column label
      */
-    public function __construct($columnName, $label = null)
+    public function __construct($columnId, $label = null)
     {
-        $this->setName($columnName);
+        $this->setDestinationParentId(Compound::ROOT_ID);
+        $this->setId($columnId);
         $this->setLabel($label);
-        $this->titleView = (new Text())
-            ->setValue([$this, 'getLabel']);
-
-        $this->dataView = (new Text())
-            ->setValue([$this, 'getCurrentValueFormatted']);
+        $this->titleView = new DataView([$this, 'getLabel']);
+        $this->dataView = new DataView([$this, 'getCurrentValueFormatted']);
     }
 
     /**
@@ -99,7 +109,7 @@ class Column
     public function formatValue($value)
     {
         $formatter = $this->getValueFormatter();
-        return (string)($formatter ? call_user_func($formatter, $value): $value);
+        return (string)($formatter ? call_user_func($formatter, $value, $this->grid->getCurrentRow()) : $value);
     }
 
     /**
@@ -118,7 +128,7 @@ class Column
     }
 
     /**
-     * @return Text
+     * @return DataViewComponentInterface
      */
     public function getDataView()
     {
@@ -126,7 +136,7 @@ class Column
     }
 
     /**
-     * @return Text
+     * @return DataViewComponentInterface
      */
     public function getTitleView()
     {
@@ -148,7 +158,7 @@ class Column
      */
     public function getDataFieldName()
     {
-        return $this->dataFieldName ?: $this->getName();
+        return $this->dataFieldName ?: $this->getId();
     }
 
     /**
@@ -187,18 +197,13 @@ class Column
         return $this->valueFormatter;
     }
 
-    protected function updateGrid()
-    {
-        if ($this->grid) {
-            $this->grid->getColumns()->updateGridInternal();
-        }
-    }
-
-    public function setDataCell(ComponentInterface $cell)
+    public function setDataCell(ContainerComponentInterface $cell)
     {
         $this->dataCell = $cell;
         $this->dataCell->children()->add($this->dataView, true);
-        $this->updateGrid();
+        if ($this->dataCellPart !== null) {
+            $this->dataCellPart->setView($cell);
+        }
         return $this;
     }
 
@@ -213,43 +218,13 @@ class Column
         return $this->titleCell;
     }
 
-    public function setTitleCell(ComponentInterface $cell)
+    public function setTitleCell(ContainerComponentInterface $cell)
     {
         $this->titleCell = $cell;
         $this->titleCell->children()->add($this->titleView, true);
-        $this->updateGrid();
-        return $this;
-    }
-
-    /**
-     * @param Grid $grid
-     */
-    public function setGridInternal(Grid $grid)
-    {
-        $this->grid = $grid;
-    }
-
-    /**
-     * Returns column name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Sets column name.
-     *
-     * @param string $name
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-        // @todo remove column with old name (?)
-        $this->updateGrid();
+        if ($this->titleCellPart !== null) {
+            $this->titleCellPart->setView($cell);
+        }
         return $this;
     }
 
@@ -260,7 +235,10 @@ class Column
      */
     public function getLabel()
     {
-        return $this->label ?: ucwords(str_replace(array('-', '_', '.'), ' ', $this->name));
+        if ($this->label === null) {
+            $this->label = ucwords(str_replace(array('-', '_', '.'), ' ', $this->id));
+        }
+        return $this->label;
     }
 
     /**
@@ -273,5 +251,50 @@ class Column
     {
         $this->label = $label;
         return $this;
+    }
+
+    public function attachToCompound(Compound $root)
+    {
+        $this->attachToCompoundInternal($root);
+        $this->grid = $root;
+        $parts = $root->getComponents();
+        $titleCellPart = $this->getTitleCellPart();
+        if (!$parts->contains($titleCellPart)) {
+            $parts->add($titleCellPart);
+        }
+        $dataCellPart = $this->getDataCellPart();
+        if (!$parts->contains($dataCellPart)) {
+            $parts->add($dataCellPart);
+        }
+    }
+
+    /**
+     * @return Part
+     */
+    protected function getDataCellPart()
+    {
+        if ($this->dataCellPart === null) {
+            $this->dataCellPart = new Part(
+                $this->getDataCell(),
+                'column-' . $this->getId() . '-data-cell',
+                'record_view'
+            );
+        }
+        return $this->dataCellPart;
+    }
+
+    /**
+     * @return Part
+     */
+    protected function getTitleCellPart()
+    {
+        if ($this->titleCellPart === null) {
+            $this->titleCellPart = new Part(
+                $this->titleCellPart = $this->getTitleCell(),
+                'column-' . $this->getId() . '-title-cell',
+                'title_row'
+            );
+        }
+        return $this->titleCellPart;
     }
 }
