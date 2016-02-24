@@ -2,20 +2,23 @@
 
 Data grids library for PHP
 
-Project status: pre-alpha.
+Project status: *alpha* since 2016-02-24
 
 This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids) library for Laravel.
 
-Now Grids is framework-agnostic in sense of application framework.
-It's based on PHP UI framework called [Presentation Framework](https://github.com/presentation-framework/presentation-framework) (that's actually also in pre-alpha status).
+Now Grids is framework-agnostic.
 
-Bindings for app. frameworks like Laravel, Symfony, Yii, etc. will be available later.
+Bindings for app. frameworks:
+* Laravel: alpha
+* Symfony 2/3: planned
+* Yii 2: planned
+* ZF 2: planned
 
 ## Demo Application
 
 1) Clone this repository
 ```bash
-git clone https://github.com/presentation-framework/grids.git
+git clone https://github.com/view-components/grids.git
 cd grids
 ```
 2) Install [Composer](https://getcomposer.org/) if it's not installed
