@@ -2,7 +2,7 @@
 
 Data grids library for PHP
 
-Project status: *alpha* since 2016-02-24
+Project status: **alpha** *since 2016-02-24*
 
 This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids) library for Laravel.
 
