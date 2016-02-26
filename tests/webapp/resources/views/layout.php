@@ -46,7 +46,7 @@
 </style>
 <?php endif ?>
 <?php
-$diff = round((microtime(true) - $_SERVER['start_time']), 4);
+$diff = round((microtime(true) - $startTime), 4);
 echo '<br>Generation Time: ' . $diff;
 ?>
 </body>

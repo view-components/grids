@@ -1,5 +1,5 @@
 <?php
-namespace ViewComponents\Grids\Demo;
+namespace ViewComponents\Grids\WebApp;
 
 use DateTime;
 
@@ -29,15 +29,15 @@ class Controller extends AbstractController
 
     protected function getUsersData()
     {
-        return include(dirname(__DIR__) . '/fixtures/users.php');
+        return include(TESTING_HELPERS_DIR . '/fixtures/users.php');
     }
 
     protected function getDataProvider($operations = [])
     {
         return (isset($_GET['use-db']) && $_GET['use-db'])
             ? new DbTableDataProvider(
-                db_connection(),
-                'users',
+                \ViewComponents\TestingHelpers\dbConnection(),
+                'test_users',
                 $operations
             )
             : new ArrayDataProvider(
@@ -127,18 +127,19 @@ class Controller extends AbstractController
         $provider = $this->getDataProvider();
         $input = new InputSource($_GET);
 
-        $grid = new Grid;
-        $grid->addChildren([
-            new Column('id'),
-            new Column('name'),
-            new Column('role'),
-            new Column('birthday'),
-            new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
-            new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
-            new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
-            new PaginationControl($input->option('page', 1), 5)
-        ]);
-        $grid->setDataProvider($provider);
+        $grid = new Grid($provider,
+            [
+                new Column('id'),
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+                new FilterControl('role', FilterOperation::OPERATOR_EQ, $input->option('role')),
+                new FilterControl('name', FilterOperation::OPERATOR_EQ, $input->option('name')),
+                new FilterControl('birthday', FilterOperation::OPERATOR_EQ, $input->option('birthday')),
+                new PaginationControl($input->option('page', 1), 5)
+            ]
+        );
+
 
         return $this->page($grid, 'Pagination');
     }

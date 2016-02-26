@@ -1,5 +1,5 @@
 <?php
-namespace ViewComponents\Grids\Demo;
+namespace ViewComponents\Grids\WebApp;
 
 use ViewComponents\ViewComponents\Base\ComponentInterface;
 use ReflectionClass;
@@ -7,18 +7,16 @@ use ReflectionMethod;
 
 abstract class AbstractController
 {
-     /**
-     * @return \ReflectionMethod[]
-     */
-    protected function getActions()
-    {
-        $class = new ReflectionClass($this);
-        return $class->getMethods(ReflectionMethod::IS_PUBLIC);
+    private $startTime;
 
+    public function __construct()
+    {
+        $this->startTime = microtime(true);
     }
 
     protected function render($tpl, array $data = [])
     {
+        $data['startTime'] = $this->startTime;
         extract($data);
         ob_start();
         $resourcesDir = __DIR__ . '/resources';
