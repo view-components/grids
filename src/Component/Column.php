@@ -136,6 +136,8 @@ class Column implements PartInterface
     }
 
     /**
+     * Returns view component that displays column title.
+     *
      * @return DataViewComponentInterface
      */
     public function getTitleView()
@@ -162,6 +164,8 @@ class Column implements PartInterface
     }
 
     /**
+     * Returns function calculating column value.
+     *
      * @return callable|null
      */
     public function getValueCalculator()
@@ -180,6 +184,8 @@ class Column implements PartInterface
     }
 
     /**
+     * Sets function for column value formatting.
+     *
      * @param callable|null $valueFormatter
      * @return Column
      */
@@ -190,6 +196,8 @@ class Column implements PartInterface
     }
 
     /**
+     * Returns function fir column value formatting.
+     *
      * @return callable|null
      */
     public function getValueFormatter()
@@ -197,6 +205,12 @@ class Column implements PartInterface
         return $this->valueFormatter;
     }
 
+    /**
+     * Sets component for rendering table cell with data (<td>).
+     *
+     * @param ContainerComponentInterface $cell
+     * @return $this
+     */
     public function setDataCell(ContainerComponentInterface $cell)
     {
         $this->dataCell = $cell;
@@ -218,6 +232,10 @@ class Column implements PartInterface
         return $this->titleCell;
     }
 
+    /**
+     * @param ContainerComponentInterface $cell
+     * @return $this
+     */
     public function setTitleCell(ContainerComponentInterface $cell)
     {
         $this->titleCell = $cell;
@@ -253,6 +271,9 @@ class Column implements PartInterface
         return $this;
     }
 
+    /**
+     * @param Compound $root
+     */
     public function attachToCompound(Compound $root)
     {
         $this->attachToCompoundInternal($root);
