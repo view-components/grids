@@ -14,6 +14,7 @@ class ServiceProvider implements ServiceProviderInterface
 {
     public function register(ServiceContainer $container)
     {
+        /** registers path to grid views */
         $container->extend(ServiceName::RENDERER, function(RendererInterface $renderer, ContainerInterface $container) {
             if (!$renderer instanceof SimpleRenderer) {
                 throw new RuntimeException('Grids supports only SimpleRenderer. You have ' . get_class($renderer));
