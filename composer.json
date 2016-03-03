@@ -37,7 +37,9 @@
   "scripts": {
     "post-install-cmd": [
       "ViewComponents\\Grids\\Installer::postComposerInstall"
-    ]
+    ],
+    "serve": "serve",
+    "test": "phpunit"
   },
   "support": {
     "email": "mail@vitaliy.in"
