@@ -15,12 +15,15 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(ServiceContainer $container)
     {
         /** registers path to grid views */
-        $container->extend(ServiceName::RENDERER, function (RendererInterface $renderer, ContainerInterface $container) {
-            if (!$renderer instanceof SimpleRenderer) {
-                throw new RuntimeException('Grids supports only SimpleRenderer. You have ' . get_class($renderer));
+        $container->extend(
+            ServiceName::RENDERER,
+            function (RendererInterface $renderer) {
+                if (!$renderer instanceof SimpleRenderer) {
+                    throw new RuntimeException('Grids supports only SimpleRenderer. You have ' . get_class($renderer));
+                }
+                $renderer->registerViewsPath(dirname(__DIR__) . '/resources/views');
+                return $renderer;
             }
-            $renderer->registerViewsPath(dirname(__DIR__) . '/resources/views');
-            return $renderer;
-        });
+        );
     }
 }
