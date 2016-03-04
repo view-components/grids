@@ -4,12 +4,14 @@ namespace ViewComponents\Grids\WebApp;
 use DateTime;
 
 use ViewComponents\Grids\Component\ColumnSortingControl;
+use ViewComponents\TestingHelpers\Application\Http\DefaultLayoutTrait;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
 use ViewComponents\ViewComponents\Component\DataView;
 use ViewComponents\ViewComponents\Component\Html\Tag;
 use ViewComponents\ViewComponents\Component\Part;
+use ViewComponents\ViewComponents\Component\TemplateView;
 use ViewComponents\ViewComponents\Customization\Bootstrap\BootstrapStyling;
 use ViewComponents\ViewComponents\Input\InputOption;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
@@ -21,15 +23,24 @@ use ViewComponents\Grids\Component\CsvExport;
 use ViewComponents\Grids\Component\PageTotalsRow;
 use ViewComponents\Grids\Component\SolidRow;
 use ViewComponents\Grids\Grid;
-use ViewComponents\ViewComponents\Service\Services;
 
-class Controller extends AbstractController
+class Controller
 {
-    public $disableStandardCss = false;
+    use DefaultLayoutTrait;
+
+    private $defaultCss;
+
+    public function __construct()
+    {
+        $this
+            ->layout()
+            ->section('head')
+            ->addChild($this->defaultCss = new TemplateView('default_css'));
+    }
 
     protected function getUsersData()
     {
-        return include(TESTING_HELPERS_DIR . '/fixtures/users.php');
+        return include(TESTING_HELPERS_DIR . '/resources/fixtures/users.php');
     }
 
     protected function getDataProvider($operations = [])
@@ -48,11 +59,7 @@ class Controller extends AbstractController
 
     public function index()
     {
-        $out = '';
-        $out .= $this->renderMenu();
-        $out .= '<h1>Grids Demo App</h1><h2>Index Page</h2>';
-
-        return $out;
+        return $this->page('', 'Home');
     }
 
     public function demo1()
@@ -81,12 +88,6 @@ class Controller extends AbstractController
             new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET)),
             new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET))
         ]);
-
-//        $grid->getControlContainer()->addChildren([
-//            //new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET)),
-//            new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET))
-//        ]);
-
         $grid->getComponent('table_heading')->addChild(
             new SolidRow([new DataView('additional row')])
         );
@@ -341,10 +342,10 @@ class Controller extends AbstractController
                 new ColumnSortingControl('id', new InputOption('sort', $_GET))
             ]
         );
-
+        $grid->attachTo($this->layout());
         $styling = new BootstrapStyling();
-        $styling->apply($grid);
-        $this->disableStandardCss = true;
-        return $this->page($grid->render(), 'BootstrapStyling');
+        $styling->apply($this->layout());
+        $this->defaultCss->detach();
+        return $this->page(null, 'BootstrapStyling');
     }
 }
