@@ -38,7 +38,6 @@ class SolidRow extends Container
         $this->rowTag = new Tag('tr', [], [$this->cellTag]);
 
         parent::__construct([$this->rowTag]);
-
     }
 
     /**
@@ -63,6 +62,11 @@ class SolidRow extends Container
         return $this->rowTag->render();
     }
 
+    public function children()
+    {
+        return $this->cellTag->children();
+    }
+
     private function provideColspanAttribute()
     {
         if ($this->cellTag->getAttribute('colspan') !== null) {
@@ -73,10 +77,5 @@ class SolidRow extends Container
             return;
         }
         $this->cellTag->setAttribute('colspan', count($grid->getColumns()));
-    }
-
-    public function children()
-    {
-        return $this->cellTag->children();
     }
 }

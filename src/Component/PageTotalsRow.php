@@ -47,9 +47,6 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
 
     private $stopDataCollecting = false;
 
-    /** @var  Grid|null */
-    protected $grid;
-
     /**
      * @var string
      */
@@ -66,7 +63,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
             }
             $this->rowsProcessed++;
             /** @var Grid $grid */
-            $grid = $this->grid;
+            $grid = $this->root;
             foreach ($grid->getColumns() as $column) {
                 $this->pushData($column->getId(), $column->getCurrentValue());
             }
@@ -77,33 +74,48 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
 
     public function attachToCompound(Compound $root)
     {
-        /** @var Grid $root */
-        $this->grid = $root;
         $this->attachToCompoundInternal($root);
         /** @var CollectionView $collectionView */
         $collectionView = $root->getComponent('collection_view');
-        $collectionView->setDataInjector(function($dataRow, $collectionView) use ($root) {
+        $collectionView->setDataInjector(function ($dataRow, $collectionView) use ($root) {
             call_user_func([$root, 'setCurrentRow'], $dataRow, $collectionView);
             call_user_func($this->dataCollectingCallback);
         });
     }
+
+    /**
+     * @return array
+     */
+    public function getValuePrefixes()
+    {
+        return $this->valuePrefixes;
+    }
+
+    public function setValuePrefixes(array $valuePrefixes)
+    {
+        $this->valuePrefixes = $valuePrefixes;
+        return $this;
+    }
+
     public function render()
     {
+        /** @var Grid $grid */
+        $grid = $this->root;
         $this->stopDataCollecting = true;
-        $tr = $this->grid->getRecordView();
+        $tr = $grid->getRecordView();
 
         // set total_row as current grid row
-        $lastRow = $this->grid->getCurrentRow();
-        $this->grid->setCurrentRow($this->totalData);
+        $lastRow = $grid->getCurrentRow();
+        $grid->setCurrentRow($this->totalData);
 
         // modify columns
         $valueCalculators = [];
         $valueFormatters = [];
-        foreach ($this->grid->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $valueCalculators[$column->getId()] = $column->getValueCalculator();
             $valueFormatters[$column->getId()] = $prevFormatter = $column->getValueFormatter();
             $column->setValueCalculator(null);
-            $column->setValueFormatter(function($value) use ($prevFormatter, $column) {
+            $column->setValueFormatter(function ($value) use ($prevFormatter, $column) {
                 if ($prevFormatter) {
                     $value = call_user_func($prevFormatter, $value);
                 }
@@ -118,12 +130,12 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         $output = $tr->render();
 
         // restore column value calculators & formatters
-        foreach ($this->grid->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $column->setValueCalculator($valueCalculators[$column->getId()]);
             $column->setValueFormatter($valueFormatters[$column->getId()]);
         }
         // restore last data row
-        $this->grid->setCurrentRow($lastRow);
+        $grid->setCurrentRow($lastRow);
         return $output;
     }
 
@@ -139,7 +151,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
             $this->totalData->$field = 0;
         }
         $operation = $this->getOperation($field);
-        switch($operation) {
+        switch ($operation) {
             case self::OPERATION_SUM:
                 $this->totalData->$field += $value;
                 break;
@@ -175,19 +187,5 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         return array_key_exists($columnName, $this->operations)
             ? $this->operations[$columnName]
             : $this->defaultOperation;
-    }
-
-    /**
-     * @return array
-     */
-    public function getValuePrefixes()
-    {
-        return $this->valuePrefixes;
-    }
-
-    public function setValuePrefixes(array $valuePrefixes)
-    {
-        $this->valuePrefixes = $valuePrefixes;
-        return $this;
     }
 }

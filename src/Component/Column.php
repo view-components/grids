@@ -50,9 +50,6 @@ class Column implements PartInterface
     /** @var  Part|null */
     protected $dataCellPart;
 
-    /** @var  Grid|null */
-    protected $grid;
-
     /** @var  string|null */
     protected $dataFieldName;
 
@@ -65,7 +62,7 @@ class Column implements PartInterface
     /**
      * Constructor.
      *
-     * @param string|null $columnId column unique name for internal usage
+     * @param string|null $columnId unique column name for internal usage
      * @param string|null $label column label
      */
     public function __construct($columnId, $label = null)
@@ -75,19 +72,6 @@ class Column implements PartInterface
         $this->setLabel($label);
         $this->titleView = new DataView([$this, 'getLabel']);
         $this->dataView = new DataView([$this, 'getCurrentValueFormatted']);
-    }
-
-    /**
-     * @return ComponentInterface
-     */
-    public function getDataCell()
-    {
-        if ($this->dataCell === null) {
-            $this->setDataCell(
-                new Tag('td')
-            );
-        }
-        return $this->dataCell;
     }
 
     /**
@@ -109,7 +93,7 @@ class Column implements PartInterface
     public function formatValue($value)
     {
         $formatter = $this->getValueFormatter();
-        return (string)($formatter ? call_user_func($formatter, $value, $this->grid->getCurrentRow()) : $value);
+        return (string)($formatter ? call_user_func($formatter, $value, $this->getGrid()->getCurrentRow()) : $value);
     }
 
     /**
@@ -121,13 +105,15 @@ class Column implements PartInterface
     {
         $func = $this->getValueCalculator();
         if ($func !== null) {
-            return call_user_func($func, $this->grid->getCurrentRow());
+            return call_user_func($func, $this->getGrid()->getCurrentRow());
         } else {
-            return mp\getValue($this->grid->getCurrentRow(), $this->getDataFieldName());
+            return mp\getValue($this->getGrid()->getCurrentRow(), $this->getDataFieldName());
         }
     }
 
     /**
+     * Returns component that renders data (content of 'td').
+     *
      * @return DataViewComponentInterface
      */
     public function getDataView()
@@ -146,6 +132,8 @@ class Column implements PartInterface
     }
 
     /**
+     * Sets name of associated field in data rows returned from data provider.
+     *
      * @param string|null $dataFieldName
      * @return $this
      */
@@ -156,6 +144,8 @@ class Column implements PartInterface
     }
 
     /**
+     * Returns name of associated field in data rows returned from data provider.
+     *
      * @return string
      */
     public function getDataFieldName()
@@ -166,6 +156,8 @@ class Column implements PartInterface
     /**
      * Returns function calculating column value.
      *
+     * This function accepts data row as first argument.
+     *
      * @return callable|null
      */
     public function getValueCalculator()
@@ -174,6 +166,10 @@ class Column implements PartInterface
     }
 
     /**
+     * Sets function for calculating column value.
+     *
+     * This function accepts data row as first argument.
+     *
      * @param $valueCalculator
      * @return $this
      */
@@ -222,6 +218,8 @@ class Column implements PartInterface
     }
 
     /**
+     * Returns title cell component ('th' tag).
+     *
      * @return ComponentInterface
      */
     public function getTitleCell()
@@ -233,6 +231,23 @@ class Column implements PartInterface
     }
 
     /**
+     * Returns component that renders data cell ('td' tag).
+     *
+     * @return ComponentInterface
+     */
+    public function getDataCell()
+    {
+        if ($this->dataCell === null) {
+            $this->setDataCell(
+                new Tag('td')
+            );
+        }
+        return $this->dataCell;
+    }
+
+    /**
+     * Sets title cell component ('th' tag).
+     *
      * @param ContainerComponentInterface $cell
      * @return $this
      */
@@ -277,7 +292,6 @@ class Column implements PartInterface
     public function attachToCompound(Compound $root)
     {
         $this->attachToCompoundInternal($root);
-        $this->grid = $root;
         $parts = $root->getComponents();
         $titleCellPart = $this->getTitleCellPart();
         if (!$parts->contains($titleCellPart)) {
@@ -317,5 +331,13 @@ class Column implements PartInterface
             );
         }
         return $this->titleCellPart;
+    }
+
+    /**
+     * @return null|Grid
+     */
+    protected function getGrid()
+    {
+        return $this->root;
     }
 }

@@ -20,8 +20,6 @@ class CsvExport extends Part
     private $csvDelimiter = ';';
     private $exitFunction;
 
-    private $grid;
-
     /**
      * @var InputOption
      */
@@ -112,12 +110,12 @@ class CsvExport extends Part
 
     public function attachToCompound(Compound $root)
     {
+        // prepend component that will render results
         $root->children()->add(new DataView(function () {
             if ($this->inputOption->hasValue()) {
                 $this->renderCsv();
             }
         }), true);
-        $this->grid = $root;
         parent::attachToCompound($root);
     }
 
@@ -137,7 +135,7 @@ class CsvExport extends Part
         header('Pragma: no-cache');
         set_time_limit(0);
         /** @var Grid $grid */
-        $grid = $this->grid;
+        $grid = $this->root;
         $provider = $grid->getDataProvider();
         $this->renderHeadingRow($file);
         $this->removePagination($provider);
@@ -166,7 +164,7 @@ class CsvExport extends Part
     {
         $output = [];
         /** @var Grid $grid */
-        $grid = $this->grid;
+        $grid = $this->root;
         foreach ($grid->getColumns() as $column) {
             $output[] = $this->escapeString($column->getLabel());
         }

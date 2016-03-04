@@ -1,6 +1,7 @@
 <?php
 namespace ViewComponents\Grids\Component;
 
+use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Base\ComponentInterface;
 use ViewComponents\ViewComponents\Base\Control\ControlInterface;
 use ViewComponents\ViewComponents\Component\Part;
@@ -10,13 +11,17 @@ use ViewComponents\ViewComponents\Data\Operation\DummyOperation;
 use ViewComponents\ViewComponents\Data\Operation\SortOperation;
 use ViewComponents\ViewComponents\Input\InputOption;
 
+/**
+ * ColumnSortingControl adds buttons for sorting grid data by specified column.
+ * It's automatically placed after title of target column.
+ */
 class ColumnSortingControl extends Part implements ControlInterface
 {
     const DELIMITER = '-dir-';
     /**
      * @var string
      */
-    protected $fieldName;
+    protected $columnId;
     /**
      * @var InputOption
      */
@@ -38,22 +43,22 @@ class ColumnSortingControl extends Part implements ControlInterface
             return null;
         }
         list($columnName, $direction) = explode(static::DELIMITER, $this->inputOption->getValue());
-        if ($columnName !== $this->fieldName) {
+        if ($columnName !== $this->columnId) {
             return null;
         }
         return $direction;
     }
 
     /**
-     * @param string $fieldName
+     * @param string $columnId
      * @param InputOption $input
      * @param ComponentInterface|null $view
      */
-    public function __construct($fieldName, InputOption $input, ComponentInterface $view = null)
+    public function __construct($columnId, InputOption $input, ComponentInterface $view = null)
     {
-        $this->fieldName = $fieldName;
+        $this->columnId = $columnId;
         $this->inputOption = $input;
-        parent::__construct($view, "column-$fieldName-sorting", "column-{$fieldName}-title-cell");
+        parent::__construct($view, "column-$columnId-sorting", "column-{$columnId}-title-cell");
     }
 
     /**
@@ -67,7 +72,14 @@ class ColumnSortingControl extends Part implements ControlInterface
         if ($direction === null) {
             return new DummyOperation();
         }
-        return new SortOperation($this->fieldName, $direction);
+        if ($this->root !== null) {
+            /** @var Grid $root */
+            $root = $this->root;
+            $fieldName = $root->getColumn($this->columnId)->getDataFieldName();
+        } else {
+            $fieldName = $this->columnId;
+        }
+        return new SortOperation($fieldName, $direction);
     }
 
     protected function makeLinks()
@@ -77,14 +89,14 @@ class ColumnSortingControl extends Part implements ControlInterface
         $asc = (string)$url->withQuery(
             (string)$url->query->merge(
                 http_build_query(
-                    [$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::ASC]
+                    [$this->inputOption->getKey() => $this->columnId . static::DELIMITER . SortOperation::ASC]
                 )
             )
         );
         $desc = (string)$url->withQuery(
             (string)$url->query->merge(
                 http_build_query(
-                    [$this->inputOption->getKey() => $this->fieldName . static::DELIMITER . SortOperation::DESC]
+                    [$this->inputOption->getKey() => $this->columnId . static::DELIMITER . SortOperation::DESC]
                 )
             )
         );
