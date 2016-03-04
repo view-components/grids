@@ -4,6 +4,7 @@ namespace ViewComponents\Grids\WebApp;
 use DateTime;
 
 use ViewComponents\Grids\Component\ColumnSortingControl;
+use ViewComponents\Grids\Component\TableCaption;
 use ViewComponents\TestingHelpers\Application\Http\DefaultLayoutTrait;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
@@ -347,5 +348,23 @@ class Controller
         $styling->apply($this->layout());
         $this->defaultCss->detach();
         return $this->page(null, 'BootstrapStyling');
+    }
+
+    public function demo12()
+    {
+        $grid = new Grid($provider = $this->getDataProvider(),
+            [
+                new Column('id'),
+                new Column('name'),
+                new TableCaption('Caption')
+            ]
+        );
+        $grid->attachTo($this->layout());
+
+        $styling = new BootstrapStyling();
+        $styling->apply($this->layout());
+        $this->defaultCss->detach();
+
+        return $this->page(null, 'Grid Caption');
     }
 }
