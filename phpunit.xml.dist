@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/view-components/testing-helpers/bootstrap/tests_bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="false"
+         syntaxCheck="true"
+>
+    <testsuites>
+        <testsuite name="view-components/grids test suite">
+            <directory suffix=".php">./tests/phpunit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
