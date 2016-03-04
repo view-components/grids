@@ -2,101 +2,134 @@
 namespace ViewComponents\Grids;
 
 use ViewComponents\ViewComponents\Base\ComponentInterface;
+use ViewComponents\ViewComponents\Base\Compound\PartInterface;
+use ViewComponents\ViewComponents\Base\ContainerComponentInterface;
+use ViewComponents\ViewComponents\Base\ViewComponentInterface;
+use ViewComponents\ViewComponents\Component\Html\Tag;
+use ViewComponents\ViewComponents\Component\Part;
 
+/**
+ * Trait GridPartsAccessTrait
+ *
+ * @todo replace Grid::constant to static::constant if it would work
+ */
 trait GridPartsAccessTrait
 {
     /**
-     * @param string $componentName
-     * @return ComponentInterface|null
+     * @param $id
+     * @param bool $extractView
+     * @return null|PartInterface|ViewComponentInterface|Part
      */
-    abstract public function getComponent($componentName);
+    abstract public function getComponent($id, $extractView = true);
 
     /**
-     * @param string $name
-     * @param ComponentInterface|null $component
-     * @return Grid
-     */
-    //abstract public function setComponent($name, ComponentInterface $component = null);
-
-    //abstract public function setRecordView(ComponentInterface $component);
-
-    //abstract public function getRecordView();
-
-    public function getTable()
-    {
-        return $this->getComponent('table');
-    }
-//
-//    public function setTable(ComponentInterface $table)
-//    {
-//        return $this->setComponent('table', $table);
-//    }
-
-    public function getTableHeading()
-    {
-        return $this->getComponent('table_heading');
-    }
-
-//    public function setTableHeading(ComponentInterface $table)
-//    {
-//        return $this->setComponent('table_heading', $table);
-//    }
-
-    public function getTitleRow()
-    {
-        return $this->getComponent('title_row');
-    }
-
-//    public function setTitleRow(ComponentInterface $table)
-//    {
-//        return $this->setComponent('title_row', $table);
-//    }
-
-    public function getControlRow()
-    {
-        return $this->getComponent('control_row');
-    }
-
-//    public function setControlRow(ComponentInterface $table)
-//    {
-//        return $this->setComponent('control_row', $table);
-//    }
-
-    public function getTableBody()
-    {
-        return $this->getComponent('table_body');
-    }
-
-//    public function setTableBody(ComponentInterface $table)
-//    {
-//        return $this->setComponent('table_body', $table);
-//    }
-
-    public function getTableFooter()
-    {
-        return $this->getComponent('table_footer');
-    }
-
-//    public function setTableFooter(ComponentInterface $table)
-//    {
-//        return $this->setComponent('table_footer', $table);
-//    }
-
-
-    /**
-     * @return ComponentInterface|null
-     */
-//    public function getTableRow()
-//    {
-//        return $this->getRecordView();
-//    }
-
-    /**
-     * @param ComponentInterface|null $component
+     * @param ComponentInterface|PartInterface $component
+     * @param string|null $id
+     * @param string|null $defaultParent
      * @return $this
      */
-//    public function setTableRow(ComponentInterface $component = null)
-//    {
-//        return $this->setRecordView($component);
-//    }
+    abstract public function setComponent(ComponentInterface $component, $id = null, $defaultParent = null);
+
+    /**
+     * @return Tag
+     */
+    public function getTable()
+    {
+        return $this->getComponent(Grid::TABLE_ID);
+    }
+
+    /**
+     * @param ComponentInterface $component
+     * @return $this
+     */
+    public function setTable(ComponentInterface $component)
+    {
+        return $this->setComponent($component, Grid::TABLE_ID, Grid::FORM_ID);
+    }
+
+    /**
+     * @return Tag
+     */
+    public function getTableHeading()
+    {
+        return $this->getComponent(Grid::TABLE_HEADING_ID);
+    }
+
+    /**
+     * @param ComponentInterface $component
+     * @return $this
+     */
+    public function setTableHeading(ComponentInterface $component)
+    {
+        return $this->setComponent($component, Grid::TABLE_HEADING_ID, Grid::TABLE_ID);
+    }
+
+    /**
+     * @return Tag
+     */
+    public function getTableBody()
+    {
+        return $this->getComponent(Grid::TABLE_BODY_ID);
+    }
+
+    /**
+     * @param ComponentInterface $component
+     * @return $this
+     */
+    public function setTableBody(ComponentInterface $component)
+    {
+        return $this->setComponent($component, Grid::TABLE_BODY_ID, Grid::TABLE_ID);
+    }
+
+    /**
+     * @return Tag
+     */
+    public function getTableFooter()
+    {
+        return $this->getComponent(Grid::TABLE_FOOTER_ID);
+    }
+
+    /**
+     * @param ComponentInterface $component
+     * @return $this
+     */
+    public function setTableFooter(ComponentInterface $component)
+    {
+        return $this->setComponent($component, Grid::TABLE_FOOTER_ID, Grid::TABLE_ID);
+    }
+
+    /**
+     * @return Tag
+     */
+    public function getTileRow()
+    {
+        return $this->getComponent(Grid::TITLE_ROW_ID);
+    }
+
+    /**
+     * @param ComponentInterface $component
+     * @return $this
+     */
+    public function setTitleRow(ComponentInterface $component)
+    {
+        return $this->setComponent($component, Grid::TITLE_ROW_ID, Grid::TABLE_HEADING_ID);
+    }
+
+    /**
+     * @return ContainerComponentInterface
+     */
+    public function getControlRow()
+    {
+        return $this->getComponent(Grid::CONTROL_ROW_ID);
+    }
+
+    /**
+     * @param ComponentInterface $component
+     * @return $this
+     */
+    public function setControlRow(ComponentInterface $component)
+    {
+        return $this->setComponent($component, Grid::CONTROL_ROW_ID, Grid::TABLE_HEADING_ID);
+    }
 }
+

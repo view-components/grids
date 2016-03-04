@@ -26,6 +26,8 @@ class Grid extends ManagedList
     const TITLE_ROW_ID = 'title_row';
     const CONTROL_ROW_ID = 'control_row';
 
+    use GridPartsAccessTrait;
+
     /** @var  mixed|null */
     protected $currentRow;
 
