@@ -3,3 +3,4 @@ composer.lock
 .env
 *.sqlite
 phpunit.xml
+build
