@@ -35,7 +35,7 @@ class Controller
         $this
             ->layout()
             ->section('head')
-            ->addChild($this->defaultCss = new TemplateView('default_css'));
+            ->addChild($this->defaultCss = new TemplateView('test/default_css'));
     }
 
     protected function getUsersData()
