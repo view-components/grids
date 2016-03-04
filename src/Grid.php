@@ -19,6 +19,13 @@ use ViewComponents\Grids\Component\SolidRow;
  */
 class Grid extends ManagedList
 {
+    const TABLE_ID = 'table';
+    const TABLE_HEADING_ID = 'table_heading';
+    const TABLE_FOOTER_ID = 'table_footer';
+    const TABLE_BODY_ID = 'table_body';
+    const TITLE_ROW_ID = 'title_row';
+    const CONTROL_ROW_ID = 'control_row';
+
     /** @var  mixed|null */
     protected $currentRow;
 
@@ -53,17 +60,17 @@ class Grid extends ManagedList
 
     public function setControlContainer(ComponentInterface $component)
     {
-        return $this->setComponent($component, 'control_container', 'control_row');
+        return $this->setComponent($component, static::CONTROL_CONTAINER_ID, static::CONTROL_ROW_ID);
     }
 
     public function setSubmitButton(ComponentInterface $component)
     {
-        return $this->setComponent($component, 'submit_button', 'control_row');
+        return $this->setComponent($component, static::SUBMIT_BUTTON_ID, static::CONTROL_ROW_ID);
     }
 
     public function setListContainer(ComponentInterface $component)
     {
-        return $this->setComponent($component, 'list_container', 'table_body');
+        return $this->setComponent($component, static::LIST_CONTAINER_ID, static::TABLE_BODY_ID);
     }
 
     /**
@@ -98,20 +105,19 @@ class Grid extends ManagedList
     protected function makeDefaultComponents()
     {
         return [
-            new Part(new Tag('div'), 'container', 'root'),
-            new Part(new Tag('form'), 'form', 'container'),
-
-            new Part(new Tag('table'), 'table', 'form'),
-            new Part(new Tag('thead'), 'table_heading', 'table'),
-            new Part(new Tag('tr'), 'title_row', 'table_heading'),
-            new Part(new SolidRow(), 'control_row', 'table_heading'),
-            new Part(new Tag('span'), 'control_container', 'control_row'),
-            new Part(new Tag('input', ['type' => 'submit']), 'submit_button', 'control_row'),
-            new Part(new Tag('tbody'), 'table_body', 'table'),
-            new Part(new Container(), 'list_container', 'table_body'),
-            new Part(new CollectionView(), 'collection_view', 'list_container'),
-            new RecordView(new Tag('tr')),
-            new Part(new Tag('tfoot'), 'table_footer', 'table'),
+            new Part(new Tag('div'), static::CONTAINER_ID, static::ROOT_ID), // inherited
+            new Part(new Tag('form'), static::FORM_ID, static::CONTAINER_ID), // inherited
+            new Part(new Tag('table'), static::TABLE_ID, static::FORM_ID),
+            new Part(new Tag('thead'), static::TABLE_HEADING_ID, static::TABLE_ID),
+            new Part(new Tag('tr'), static::TITLE_ROW_ID, static::TABLE_HEADING_ID),
+            new Part(new SolidRow(), static::CONTROL_ROW_ID, static::TABLE_HEADING_ID),
+            new Part(new Tag('span'), static::CONTROL_CONTAINER_ID, static::CONTROL_ROW_ID), // inherited
+            new Part(new Tag('input', ['type' => 'submit']), static::SUBMIT_BUTTON_ID, static::CONTROL_ROW_ID), // inherited
+            new Part(new Tag('tbody'), static::TABLE_BODY_ID, static::TABLE_ID),
+            new Part(new Container(), static::LIST_CONTAINER_ID, static::TABLE_BODY_ID), // inherited
+            new Part(new CollectionView(), static::COLLECTION_VIEW_ID, static::LIST_CONTAINER_ID),  // inherited
+            new RecordView(new Tag('tr')), // inherited
+            new Part(new Tag('tfoot'), static::TABLE_FOOTER_ID, static::TABLE_ID),
         ];
     }
 }
