@@ -107,19 +107,19 @@ class Grid extends ManagedList
     protected function makeDefaultComponents()
     {
         return [
-            new Part(new Tag('div'), static::CONTAINER_ID, static::ROOT_ID), // inherited
-            new Part(new Tag('form'), static::FORM_ID, static::CONTAINER_ID), // inherited
-            new Part(new Tag('table'), static::TABLE_ID, static::FORM_ID),
-            new Part(new Tag('thead'), static::TABLE_HEADING_ID, static::TABLE_ID),
-            new Part(new Tag('tr'), static::TITLE_ROW_ID, static::TABLE_HEADING_ID),
-            new Part(new SolidRow(), static::CONTROL_ROW_ID, static::TABLE_HEADING_ID),
-            new Part(new Tag('span'), static::CONTROL_CONTAINER_ID, static::CONTROL_ROW_ID), // inherited
-            new Part(new Tag('input', ['type' => 'submit']), static::SUBMIT_BUTTON_ID, static::CONTROL_ROW_ID), // inherited
-            new Part(new Tag('tbody'), static::TABLE_BODY_ID, static::TABLE_ID),
-            new Part(new Container(), static::LIST_CONTAINER_ID, static::TABLE_BODY_ID), // inherited
-            new Part(new CollectionView(), static::COLLECTION_VIEW_ID, static::LIST_CONTAINER_ID),  // inherited
-            new RecordView(new Tag('tr')), // inherited
-            new Part(new Tag('tfoot'), static::TABLE_FOOTER_ID, static::TABLE_ID),
+            new Part(new Tag('div'), static::CONTAINER_ID, static::ROOT_ID),
+            new Part(new Tag('form'), static::FORM_ID, static::CONTAINER_ID),
+            new Part(new Tag('table'), static::TABLE_ID, static::FORM_ID), // new
+            new Part(new Tag('thead'), static::TABLE_HEADING_ID, static::TABLE_ID), // new
+            new Part(new Tag('tr'), static::TITLE_ROW_ID, static::TABLE_HEADING_ID), // new
+            new Part(new SolidRow(), static::CONTROL_ROW_ID, static::TABLE_HEADING_ID), // new
+            new Part(new Tag('span'), static::CONTROL_CONTAINER_ID, static::CONTROL_ROW_ID),
+            new Part(new Tag('input', ['type' => 'submit']), static::SUBMIT_BUTTON_ID, static::CONTROL_ROW_ID),
+            new Part(new Tag('tbody'), static::TABLE_BODY_ID, static::TABLE_ID), // new
+            new Part(new Container(), static::LIST_CONTAINER_ID, static::TABLE_BODY_ID),
+            new Part(new CollectionView(), static::COLLECTION_VIEW_ID, static::LIST_CONTAINER_ID),
+            new RecordView(new Tag('tr')),
+            new Part(new Tag('tfoot'), static::TABLE_FOOTER_ID, static::TABLE_ID), // new
         ];
     }
 }

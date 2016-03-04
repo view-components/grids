@@ -100,7 +100,7 @@ class ColumnSortingControl extends Part implements ControlInterface
                 )
             )
         );
-        return compact('asc','desc');
+        return compact('asc', 'desc');
     }
 
     /**

@@ -144,7 +144,6 @@ class CsvExport extends Part
             $grid->setCurrentRow($row);
             foreach ($grid->getColumns() as $column) {
                 $output[] = $this->escapeString($column->getCurrentValueFormatted());
-
             }
             fputcsv($file, $output, $this->getCsvDelimiter());
         }
@@ -189,7 +188,8 @@ class CsvExport extends Part
     protected function makeDefaultView()
     {
         $href = $this->getExportUrl();
-        return new Tag('button',
+        return new Tag(
+            'button',
             [
                 // required to avoid emitting 'click' on pressing enter
                 'type' => 'button',

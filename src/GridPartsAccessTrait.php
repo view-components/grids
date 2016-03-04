@@ -132,4 +132,3 @@ trait GridPartsAccessTrait
         return $this->setComponent($component, Grid::CONTROL_ROW_ID, Grid::TABLE_HEADING_ID);
     }
 }
-
