@@ -1,5 +1,11 @@
 # Grids
 
+[![Release](https://img.shields.io/packagist/v/view-components/view-components.svg)](https://packagist.org/packages/view-components/grids)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/view-components/grids/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/view-components/grids/?branch=master)
+[![Build Status](https://travis-ci.org/view-components/grids.svg?branch=master)](https://travis-ci.org/view-components/grids)
+[![Code Coverage](https://scrutinizer-ci.com/g/view-components/grids/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/view-components/grids/?branch=master)
+
+
 Data grids for PHP
 
 Project status: **alpha** *since 2016-02-24*
