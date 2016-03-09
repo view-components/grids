@@ -72,9 +72,9 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         $this->defaultOperation = $defaultOperation;
     }
 
-    public function attachToCompound(Compound $root)
+    public function attachToCompound(Compound $root, $prepend = false)
     {
-        $this->attachToCompoundInternal($root);
+        $this->attachToCompoundInternal($root, $prepend);
         /** @var CollectionView $collectionView */
         $collectionView = $root->getComponent('collection_view');
         $collectionView->setDataInjector(function ($dataRow, $collectionView) use ($root) {

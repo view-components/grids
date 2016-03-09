@@ -108,7 +108,7 @@ class CsvExport extends Part
         return $this->fileName;
     }
 
-    public function attachToCompound(Compound $root)
+    public function attachToCompound(Compound $root, $prepend = false)
     {
         // prepend component that will render results
         $root->children()->add(new DataView(function () {
@@ -116,7 +116,7 @@ class CsvExport extends Part
                 $this->renderCsv();
             }
         }), true);
-        parent::attachToCompound($root);
+        parent::attachToCompound($root, $prepend);
     }
 
     protected function removePagination(DataProviderInterface $provider)
