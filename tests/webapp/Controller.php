@@ -3,13 +3,17 @@ namespace ViewComponents\Grids\WebApp;
 
 use DateTime;
 
+use ViewComponents\Grids\Component\AjaxDetailsRow;
 use ViewComponents\Grids\Component\ColumnSortingControl;
+use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Component\TableCaption;
 use ViewComponents\TestingHelpers\Application\Http\DefaultLayoutTrait;
+use ViewComponents\ViewComponents\Component\Container;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
 use ViewComponents\ViewComponents\Component\DataView;
+use ViewComponents\ViewComponents\Component\Debug\SymfonyVarDump;
 use ViewComponents\ViewComponents\Component\Html\Tag;
 use ViewComponents\ViewComponents\Component\Part;
 use ViewComponents\ViewComponents\Component\TemplateView;
@@ -367,4 +371,69 @@ class Controller
 
         return $this->page(null, 'Grid Caption');
     }
+
+
+    public function demo13()
+    {
+
+        $grid = new Grid($provider = $this->getDataProvider(),
+            [
+                new Column('id'),
+                new Column('name'),
+                new DetailsRow(new SymfonyVarDump())
+            ]
+        );
+        $grid->attachTo($this->layout());
+
+        $styling = new BootstrapStyling();
+        $styling->apply($this->layout());
+        $this->defaultCss->detach();
+        return $this->page(null, 'DetailsRow');
+    }
+
+    public function demo14()
+    {
+        if (isset($_GET['details'])) {
+            return $this->demo14Details();
+        }
+        $grid = new Grid($provider = $this->getDataProvider(),
+            [
+                new Column('id'),
+                new Column('name'),
+                new AjaxDetailsRow(function ($row) {
+                    return "/demo14?details=1&id=" . $row->id;
+                })
+            ]
+        );
+        $grid->attachTo($this->layout());
+
+        $styling = new BootstrapStyling();
+        $styling->apply($this->layout());
+        $this->defaultCss->detach();
+        return $this->page(null, 'AjaxDetailsRow');
+    }
+
+    protected function demo14Details()
+    {
+        $provider = $this->getDataProvider();
+        $provider->operations()->add(new FilterOperation('id', FilterOperation::OPERATOR_EQ, $_GET['id']));
+        $grid = new Grid(
+            $provider,
+            [
+
+                new Column('name'),
+                new Column('role'),
+                new Column('birthday'),
+            ]
+        );
+        $styling = new BootstrapStyling();
+        $styling->apply($grid, new Container());
+        $layout = new DataView(function() use ($grid){
+            return "<div class='panel panel-default'>
+                <div class='panel-body'>$grid</div>
+            </div>";
+        });
+        return $layout->render();
+    }
+
 }
