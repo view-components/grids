@@ -18,7 +18,7 @@
   },
   "require-dev": {
     "symfony/var-dumper": "^3",
-    "view-components/testing-helpers": "^1.1.2",
+    "view-components/testing-helpers": "dev-master",
     "squizlabs/php_codesniffer": "~2.3"
   },
   "autoload": {
@@ -40,7 +40,8 @@
       "ViewComponents\\Grids\\Installer::postComposerInstall"
     ],
     "serve": "serve",
-    "test": "phpunit"
+    "test": "php vendor/phpunit/phpunit/phpunit",
+    "cs": "php vendor/squizlabs/php_codesniffer/scripts/phpcs --standard=psr2 src/"
   },
   "support": {
     "email": "mail@vitaliy.in"

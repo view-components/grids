@@ -19,9 +19,5 @@ before_script:
   - travis_retry composer install --prefer-source --no-interaction
 
 script:
-  - vendor/bin/phpunit
-  - vendor/bin/phpcs --standard=psr2 src/
-  # - vendor/bin/codecept run acceptance
-# after_failure:
-  # - cat app/storage/logs/laravel.log
-  # - cat tests/codecept/_output/*
+  - composer test
+  - composer cs
