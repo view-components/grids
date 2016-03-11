@@ -39,7 +39,7 @@
     "post-install-cmd": [
       "ViewComponents\\Grids\\Installer::postComposerInstall"
     ],
-    "serve": "serve",
+    "serve": "php vendor/view-components/testing-helpers/serve",
     "test": "php vendor/phpunit/phpunit/phpunit",
     "cs": "php vendor/squizlabs/php_codesniffer/scripts/phpcs --standard=psr2 src/"
   },
