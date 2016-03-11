@@ -13,6 +13,9 @@ use ViewComponents\ViewComponents\Component\DataView;
 use ViewComponents\ViewComponents\Resource\ResourceManager;
 use ViewComponents\ViewComponents\Service\Services;
 
+/**
+ * This component adds hidden rows that are shown when clicking on grid row.
+ */
 class DetailsRow extends SolidRow implements PartInterface
 {
     use PartTrait {
@@ -26,6 +29,12 @@ class DetailsRow extends SolidRow implements PartInterface
     private $resourceManager;
     private $jquery;
 
+    /**
+     * DetailsRow constructor.
+     *
+     * @param DataViewComponentInterface $view details row content, will be initialized by data row
+     * @param ResourceManager|null $resourceManager
+     */
     public function __construct(DataViewComponentInterface $view, ResourceManager $resourceManager = null)
     {
         parent::__construct();
@@ -69,10 +78,9 @@ class DetailsRow extends SolidRow implements PartInterface
         $tr->setAttribute('data-row-with-details', 1);
         $this->getGrid()->children()
             ->add($this->jquery, 1)
-            ->add($this->getScript());;
+            ->add($this->getScript());
         // fix zebra styled tables
         $this->parent()->addChild(new DataView('<tr style="display: none"></tr>'));
-
     }
 
     protected function getScript()

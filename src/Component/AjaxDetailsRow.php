@@ -7,9 +7,14 @@ use ViewComponents\ViewComponents\Resource\ResourceManager;
 
 class AjaxDetailsRow extends DetailsRow
 {
-
     protected $urlGenerator;
 
+    /**
+     * AjaxDetailsRow constructor.
+     *
+     * @param callable $urlGenerator
+     * @param ResourceManager|null $resourceManager
+     */
     public function __construct(callable $urlGenerator, ResourceManager $resourceManager = null)
     {
         parent::__construct(new DataView(null, function ($url) {
