@@ -55,7 +55,8 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     /**
      * PageTotalsRow constructor.
      *
-     * Operations passed to first argument ($operations) can contain values of PageTotalsRow::OPERATIN_* constants or Closure or null.
+     * Operations passed to first argument ($operations) can contain values
+     * of PageTotalsRow::OPERATIN_* constants or Closure or null.
      * If $operations has no key for column, default operation will be used.
      *
      * @param array $operations keys are field names and values are operations, operations
