@@ -20,48 +20,46 @@ Bindings for app. frameworks:
 * Yii 2: planned
 * ZF 2: planned
 
-## Demo Application
-
-1) Clone this repository
-```bash
-git clone https://github.com/view-components/grids.git
-cd grids
-```
-2) Install [Composer](https://getcomposer.org/) if it's not installed
-
-3) Install Composer dependencies
- ```bash
- composer install
- ```
-
-4) Create .env file
-```bash
-cp tests/.env.example tests/.env
-
-```
-5)  Start built-in php web server
-```bash
-php -S localhost:9000 tests/webapp/index.php
-```
-Do not close terminal.
-
-6) Now open [http://localhost:9000/](http://localhost:9000/) in browser
 
 ## Testing
 
 #### Overview
 
-The package bundled with phpunit tests and web-application for integration/acceptance tests using codeception.
+The package bundled with phpunit tests and web-application for integration/acceptance tests.
 
-#### Running Unit Tests
+#### Running Tests
 
-Just execute phpunit from package folder.
+1) Clone this repository and navigate to created folder
 
-```bash
-phpunit
+2) Run composer installation
+
 ```
-Package dependencies must be installed via composer (just run composer install).
+composer install
+```
+3) Run tests
 
+```
+composer test
+```
+
+
+#### Running demo application
+
+1) Clone this repository and navigate to created folder
+
+2) Run composer installation
+
+```
+composer install
+```
+
+3) Run web-server
+
+```
+composer serve
+```
+
+4) Open [http://localhost:8000](http://localhost:8000) in browser
 
 ## License
 
