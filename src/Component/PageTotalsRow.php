@@ -27,7 +27,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     const OPERATION_SUM = 'sum';
     const OPERATION_AVG = 'avg';
     const OPERATION_COUNT = 'count';
-    const OPERATION_IGNORE = 'ignore';
+    const OPERATION_IGNORE = null;
 
     protected $valuePrefixes = [
         self::OPERATION_SUM => 'Σ',
@@ -52,6 +52,15 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
      */
     private $defaultOperation;
 
+    /**
+     * PageTotalsRow constructor.
+     *
+     * Operations passed to first argument ($operations) can contain values of PageTotalsRow::OPERATIN_* constants or Closure or null.
+     * If $operations has no key for column, default operation will be used.
+     *
+     * @param array $operations keys are field names and values are operations, operations
+     * @param string $defaultOperation
+     */
     public function __construct(array $operations = [], $defaultOperation = self::OPERATION_SUM)
     {
         $this->id = 'page_totals_row';
@@ -170,6 +179,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
                 );
                 break;
             case self::OPERATION_IGNORE:
+                $this->totalData->$field = null;
                 break;
             default:
                 if ($operation instanceof Closure) {
@@ -182,6 +192,10 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         }
     }
 
+    /**
+     * @param string $columnName
+     * @return string|Closure|null
+     */
     protected function getOperation($columnName)
     {
         return array_key_exists($columnName, $this->operations)
