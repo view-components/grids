@@ -400,9 +400,25 @@ class Controller
             [
                 new Column('id'),
                 new Column('name'),
+                (new Column('age'))
+                    ->setValueCalculator(function ($row) {
+                        return DateTime
+                            ::createFromFormat('Y-m-d', $row->birthday)
+                            ->diff(new DateTime('now'))
+                            ->y;
+
+                    })
+                    ->setValueFormatter(function ($val) {
+                        return "$val years";
+                    })
+                ,
                 new AjaxDetailsRow(function ($row) {
                     return "/demo14?details=1&id=" . $row->id;
-                })
+                }),
+                new PageTotalsRow([
+                    'id' => PageTotalsRow::OPERATION_IGNORE,
+                    'age' => PageTotalsRow::OPERATION_AVG
+                ])
             ]
         );
         $grid->attachTo($this->layout());
