@@ -118,8 +118,6 @@ class Controller
                 ->setDestinationParentId('role-c-row'),
             new Part(new Tag('input', ['type' => 'submit']), 'submit_button', 'action-c-row')
         ]);
-        $grid->getComponents()->remove($grid->getComponent('control_container', false));
-        $grid->getComponents()->remove($grid->getComponent('control_row', false));
         return $this->page($grid->render(), 'Filters placed under column headers');
     }
 
