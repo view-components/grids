@@ -6,6 +6,7 @@ use Nayjest\Collection\Extended\ObjectCollectionReadInterface;
 use RuntimeException;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\ViewComponents\Base\ComponentInterface;
+use ViewComponents\ViewComponents\Base\Compound\PartInterface;
 use ViewComponents\ViewComponents\Component\CollectionView;
 use ViewComponents\ViewComponents\Component\Container;
 use ViewComponents\ViewComponents\Component\Html\Tag;
@@ -121,5 +122,31 @@ class Grid extends ManagedList
             new RecordView(new Tag('tr')),
             new Part(new Tag('tfoot'), static::TABLE_FOOTER_ID, static::TABLE_ID), // new
         ];
+    }
+
+    /**
+     * Prepares component for rendering.
+     */
+    protected function prepare()
+    {
+        parent::prepare();
+        $this->hideControlRowIfEmpty();
+    }
+
+    protected function hideControlRowIfEmpty()
+    {
+        $row = $this->getControlRow();
+        $container = $this->getControlContainer();
+        if (
+            !$row
+            || !$container
+            || !$container->children()->isEmpty()
+            || ($row->children()->count() > 2) // submit button + control_container
+        ) {
+            return;
+        }
+        /** @var Part $rowPart */
+        $rowPart = $this->getComponent(static::CONTROL_ROW_ID, false);
+        $rowPart->setView(null);
     }
 }
