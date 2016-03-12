@@ -6,7 +6,6 @@ use Nayjest\Collection\Extended\ObjectCollectionReadInterface;
 use RuntimeException;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\ViewComponents\Base\ComponentInterface;
-use ViewComponents\ViewComponents\Base\Compound\PartInterface;
 use ViewComponents\ViewComponents\Component\CollectionView;
 use ViewComponents\ViewComponents\Component\Container;
 use ViewComponents\ViewComponents\Component\Html\Tag;
