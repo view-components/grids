@@ -12,13 +12,13 @@
   ],
   "require": {
     "php": "^5.5||^7",
-    "view-components/view-components": "^0.21.10",
+    "view-components/view-components": "^0.22",
     "nayjest/tree": "^3",
     "league/uri": "^4"
   },
   "require-dev": {
     "symfony/var-dumper": "^3",
-    "view-components/testing-helpers": "^1.2.1",
+    "view-components/testing-helpers": "^1.2.2",
     "squizlabs/php_codesniffer": "~2.3"
   },
   "autoload": {
