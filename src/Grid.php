@@ -136,8 +136,7 @@ class Grid extends ManagedList
     {
         $row = $this->getControlRow();
         $container = $this->getControlContainer();
-        if (
-            !$row
+        if (!$row
             || !$container
             || !$container->children()->isEmpty()
             || ($row->children()->count() > 2) // submit button + control_container
