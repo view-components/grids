@@ -113,7 +113,7 @@ class ColumnSortingControl extends Part implements ControlInterface
         if ($this->getView() === null) {
             $this->setView(new TemplateView('controls/column_sorting'));
         }
-        $this->getView()->setData([
+        $this->getView()->mergeData([
             'order' => $this->getDirection(),
             'links' => $this->makeLinks()
         ]);
