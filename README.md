@@ -60,7 +60,7 @@ $input = $input = new InputSource($_GET);
 // create grid
 $grid = new Grid(
     $provider,
-    // all components is optional, you can specify only columns
+    // all components are optional, you can specify only columns
     [
         new TableCaption('My Grid')
         new Column('id'),
