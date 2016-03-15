@@ -6,20 +6,50 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/view-components/grids/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/view-components/grids/?branch=master)
 
 
-Data grids for PHP
+**Data grids for PHP**
 
 Project status: **alpha** *since 2016-02-24*
 
-This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids) library for Laravel.
+This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids).
 
-Now Grids is framework-agnostic.
+It's framwork-agnostic in sense of both backend and frontend frameworks, i. e.:
+ * You can use it with any PHP Framework. Integration packages are also available.
+ * Don't worry about fitting markup for your favorite CSS framework. Just describe grid with all required components and then apply customization
 
-Bindings for app. frameworks:
-* Laravel: alpha
-* Symfony 2/3: planned
-* Yii 2: planned
-* ZF 2: planned
+### Bindings / Integrations
 
+ Area | Framework | Component | Package | Status
+ --- | --- | --- | --- | ---
+ Backend | Laravel(Eloquent) | Eloquent Data Provider | [view-components/eloquent-data-processing](https://github.com/view-components/eloquent-data-processing) | Stable
+ Backend | Laravel(Blade) | Blade Renderer |  | Planned
+ Backend | Symfony(Twig) | Twig Renderer |  | Planned
+ Backend | Zend Framework 2/3 | * |  | Planned
+ Backend | Yii 2 | * |  | Planned
+ Backend | Doctrine(DBAL) | Doctrine(DBAL) Data Provider | [view-components/doctrine-dbal-data-processing](https://github.com/view-components/doctrine-dbal-data-processing) | In Progress
+  Backend | Any | PHP Array Data Provider | Bundled | Ready, Unstable 
+  Backend | Any | PDO Data Provider | Bundled | Ready, Unstable 
+  Frontend | Twitter Bootstrap | Bootstrap View Customization | Bundled | Ready, Unstable 
+  Frontend | Foundation by ZURB | Foundation View Customization | Bundled | In Progress
+  Frontend | Semantic UI | Semantic UI View Customization |  | Planned
+  Frontend | Yahoo Pure | Yahoo Pure View Customization |  | Planned
+  Frontend | UIKit | UIKit View Customization |  | Planned
+  
+
+## Requirements
+
+* PHP 5.5+ (hhvm & php7 are supported)
+* Some components requires [ext_intl](http://php.net/manual/en/book.intl.php) ([bundled with PHP](http://php.net/manual/en/intl.installation.php) as of PHP 5.3.0)
+* ext_curl required for running package tests
+
+## Installation
+
+The recommended way of installing the component is through [Composer](https://getcomposer.org).
+
+Run following command:
+
+```bash
+composer require view-components/grids
+```
 
 ## Testing
 
@@ -31,11 +61,12 @@ The package bundled with phpunit tests and web-application for integration/accep
 
 1) Clone this repository and navigate to created folder
 
-2) Run composer installation
+2) Run installation
 
 ```
 composer install
 ```
+
 3) Run tests
 
 ```
