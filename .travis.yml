@@ -17,7 +17,7 @@ script:
 - composer cs
 deploy:
   provider: heroku
-  buildpack: https://github.com/Nayjest/heroku-buildpack-php.git
+#  buildpack: https://github.com/Nayjest/heroku-buildpack-php.git
   api_key:
     secure: TX1w3dIQp1Se/yEbEp6FvhuopKKhCku83J1AXs1gohgZOUJVPDAtiqupVJQUTUjF25FAw2eHNXb7+hf0brwCUOXrd/drxrgvNYhZFWjMX/QEbKizwg/4EVmAMTlwyFucq++bnNjYyWSJrJ5cj0k4AM36OwG/NN3FG/6BOI6LTbcD/J63GxeHSFcTxD8sp4lqMjBLEvH8+GRiZJVauUYLy0N1TDsjqmX0aF2xmDaERhVZjzO83zeV3jS6lAplGCeliy+bGy4FnfXH+DDbGsOcD4UCHql/tOrsZgQV361jN03jeweZN2wuSwmgezdYtX3QwJsFSb38/YY6L4++MsvwYzrVuIltkfpbCU+JwQ+Q3a3Lcf1rBqWWoupFu0ANWBTJbhrG0uTly3XQpod29Ls9ZQZ/M8suSOK9j+1bgwU0o1zBa6UsyybWG4HP9taTSwxonckLPau7UezDLupAjSKPmmcO9Fd9hpql7R1hvWhR13fJYdFqZBn2/vp5lw49owZSUoywo00yQNrWSY2PV65zI0dWkx+dCoQRd8+FpUZHOEKaEYwmqshRrl/wZ98ix1OWtU3SJzw7GwAcWEtHJguWnIulZvn+N26vTT9wCblX2SOi66CIEBvqN8K23hyQMfayv0HkG7MuE3g30+zRGZissM7MJBO6oUB5h2iYlrV3DVU=
   app: vc-grids
