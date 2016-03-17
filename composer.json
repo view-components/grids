@@ -37,7 +37,7 @@
     }
   },
   "scripts": {
-    "post-install-cmd": [
+    "post-create-project-cmd": [
       "ViewComponents\\Grids\\Installer::postComposerInstall"
     ],
     "serve": "php vendor/view-components/testing-helpers/serve",
