@@ -25,3 +25,4 @@ deploy:
   app: vc-grids
   on:
     repo: view-components/grids
+  skip_cleanup: true
