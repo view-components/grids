@@ -13,7 +13,7 @@
   "require": {
     "php": "^5.5||^7",
     "ext-intl": "*",
-    "view-components/view-components": "~0.22.1",
+    "view-components/view-components": "~0.22.2",
     "nayjest/tree": "^3",
     "league/uri": "^4"
   },
