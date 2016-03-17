@@ -5,16 +5,15 @@
 [![Build Status](https://travis-ci.org/view-components/grids.svg?branch=master)](https://travis-ci.org/view-components/grids)
 [![Code Coverage](https://scrutinizer-ci.com/g/view-components/grids/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/view-components/grids/?branch=master)
 
-
-**Data grids for PHP**
-
-Project status: **alpha** *since 2016-02-24*
+### `Flexible Data Grids for PHP`
 
 This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids).
 
 It's framwork-agnostic in sense of both backend and frontend frameworks, i. e.:
  * You can use it with any PHP Framework. Integration packages are also available.
  * Don't worry about fitting markup for your favorite CSS framework. Just describe grid with all required components and then apply customization
+
+Project status: **alpha** *since 2016-02-24*
 
 ### Bindings / Integrations
 
@@ -38,18 +37,38 @@ It's framwork-agnostic in sense of both backend and frontend frameworks, i. e.:
 ## Requirements
 
 * PHP 5.5+ (hhvm & php7 are supported)
-* Some components requires [ext_intl](http://php.net/manual/en/book.intl.php) ([bundled with PHP](http://php.net/manual/en/intl.installation.php) as of PHP 5.3.0)
+* [ext_intl](http://php.net/manual/en/book.intl.php) ([bundled with PHP](http://php.net/manual/en/intl.installation.php) as of PHP 5.3.0)
 * ext_curl required for running package tests
 
 ## Installation
 
+### Installing into Existing Project
+
 The recommended way of installing the component is through [Composer](https://getcomposer.org).
 
-Run following command:
+Run following command from your project folder:
 
 ```bash
 composer require view-components/grids
 ```
+
+### Installing as Stand-alone Project
+
+For running tests and demo-application bundled with this package on your system you need to install it as stand-alone project.
+
+```
+composer create-project view-components/grids
+```
+
+This is the equivalent of doing a git clone followed by a "composer install" of the vendors.
+Composer will automatically run 'post-create-project-cmd' command and that will call interactive installation.
+
+If you want to use default settings and run it silently, just add `--no-interaction` option.
+
+If you already cloned this repository, or you want to reinstall package, navigate to package folder and run `composer create-project` without specifying package name.
+
+If you are sure that you don't need to reinstall composer dependencies, you can execute only bundled installer: `composer run post-create-project-cmd`
+
 ## Usage
 
 Basic example:
@@ -102,47 +121,40 @@ $customization = new BootstrapStyling();
 $customization->apply($grid);
 echo $grid;
 ```
+## Demo Application
 
-## Testing
+This package bundled with demo-application.
 
-#### Overview
+Souce code of demos available [here](https://github.com/view-components/grids/blob/master/tests/webapp/Controller.php)
 
-The package bundled with phpunit tests and web-application for integration/acceptance tests.
+### Demo Application on Heroku
 
-#### Running Tests
+Travis CI automatically deploys web-application bundled with this package to Heroku.
 
-1) Clone this repository and navigate to created folder
+Here you can see working demos: <http://vc-grids.herokuapp.com/>
 
-2) Run installation
+*First run may be slow becouse Heroku shutting down workers when there is no traffic and starts it again on first visit*
 
-```
-composer install
-```
+### Running Demo Application Locally
 
-3) Run tests
+To run it locally, you must install this package as stand-alone project with dev-dependencis.
 
-```
-composer test
-```
-
-
-#### Running demo application
-
-1) Clone this repository and navigate to created folder
-
-2) Run composer installation
-
-```
-composer install
-```
-
-3) Run web-server
+Then, run web-server from the package directory with the following command:
 
 ```
 composer serve
 ```
+This command uses web-server bundled with PHP.
 
-4) Open [http://localhost:8000](http://localhost:8000) in browser
+Now, open [http://localhost:8000](http://localhost:8000) in browser (for Windows users it will be opened automatically after starting web-server).
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Security
+
+If you discover any security related issues, please email mail@vitaliy.in instead of using the issue tracker.
 
 ## License
 
