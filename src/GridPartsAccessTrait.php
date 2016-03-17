@@ -31,6 +31,8 @@ trait GridPartsAccessTrait
     abstract public function setComponent(ComponentInterface $component, $id = null, $defaultParent = null);
 
     /**
+     * Returns component that renders 'table' HTML tag.
+     *
      * @return Tag
      */
     public function getTable()
@@ -39,6 +41,8 @@ trait GridPartsAccessTrait
     }
 
     /**
+     * Sets component for rendering 'table' tag.
+     *
      * @param ComponentInterface $component
      * @return $this
      */
@@ -48,6 +52,8 @@ trait GridPartsAccessTrait
     }
 
     /**
+     * Returns component that renders 'thead' HTML tag.
+     *
      * @return Tag
      */
     public function getTableHeading()
@@ -65,6 +71,8 @@ trait GridPartsAccessTrait
     }
 
     /**
+     * Returns component that renders 'tbody' HTML tag.
+     *
      * @return Tag
      */
     public function getTableBody()
@@ -82,6 +90,8 @@ trait GridPartsAccessTrait
     }
 
     /**
+     * Returns component that renders 'tfoot' HTML tag.
+     *
      * @return Tag
      */
     public function getTableFooter()
@@ -99,6 +109,7 @@ trait GridPartsAccessTrait
     }
 
     /**
+     * Returns component that renders 'tr' HTML tag containing column titles.
      * @return Tag
      */
     public function getTileRow()
