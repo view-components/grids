@@ -47,5 +47,5 @@
   "support": {
     "email": "mail@vitaliy.in"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "stable"
 }
