@@ -8,6 +8,7 @@ use ViewComponents\Grids\Component\ColumnSortingControl;
 use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Component\TableCaption;
 use ViewComponents\TestingHelpers\Application\Http\DefaultLayoutTrait;
+use ViewComponents\TestingHelpers\Application\Http\TimingTrait;
 use ViewComponents\ViewComponents\Component\Container;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
@@ -32,6 +33,7 @@ use ViewComponents\Grids\Grid;
 class Controller
 {
     use DefaultLayoutTrait;
+    use TimingTrait;
 
     private $defaultCss;
 
@@ -69,6 +71,8 @@ class Controller
 
     public function demo1()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $grid = new Grid($provider, [
             new Column('id'),
@@ -85,6 +89,8 @@ class Controller
      */
     public function demo2()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $grid = new Grid($provider, [
             new Column('id'),
@@ -101,6 +107,8 @@ class Controller
 
     public function demo3()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $grid = new Grid($provider, [
             new Column('id'),
@@ -128,6 +136,8 @@ class Controller
      */
     public function demo4()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $input = new InputSource($_GET);
 
@@ -155,6 +165,8 @@ class Controller
      */
     public function demo5()
     {
+        $this->prepareTiming();
+
         $input = new InputSource($_GET);
         # Solution A
         # Attach pagination to grid, then move it to another part of tree using Tree API
@@ -218,6 +230,8 @@ class Controller
      */
     public function demo6()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $grid = new Grid($provider, [
             new Column('id'),
@@ -265,6 +279,8 @@ class Controller
      */
     public function demo7()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $sortingInput = new InputOption('sort', $_GET);
         $grid = new Grid($provider,
@@ -285,6 +301,8 @@ class Controller
 
     public function demo8()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $grid = new Grid($provider, [
             new Column('id'),
@@ -297,6 +315,8 @@ class Controller
 
     public function demo9()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $input = new InputSource($_GET);
         $grid = new Grid($provider,
@@ -314,6 +334,8 @@ class Controller
 
     public function demo10()
     {
+        $this->prepareTiming();
+
         $provider = $this->getDataProvider();
         $input = new InputSource($_GET);
         $grid = new Grid($provider,
@@ -332,6 +354,8 @@ class Controller
 
     public function demo11()
     {
+        $this->prepareTiming();
+
         $input = new InputSource($_GET);
         $grid = new Grid($provider = $this->getDataProvider(),
             [
@@ -354,6 +378,8 @@ class Controller
 
     public function demo12()
     {
+        $this->prepareTiming();
+
         $grid = new Grid($provider = $this->getDataProvider(),
             [
                 new Column('id'),
@@ -373,6 +399,7 @@ class Controller
 
     public function demo13()
     {
+        $this->prepareTiming();
 
         $grid = new Grid($provider = $this->getDataProvider(),
             [
@@ -391,6 +418,8 @@ class Controller
 
     public function demo14()
     {
+        $this->prepareTiming();
+
         if (isset($_GET['details'])) {
             return $this->demo14Details();
         }
@@ -449,5 +478,4 @@ class Controller
         });
         return $layout->render();
     }
-
 }
