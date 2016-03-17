@@ -1,23 +1,27 @@
 language: php
-
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
-  - nightly
+- 5.5
+- 5.6
+- 7.0
+- hhvm
+- nightly
 matrix:
   allow_failures:
-    - php: nightly
-
+  - php: nightly
 # This triggers builds to run on the new TravisCI infrastructure.
 # See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
-
 before_script:
-  - travis_retry composer self-update
-  - travis_retry composer install --prefer-source --no-interaction
-
+- travis_retry composer self-update
+- travis_retry composer create-project --prefer-source --no-interaction
 script:
   - composer test
   - composer cs
+deploy:
+  provider: heroku
+  buildpack: https://github.com/Nayjest/heroku-buildpack-php.git
+  api_key:
+    secure: ABXiZKDiqKCQADPGcdn4OV5jwiTDrTTWyBjQ7/GZmSjRtleh7nY15hKuqkvGWldrJNQhrWMWVIDPCJRTtZqQuYNIgEsL9xe6kQjpFfKBoB/wUfqGPwyhOUZgdvLwSnhZUz7TG5kiqN6D8gDXBYutLCP0NLvUwcs7kqX/BUFF4hQ=
+  app: vc-grids
+  on:
+    repo: view-components/grids
