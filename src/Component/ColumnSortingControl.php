@@ -4,8 +4,8 @@ namespace ViewComponents\Grids\Component;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Base\ComponentInterface;
 use ViewComponents\ViewComponents\Base\Control\ControlInterface;
+use ViewComponents\ViewComponents\Common\UriFunctions;
 use ViewComponents\ViewComponents\Component\Part;
-use League\Uri\Schemes\Http as HttpUri;
 use ViewComponents\ViewComponents\Component\TemplateView;
 use ViewComponents\ViewComponents\Data\Operation\DummyOperation;
 use ViewComponents\ViewComponents\Data\Operation\SortOperation;
@@ -84,22 +84,16 @@ class ColumnSortingControl extends Part implements ControlInterface
 
     protected function makeLinks()
     {
-        $url = HttpUri::createFromServer($_SERVER);
-
-        $asc = (string)$url->withQuery(
-            (string)$url->query->merge(
-                http_build_query(
-                    [$this->inputOption->getKey() => $this->columnId . static::DELIMITER . SortOperation::ASC]
-                )
-            )
+        $asc = UriFunctions::modifyQuery(
+            null,
+            [$this->inputOption->getKey() => $this->columnId . static::DELIMITER . SortOperation::ASC]
         );
-        $desc = (string)$url->withQuery(
-            (string)$url->query->merge(
-                http_build_query(
-                    [$this->inputOption->getKey() => $this->columnId . static::DELIMITER . SortOperation::DESC]
-                )
-            )
+        $desc = UriFunctions::modifyQuery(
+            null,
+            [$this->inputOption->getKey() => $this->columnId . static::DELIMITER . SortOperation::DESC]
         );
+        $asc = UriFunctions::replaceFragment($asc, '');
+        $desc = UriFunctions::replaceFragment($desc, '');
         return compact('asc', 'desc');
     }
 

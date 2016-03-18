@@ -2,8 +2,8 @@
 
 namespace ViewComponents\Grids\Component;
 
-use League\Uri\Schemes\Http as HttpUri;
 use ViewComponents\ViewComponents\Base\ViewComponentInterface;
+use ViewComponents\ViewComponents\Common\UriFunctions;
 use ViewComponents\ViewComponents\Component\Compound;
 use ViewComponents\ViewComponents\Component\DataView;
 use ViewComponents\ViewComponents\Component\Html\Tag;
@@ -180,9 +180,7 @@ class CsvExport extends Part
 
     public function getExportUrl()
     {
-        $url = HttpUri::createFromServer($_SERVER);
-        $query = $url->query->merge(http_build_query([$this->inputOption->getKey() => 1]));
-        return (string)$url->withQuery((string)$query);
+        return UriFunctions::modifyQuery(null, [$this->inputOption->getKey() => 1]);
     }
 
     protected function makeDefaultView()

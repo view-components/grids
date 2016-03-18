@@ -37,8 +37,6 @@ Project status: **alpha** *since 2016-02-24*
 ## Requirements
 
 * PHP 5.5+ (hhvm & php7 are supported)
-* [ext_intl](http://php.net/manual/en/book.intl.php) ([bundled with PHP](http://php.net/manual/en/intl.installation.php) as of PHP 5.3.0)
-* ext_curl required for running package tests
 
 ## Installation
 
@@ -68,6 +66,10 @@ If you want to use default settings and run it silently, just add `--no-interact
 If you already cloned this repository, or you want to reinstall package, navigate to package folder and run `composer create-project` without specifying package name.
 
 If you are sure that you don't need to reinstall composer dependencies, you can execute only bundled installer: `composer run post-create-project-cmd`
+
+This kind of installation has additional requirements:
+* ext-curl
+* ext-pdo_sqlite
 
 ## Usage
 
