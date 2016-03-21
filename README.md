@@ -1,7 +1,7 @@
  ![Logo](https://raw.githubusercontent.com/view-components/logo/master/view-components-logo-without-text-42.png) Grids
 =====
 
-[![Release](https://img.shields.io/packagist/v/view-components/view-components.svg)](https://packagist.org/packages/view-components/grids)
+[![Release](https://img.shields.io/packagist/v/view-components/grids.svg)](https://packagist.org/packages/view-components/grids)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/view-components/grids/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/view-components/grids/?branch=master)
 [![Build Status](https://travis-ci.org/view-components/grids.svg?branch=master)](https://travis-ci.org/view-components/grids)
 [![Code Coverage](https://scrutinizer-ci.com/g/view-components/grids/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/view-components/grids/?branch=master)
