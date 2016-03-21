@@ -440,7 +440,7 @@ class Controller
                     })
                 ,
                 new AjaxDetailsRow(function ($row) {
-                    return "/demo14?details=1&id=" . $row->id;
+                    return "/index.php/demo14?details=1&id=" . $row->id;
                 }),
                 new PageTotalsRow([
                     'id' => PageTotalsRow::OPERATION_IGNORE,
