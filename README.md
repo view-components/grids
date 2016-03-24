@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/view-components/grids.svg?branch=master)](https://travis-ci.org/view-components/grids)
 [![Code Coverage](https://scrutinizer-ci.com/g/view-components/grids/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/view-components/grids/?branch=master)
 
-### `Flexible Data Grids for PHP`
+### `Flexible Framework-agnostic Data Grids for PHP`
 
 This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids).
 
@@ -36,10 +36,10 @@ Project status: **alpha-testing** *since 2016-02-24*
 * Flexible component architecture
 * Can be used with wide variety of data sources (php array, PDO database connection, Laravel ActiveRecord or QueryBuilder, Doctrine DBAL Query builder, etc)
 * Themes / Customizations / Styling
-* Framework-agnostic in sense of backend frameworks but have bindings for popular PHP frameworks that simplifies its usage
-* Framework-agnostic in sense of fronted frameworks but have themes for popular CSS Frameworks like Twitter Bootstrap, Foundation, Semantic UI
+* Can be used with any PHP framework, has integration packages for popular frameworks.
+* Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization. This package is framework-agnostic in sense of fronted frameworks too but it's bundled with themes for Twitter Bootstrap, Foundation, Semantic UI
 * Alot of components ready to use: filters, sorting, totals, row details, pagination, CSV export 
-* User-friendly for developers
+* User-friendly for developers (documentation in progress)
 
 
 ## Requirements
