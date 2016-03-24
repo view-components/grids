@@ -10,30 +10,26 @@
 
 This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids).
 
-It's framwork-agnostic in sense of both backend and frontend frameworks, i. e.:
+This package is framwork-agnostic in sense of both backend and frontend frameworks, i. e.:
  * You can use it with any PHP Framework. Integration packages are also available.
- * Don't worry about fitting markup for your favorite CSS framework. Just describe grid with all required components and then apply customization
+ * Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization
 
-Project status: **alpha** *since 2016-02-24*
+Project status: **alpha-testing** *since 2016-02-24*
 
-### Bindings / Integrations
-
- Area | Framework | Component | Package | Status
- --- | --- | --- | --- | ---
- Backend | Laravel(Eloquent) | Eloquent Data Provider | [view-components/eloquent-data-processing](https://github.com/view-components/eloquent-data-processing) | Stable
- Backend | Laravel(Blade) | Blade Renderer |  | Planned
- Backend | Symfony(Twig) | Twig Renderer |  | Planned
- Backend | Zend Framework 2/3 | * |  | Planned
- Backend | Yii 2 | * |  | Planned
- Backend | Doctrine(DBAL) | Doctrine(DBAL) Data Provider | [view-components/doctrine-dbal-data-processing](https://github.com/view-components/doctrine-dbal-data-processing) | In Progress
-  Backend | Any | PHP Array Data Provider | Bundled | Ready, Unstable 
-  Backend | Any | PDO Data Provider | Bundled | Ready, Unstable 
-  Frontend | Twitter Bootstrap | Bootstrap View Customization | Bundled | Ready, Unstable 
-  Frontend | Foundation by ZURB | Foundation View Customization | Bundled | In Progress
-  Frontend | Semantic UI | Semantic UI View Customization |  | Planned
-  Frontend | Yahoo Pure | Yahoo Pure View Customization |  | Planned
-  Frontend | UIKit | UIKit View Customization |  | Planned
-  
+## Table of Contents
+- [Requirements](#requirements)
+- [Intallation](#installation)
+  - [Installing into Existing Project](#installing-into-existing-project)
+  - [Installing as Stand-alone Project](#installing-as-stand-alone-project)
+- [Integrations](#integrations)
+- [Usage](#usage)
+- [Demo Application](#demo-application)
+  - [Working Demo](#working-demo)
+  - [Running Demo Application Locally](#running-demo-application-locally)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [Security](#security)
+- [License](#license)
 
 ## Requirements
 
@@ -71,6 +67,24 @@ If you are sure that you don't need to reinstall composer dependencies, you can 
 This kind of installation has additional requirements:
 * ext-curl
 * ext-pdo_sqlite
+
+# Integrations
+
+ Area | Framework | Component | Package | Status
+ --- | --- | --- | --- | ---
+ Backend | Laravel(Eloquent) | Eloquent Data Provider | [view-components/eloquent-data-processing](https://github.com/view-components/eloquent-data-processing) | Ready, Stable
+ Backend | Laravel(Blade) | Blade Renderer |  | Planned
+ Backend | Symfony(Twig) | Twig Renderer |  | Planned
+ Backend | Zend Framework 2/3 | * |  | Planned
+ Backend | Yii 2 | * |  | Planned
+ Backend | Doctrine(DBAL) | Doctrine(DBAL) Data Provider | [view-components/doctrine-dbal-data-processing](https://github.com/view-components/doctrine-dbal-data-processing) | In Progress
+  Backend | Any | PHP Array Data Provider | Bundled | Ready, Unstable 
+  Backend | Any | PDO Data Provider | Bundled | Ready, Unstable 
+  Frontend | Twitter Bootstrap | Bootstrap View Customization | Bundled | Ready, Unstable 
+  Frontend | Foundation by ZURB | Foundation View Customization | Bundled | Ready, Unstable
+  Frontend | Semantic UI | Semantic UI View Customization | Bundled | Ready, Unstable
+  Frontend | Yahoo Pure | Yahoo Pure View Customization |  | Planned
+  Frontend | UIKit | UIKit View Customization |  | Planned
 
 ## Usage
 
@@ -150,6 +164,24 @@ composer serve
 This command uses web-server bundled with PHP.
 
 Now, open [http://localhost:8000](http://localhost:8000) in browser (for Windows users it will be opened automatically after starting web-server).
+
+## Testing
+
+This application bundled with unit and acceptance tests created with PHPUnit.
+
+To run tests locally, you must install this package as stand-alone project with dev-dependencis.
+
+Command for unit and acceptance tests:
+
+```bash
+composer test
+```
+
+Command for checking code style:
+
+```bash
+composer cs
+```
 
 ## Contributing
 
