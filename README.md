@@ -17,6 +17,7 @@ This package is framwork-agnostic in sense of both backend and frontend framewor
 Project status: **alpha-testing** *since 2016-02-24*
 
 ## Table of Contents
+- [Features](#features)
 - [Requirements](#requirements)
 - [Intallation](#installation)
   - [Installing into Existing Project](#installing-into-existing-project)
@@ -24,12 +25,22 @@ Project status: **alpha-testing** *since 2016-02-24*
 - [Integrations](#integrations)
 - [Usage](#usage)
 - [Demo Application](#demo-application)
-  - [Working Demo](#working-demo)
+  - [Working Demo Deployed to Heroku](#working-demo-deployed-to-heroku)
   - [Running Demo Application Locally](#running-demo-application-locally)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [Security](#security)
 - [License](#license)
+
+## Features
+* Flexible component architecture
+* Can be used with wide variety of data sources (php array, PDO database connection, Laravel ActiveRecord or QueryBuilder, Doctrine DBAL Query builder, etc)
+* Themes / Customizations / Styling
+* Framework-agnostic in sense of backend frameworks but have bindings for popular PHP frameworks that simplifies its usage
+* Framework-agnostic in sense of fronted frameworks but have themes for popular CSS Frameworks like Twitter Bootstrap, Foundation, Semantic UI
+* Alot of components ready to use: filters, sorting, totals, row details, pagination, CSV export 
+* User-friendly for developers
+
 
 ## Requirements
 
@@ -68,7 +79,7 @@ This kind of installation has additional requirements:
 * ext-curl
 * ext-pdo_sqlite
 
-# Integrations
+## Integrations
 
  Area | Framework | Component | Package | Status
  --- | --- | --- | --- | ---
@@ -144,7 +155,7 @@ This package bundled with demo-application.
 
 Souce code of demos available [here](https://github.com/view-components/grids/blob/master/tests/webapp/Controller.php)
 
-### Demo Application on Heroku
+### Working Demo Deployed to Heroku
 
 Travis CI automatically deploys web-application bundled with this package to Heroku.
 
