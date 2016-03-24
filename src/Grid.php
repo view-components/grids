@@ -6,8 +6,6 @@ use Nayjest\Collection\Extended\ObjectCollectionReadInterface;
 use RuntimeException;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\ViewComponents\Base\ComponentInterface;
-use ViewComponents\ViewComponents\Component\CollectionView;
-use ViewComponents\ViewComponents\Component\Container;
 use ViewComponents\ViewComponents\Component\Html\Tag;
 use ViewComponents\ViewComponents\Component\ManagedList;
 use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
@@ -106,21 +104,39 @@ class Grid extends ManagedList
 
     protected function makeDefaultComponents()
     {
-        return [
-            new Part(new Tag('div'), static::CONTAINER_ID, static::ROOT_ID),
-            new Part(new Tag('form'), static::FORM_ID, static::CONTAINER_ID),
-            new Part(new Tag('table'), static::TABLE_ID, static::FORM_ID), // new
-            new Part(new Tag('thead'), static::TABLE_HEADING_ID, static::TABLE_ID), // new
-            new Part(new Tag('tr'), static::TITLE_ROW_ID, static::TABLE_HEADING_ID), // new
-            new Part(new SolidRow(), static::CONTROL_ROW_ID, static::TABLE_HEADING_ID), // new
-            new Part(new Tag('span'), static::CONTROL_CONTAINER_ID, static::CONTROL_ROW_ID),
-            new Part(new Tag('input', ['type' => 'submit']), static::SUBMIT_BUTTON_ID, static::CONTROL_ROW_ID),
-            new Part(new Tag('tbody'), static::TABLE_BODY_ID, static::TABLE_ID), // new
-            new Part(new Container(), static::LIST_CONTAINER_ID, static::TABLE_BODY_ID),
-            new Part(new CollectionView(), static::COLLECTION_VIEW_ID, static::LIST_CONTAINER_ID),
-            new RecordView(new Tag('tr')),
-            new Part(new Tag('tfoot'), static::TABLE_FOOTER_ID, static::TABLE_ID), // new
-        ];
+        $components = parent::makeDefaultComponents();
+        unset($components[ManagedList::RECORD_VIEW_ID]);
+        $components[ManagedList::CONTROL_CONTAINER_ID]->setDestinationParentId(static::CONTROL_ROW_ID);
+        $components[ManagedList::LIST_CONTAINER_ID]->setDestinationParentId(static::TABLE_BODY_ID);
+        $components[ManagedList::SUBMIT_BUTTON_ID]->setDestinationParentId(static::CONTROL_ROW_ID);
+        return array_merge(
+            $components,
+            [
+                static::TABLE_ID => new Part(
+                    new Tag('table'),
+                    static::TABLE_ID,
+                    static::FORM_ID
+                ),
+                static::TABLE_HEADING_ID => new Part(
+                    new Tag('thead'),
+                    static::TABLE_HEADING_ID,
+                    static::TABLE_ID
+                ),
+                static::TITLE_ROW_ID => new Part(
+                    new Tag('tr'),
+                    static::TITLE_ROW_ID,
+                    static::TABLE_HEADING_ID
+                ),
+                static::CONTROL_ROW_ID => new Part(
+                    new SolidRow(),
+                    static::CONTROL_ROW_ID,
+                    static::TABLE_HEADING_ID
+                ),
+                static::TABLE_BODY_ID => new Part(new Tag('tbody'), static::TABLE_BODY_ID, static::TABLE_ID),
+                static::RECORD_VIEW_ID => new RecordView(new Tag('tr')),
+                static::TABLE_FOOTER_ID => new Part(new Tag('tfoot'), static::TABLE_FOOTER_ID, static::TABLE_ID),
+            ]
+        );
     }
 
     /**

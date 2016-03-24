@@ -70,8 +70,8 @@ class Column implements PartInterface
         $this->setDestinationParentId(Compound::ROOT_ID);
         $this->setId($columnId);
         $this->setLabel($label);
-        $this->titleView = new DataView([$this, 'getLabel']);
-        $this->dataView = new DataView([$this, 'getCurrentValueFormatted']);
+        $this->titleView = new DataView(null, [$this, 'getLabel']);
+        $this->dataView = new DataView(null, [$this, 'getCurrentValueFormatted']);
     }
 
     /**

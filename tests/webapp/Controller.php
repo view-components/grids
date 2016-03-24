@@ -2,7 +2,6 @@
 namespace ViewComponents\Grids\WebApp;
 
 use DateTime;
-
 use ViewComponents\Grids\Component\AjaxDetailsRow;
 use ViewComponents\Grids\Component\ColumnSortingControl;
 use ViewComponents\Grids\Component\DetailsRow;
@@ -16,9 +15,12 @@ use ViewComponents\ViewComponents\Component\Control\PaginationControl;
 use ViewComponents\ViewComponents\Component\DataView;
 use ViewComponents\ViewComponents\Component\Debug\SymfonyVarDump;
 use ViewComponents\ViewComponents\Component\Html\Tag;
+use ViewComponents\ViewComponents\Component\ManagedList\ResetButton;
 use ViewComponents\ViewComponents\Component\Part;
 use ViewComponents\ViewComponents\Component\TemplateView;
-use ViewComponents\ViewComponents\Customization\Bootstrap\BootstrapStyling;
+use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
+use ViewComponents\ViewComponents\Customization\CssFrameworks\FoundationStyling;
+use ViewComponents\ViewComponents\Customization\CssFrameworks\SemanticUIStyling;
 use ViewComponents\ViewComponents\Input\InputOption;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 use ViewComponents\ViewComponents\Data\DbTableDataProvider;
@@ -352,28 +354,53 @@ class Controller
         return $this->page($grid->render(), 'PageSizeSelectControl');
     }
 
-    public function demo11()
+    protected function prepareDemo11Grid()
     {
-        $this->prepareTiming();
-
         $input = new InputSource($_GET);
         $grid = new Grid($provider = $this->getDataProvider(),
             [
+                new TableCaption('Demo 11: Customization. Table Caption'),
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
                 new FilterControl('role', FilterOperation::OPERATOR_EQ, $input('role')),
                 new PageSizeSelectControl($input('ps', 4), [2, 4, 10, 100]),
                 new CsvExport($input('csv')),
+                new ResetButton(),
                 new PaginationControl($input('page', 1), 5, $provider),
                 new ColumnSortingControl('id', new InputOption('sort', $_GET))
             ]
         );
+
+        $grid->getTileRow()->detach()->attachTo($grid->getTableHeading());
         $grid->attachTo($this->layout());
-        $styling = new BootstrapStyling();
-        $styling->apply($this->layout());
+    }
+
+    public function demo11_1()
+    {
+        $this->prepareTiming();
+        $this->prepareDemo11Grid();
+        BootstrapStyling::applyTo($this->layout());
         $this->defaultCss->detach();
-        return $this->page(null, 'BootstrapStyling');
+        return $this->page(null, 'Bootstrap Styling');
+    }
+
+    public function demo11_2()
+    {
+        $this->prepareTiming();
+        $this->prepareDemo11Grid();
+        FoundationStyling::applyTo($this->layout());
+        $this->defaultCss->detach();
+        return $this->page(null, 'Foundation Styling');
+    }
+
+    public function demo11_3()
+    {
+        $this->prepareTiming();
+        $this->prepareDemo11Grid();
+        SemanticUIStyling::applyTo($this->layout());
+        $this->defaultCss->detach();
+        return $this->page(null, 'Semantic UI Styling');
     }
 
     public function demo12()
