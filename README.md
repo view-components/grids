@@ -182,7 +182,7 @@ This application bundled with unit and acceptance tests created with PHPUnit.
 
 To run tests locally, you must install this package as stand-alone project with dev-dependencies.
 
-Command for unit and acceptance tests:
+Command for running unit and acceptance tests:
 
 ```bash
 composer test
