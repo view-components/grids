@@ -180,7 +180,7 @@ Now, open [http://localhost:8000](http://localhost:8000) in browser (for Windows
 
 This application bundled with unit and acceptance tests created with PHPUnit.
 
-To run tests locally, you must install this package as stand-alone project with dev-dependencis.
+To run tests locally, you must install this package as stand-alone project with dev-dependencies.
 
 Command for unit and acceptance tests:
 
