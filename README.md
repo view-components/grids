@@ -19,7 +19,7 @@ Project status: **alpha-testing** *since 2016-02-24*
 ## Table of Contents
 - [Features](#features)
 - [Requirements](#requirements)
-- [Intallation](#installation)
+- [Installation](#installation)
   - [Installing into Existing Project](#installing-into-existing-project)
   - [Installing as Stand-alone Project](#installing-as-stand-alone-project)
 - [Integrations](#integrations)
