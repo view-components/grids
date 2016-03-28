@@ -37,7 +37,7 @@ Project status: **alpha-testing** *since 2016-02-24*
 * Can be used with wide variety of data sources (php array, PDO database connection, Laravel ActiveRecord or QueryBuilder, Doctrine DBAL Query builder, etc)
 * Themes / Customizations / Styling
 * Can be used with any PHP framework, has integration packages for popular frameworks.
-* Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization. This package is framework-agnostic in sense of fronted frameworks too but it's bundled with themes for Twitter Bootstrap, Foundation, Semantic UI
+* Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization. This package is framework-agnostic in sense of fronted frameworks and bundled with themes for Twitter Bootstrap, Foundation, Semantic UI
 * Alot of components ready to use: filters, sorting, totals, row details, pagination, CSV export 
 * User-friendly for developers (documentation in progress)
 
