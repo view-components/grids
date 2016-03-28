@@ -88,7 +88,7 @@ This kind of installation has additional requirements:
  Backend | Symfony(Twig) | Twig Renderer |  | Planned
  Backend | Zend Framework 2/3 | * |  | Planned
  Backend | Yii 2 | * |  | Planned
- Backend | Doctrine(DBAL) | Doctrine(DBAL) Data Provider | [view-components/doctrine-dbal-data-processing](https://github.com/view-components/doctrine-dbal-data-processing) | Ready, Beta
+ Backend | Doctrine(DBAL) | Doctrine(DBAL) Data Provider | [view-components/doctrine-dbal-processing](https://github.com/view-components/doctrine-data-processing) | Ready, Beta
   Backend | Any | PHP Array Data Provider | Bundled | Ready, Unstable 
   Backend | Any | PDO Data Provider | Bundled | Ready, Unstable 
   Frontend | Twitter Bootstrap | Bootstrap View Customization | Bundled | Ready, Unstable 
