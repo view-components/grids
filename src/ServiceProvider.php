@@ -2,7 +2,6 @@
 
 namespace ViewComponents\Grids;
 
-use Interop\Container\ContainerInterface;
 use ViewComponents\ViewComponents\Rendering\TemplateFinder;
 use ViewComponents\ViewComponents\Service\ServiceContainer;
 use ViewComponents\ViewComponents\Service\ServiceId;
