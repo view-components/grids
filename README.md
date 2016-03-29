@@ -57,6 +57,20 @@ Run following command from your project folder:
 ```bash
 composer require view-components/grids
 ```
+#### Add-ons
+
+If you use Laravel, install also [eloquent-data-processing](https://github.com/view-components/eloquent-data-processing) package.
+
+```bash
+composer require view-components/eloquent-data-processing
+```
+This will give possibility to use Eloquent models and query builder instances as data source for grid.
+
+For Doctrine users, there is [doctrine-data-processing](https://github.com/view-components/doctrine-data-processing) package available.
+
+```bash
+composer require view-components/doctrine-data-processing
+```
 
 ### Installing as Stand-alone Project
 
