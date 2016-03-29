@@ -1,6 +1,6 @@
 {
   "name": "view-components/grids",
-  "description": "Data Grids for PHP",
+  "description": "Flexible Framework-agnostic Data Grids for PHP",
   "type": "library",
   "license": "MIT",
   "authors": [
