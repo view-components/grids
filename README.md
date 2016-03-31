@@ -14,7 +14,9 @@ This package is framwork-agnostic in sense of both backend and frontend framewor
  * You can use it with any PHP Framework. Integration packages are also available.
  * Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization
 
-Project status: **alpha-testing** *since 2016-02-24*
+Project status: **beta** *since 2016-03-31*
+
+**Have questions? [Ask in issue-tracer](https://github.com/view-components/grids/issues/new)**.
 
 ## Table of Contents
 - [Features](#features)
