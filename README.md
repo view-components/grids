@@ -107,7 +107,7 @@ This kind of installation has additional requirements:
  Backend | Doctrine(DBAL) | Doctrine(DBAL) Data Provider | [view-components/doctrine-dbal-processing](https://github.com/view-components/doctrine-data-processing) | Ready, Beta
   Backend | Any | PHP Array Data Provider | Bundled | Ready, Unstable 
   Backend | Any | PDO Data Provider | Bundled | Ready, Unstable 
-  Frontend | Twitter Bootstrap | Bootstrap View Customization | Bundled | Ready, Unstable 
+  Frontend | Twitter Bootstrap | Bootstrap View Customization | Bundled | Ready, Beta 
   Frontend | Foundation by ZURB | Foundation View Customization | Bundled | Ready, Unstable
   Frontend | Semantic UI | Semantic UI View Customization | Bundled | Ready, Unstable
   Frontend | Yahoo Pure | Yahoo Pure View Customization |  | Planned
