@@ -62,7 +62,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
      * @param array $operations keys are field names and values are operations
      * @param string $defaultOperation
      */
-    public function __construct(array $operations = [], $defaultOperation = self::OPERATION_SUM)
+    public function __construct(array $operations = [], $defaultOperation = null)
     {
         $this->id = 'page_totals_row';
         $this->destinationParentId = 'list_container';
@@ -79,6 +79,9 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
             }
         };
 
+        if ($defaultOperation === null) {
+            $defaultOperation = empty($operations) ? self::OPERATION_SUM : self::OPERATION_IGNORE;
+        }
         $this->defaultOperation = $defaultOperation;
     }
 
