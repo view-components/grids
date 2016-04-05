@@ -191,7 +191,8 @@ class CsvExport extends Part
             [
                 // required to avoid emitting 'click' on pressing enter
                 'type' => 'button',
-                'onclick' => "window.location='$href'; return false;"
+                'onclick' => "window.location='$href'; return false;",
+                'style' => 'margin:2px;'
             ],
             [new DataView('CSV Export')]
         );
