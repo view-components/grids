@@ -5,7 +5,6 @@ namespace ViewComponents\Grids;
 use Nayjest\Collection\Extended\ObjectCollectionReadInterface;
 use RuntimeException;
 use ViewComponents\Grids\Component\Column;
-use ViewComponents\ViewComponents\Base\ComponentInterface;
 use ViewComponents\ViewComponents\Component\Html\Tag;
 use ViewComponents\ViewComponents\Component\ManagedList;
 use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
@@ -56,21 +55,6 @@ class Grid extends ManagedList
             throw new RuntimeException("'$id' is not a column.");
         }
         return $column;
-    }
-
-    public function setControlContainer(ComponentInterface $component)
-    {
-        return $this->setComponent($component, static::CONTROL_CONTAINER_ID, static::CONTROL_ROW_ID);
-    }
-
-    public function setSubmitButton(ComponentInterface $component)
-    {
-        return $this->setComponent($component, static::SUBMIT_BUTTON_ID, static::CONTROL_ROW_ID);
-    }
-
-    public function setListContainer(ComponentInterface $component)
-    {
-        return $this->setComponent($component, static::LIST_CONTAINER_ID, static::TABLE_BODY_ID);
     }
 
     /**
