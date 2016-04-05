@@ -31,6 +31,7 @@ use ViewComponents\Grids\Component\CsvExport;
 use ViewComponents\Grids\Component\PageTotalsRow;
 use ViewComponents\Grids\Component\SolidRow;
 use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Service\Services;
 
 class Controller
 {
@@ -263,7 +264,8 @@ class Controller
                 'id' => function () {
                     return 'Totals:';
                 },
-                'age' => PageTotalsRow::OPERATION_AVG
+                'age' => PageTotalsRow::OPERATION_AVG,
+                'random_number' => PageTotalsRow::OPERATION_SUM,
             ])
         ]);
 
@@ -363,12 +365,54 @@ class Controller
                 new Column('id'),
                 new Column('name'),
                 new Column('role'),
-                new FilterControl('role', FilterOperation::OPERATOR_EQ, $input('role')),
-                new PageSizeSelectControl($input('ps', 4), [2, 4, 10, 100]),
+                new Column('birthday'),
+                (new Column('age'))
+                    ->setValueCalculator(function ($row) {
+                        return DateTime
+                            ::createFromFormat('Y-m-d', $row->birthday)
+                            ->diff(new DateTime('now'))
+                            ->y;
+
+                    })
+                    ->setValueFormatter(function ($val) {
+                        return "$val years";
+                    })
+                ,
+                (new Column('income'))->setValueFormatter(function ($value) {
+
+                    static $numberFormatter;
+                    if ($numberFormatter === null) {
+                        $numberFormatter = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);
+                        $numberFormatter->setPattern(
+                            '<span style="color:green">¤</span>#,##0.00;-<span style="color:red">¤</span>#,##0.00'
+                        );
+                    }
+                    return $numberFormatter->format($value);
+                }),
+                new FilterControl('name', FilterOperation::OPERATOR_EQ, $input('name')),
+                (new FilterControl('role', FilterOperation::OPERATOR_EQ, $input('role')))->setView(
+                    new TemplateView('select', [
+                        'options' => [
+                            '' => 'All Roles',
+                            'User' => 'Users',
+                            'Manager' => 'Managers',
+                            'Admin' => 'Admins',
+                        ]
+                    ])
+                ),
+                new PageSizeSelectControl($input('ps', 10), [5, 10, 20, 50, 100]),
                 new CsvExport($input('csv')),
                 new ResetButton(),
-                new PaginationControl($input('page', 1), 5, $provider),
-                new ColumnSortingControl('id', new InputOption('sort', $_GET))
+                new PageTotalsRow([
+                    'id' => function () {
+                        return 'Page totals';
+                    },
+                    'age' => PageTotalsRow::OPERATION_AVG,
+                    'income' => PageTotalsRow::OPERATION_SUM,
+                ]),
+                new PaginationControl($input('page', 1), 10, $provider),
+                new ColumnSortingControl('id', new InputOption('sort', $_GET)),
+                new ColumnSortingControl('birthday', new InputOption('sort', $_GET))
             ]
         );
 
@@ -448,6 +492,11 @@ class Controller
         $this->prepareTiming();
 
         if (isset($_GET['details'])) {
+            // mark resources as already included
+            $manager = Services::resourceManager();
+            $manager->js('jquery');
+            $manager->js('bootstrap');
+            $manager->css('bootstrap');
             return $this->demo14Details();
         }
         $grid = new Grid($provider = $this->getDataProvider(),
@@ -490,15 +539,14 @@ class Controller
         $grid = new Grid(
             $provider,
             [
-
                 new Column('name'),
                 new Column('role'),
                 new Column('birthday'),
             ]
         );
-        $styling = new BootstrapStyling();
-        $styling->apply($grid, new Container());
-        $layout = new DataView(function() use ($grid){
+        BootstrapStyling::applyTo($grid);
+
+        $layout = new DataView(function () use ($grid) {
             return "<div class='panel panel-default'>
                 <div class='panel-body'>$grid</div>
             </div>";
