@@ -16,9 +16,7 @@
     "nayjest/tree": "^3"
   },
   "require-dev": {
-    "symfony/var-dumper": "^3",
-    "view-components/testing-helpers": "^1.8.1",
-    "squizlabs/php_codesniffer": "~2.3"
+    "view-components/testing-helpers": "^1.11"
   },
   "autoload": {
     "psr-4": {
