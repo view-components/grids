@@ -18,6 +18,10 @@ Project status: **beta** *since 2016-03-31*
 
 **Have questions? [Ask in issue-tracer](https://github.com/view-components/grids/issues/new)**.
 
+**Screenshot**
+
+![screenshot](https://i.gyazo.com/be64c5acebb7982bea9fb6fdff5586e2.png)
+
 ## Table of Contents
 - [Features](#features)
 - [Requirements](#requirements)
