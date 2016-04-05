@@ -169,5 +169,4 @@ trait GridPartsAccessTrait
     {
         return $this->setComponent($component, Grid::LIST_CONTAINER_ID, Grid::TABLE_BODY_ID);
     }
-
 }
