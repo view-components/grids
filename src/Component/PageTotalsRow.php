@@ -59,7 +59,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
      * of PageTotalsRow::OPERATIN_* constants or Closure or null.
      * If $operations has no key for column, default operation will be used.
      *
-     * @param array $operations keys are field names and values are operations, operations
+     * @param array $operations keys are field names and values are operations
      * @param string $defaultOperation
      */
     public function __construct(array $operations = [], $defaultOperation = self::OPERATION_SUM)
