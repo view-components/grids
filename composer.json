@@ -35,13 +35,13 @@
   },
   "scripts": {
     "post-create-project-cmd": [
-      "ViewComponents\\Grids\\Installer::postComposerInstall"
+      "ViewComponents\\Grids\\Installer::runFromComposer"
     ],
     "post-update-cmd": [
-      "ViewComponents\\Grids\\Installer::postComposerInstall"
+      "ViewComponents\\Grids\\Installer::runFromComposer"
     ],
     "post-install-cmd": [
-      "ViewComponents\\Grids\\Installer::postComposerInstall"
+      "ViewComponents\\Grids\\Installer::runFromComposer"
     ],
     "serve": "php vendor/view-components/testing-helpers/serve",
     "test": "php vendor/phpunit/phpunit/phpunit",
