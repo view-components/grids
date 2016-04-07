@@ -12,11 +12,11 @@
   ],
   "require": {
     "php": "^5.5||^7",
-    "view-components/view-components": "~0.23.1",
+    "view-components/view-components": "~0.24",
     "nayjest/tree": "^3"
   },
   "require-dev": {
-    "view-components/testing-helpers": "^1.11",
+    "view-components/testing-helpers": "^2.0.1",
     "ext-intl": "*"
   },
   "autoload": {
@@ -35,6 +35,12 @@
   },
   "scripts": {
     "post-create-project-cmd": [
+      "ViewComponents\\Grids\\Installer::postComposerInstall"
+    ],
+    "post-update-cmd": [
+      "ViewComponents\\Grids\\Installer::postComposerInstall"
+    ],
+    "post-install-cmd": [
       "ViewComponents\\Grids\\Installer::postComposerInstall"
     ],
     "serve": "php vendor/view-components/testing-helpers/serve",
