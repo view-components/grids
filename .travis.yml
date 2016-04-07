@@ -22,4 +22,5 @@ deploy:
   app: vc-grids
   on:
     repo: view-components/grids
+    php: '5.6'
   skip_cleanup: true
