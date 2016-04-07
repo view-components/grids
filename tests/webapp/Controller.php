@@ -379,7 +379,9 @@ class Controller
                     })
                 ,
                 (new Column('income'))->setValueFormatter(function ($value) {
-
+                    if (!class_exists('\NumberFormatter')) {
+                        return '$' . $value;
+                    }
                     static $numberFormatter;
                     if ($numberFormatter === null) {
                         $numberFormatter = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);

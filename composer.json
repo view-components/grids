@@ -16,8 +16,7 @@
     "nayjest/tree": "^3"
   },
   "require-dev": {
-    "view-components/testing-helpers": "^2.0.1",
-    "ext-intl": "*"
+    "view-components/testing-helpers": "^2.0.1"
   },
   "autoload": {
     "psr-4": {
