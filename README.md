@@ -16,7 +16,7 @@ This package is framwork-agnostic in sense of both backend and frontend framewor
 
 Project status: **beta** *since 2016-03-31*
 
-**Have questions? [Ask in issue-tracer](https://github.com/view-components/grids/issues/new)**.
+**Have questions? [Ask in issue-tracker](https://github.com/view-components/grids/issues/new)**.
 
 **Screenshot:**
 
