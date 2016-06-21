@@ -33,6 +33,7 @@ Project status: **beta** *since 2016-03-31*
 - [Demo Application](#demo-application)
   - [Working Demo Deployed to Heroku](#working-demo-deployed-to-heroku)
   - [Running Demo Application Locally](#running-demo-application-locally)
+- [Documentation](#documentation)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [Security](#security)
@@ -195,6 +196,12 @@ composer serve
 This command uses web-server bundled with PHP.
 
 Now, open [http://localhost:8000](http://localhost:8000) in the browser (for Windows users it will be opened automatically after starting web-server).
+
+## Documentation
+
+* [ViewComponents / Components Overview](https://github.com/view-components/view-components/blob/master/doc/components.md)
+* [ViewComponents / Cookbook](https://github.com/view-components/view-components/blob/master/doc/cookbook.md)
+
 
 ## Testing
 
