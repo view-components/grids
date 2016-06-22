@@ -185,7 +185,7 @@ class Column implements PartInterface
      * @param callable|null $valueFormatter
      * @return Column
      */
-    public function setValueFormatter($valueFormatter)
+    public function setValueFormatter(callable $valueFormatter = null)
     {
         $this->valueFormatter = $valueFormatter;
         return $this;
