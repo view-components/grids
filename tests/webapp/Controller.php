@@ -486,7 +486,7 @@ class Controller
         $styling = new BootstrapStyling();
         $styling->apply($this->layout());
         $this->defaultCss->detach();
-        return $this->page(null, 'DetailsRow');
+        return $this->page(null, 'DetailsRow (Click table rows to check)');
     }
 
     public function demo14()
@@ -531,28 +531,23 @@ class Controller
         $styling = new BootstrapStyling();
         $styling->apply($this->layout());
         $this->defaultCss->detach();
-        return $this->page(null, 'AjaxDetailsRow');
+        return $this->page(null, 'AjaxDetailsRow (Click table rows to check)');
     }
 
     protected function demo14Details()
     {
         $provider = $this->getDataProvider();
         $provider->operations()->add(new FilterOperation('id', FilterOperation::OPERATOR_EQ, $_GET['id']));
-        $grid = new Grid(
-            $provider,
-            [
-                new Column('name'),
-                new Column('role'),
-                new Column('birthday'),
-            ]
-        );
-        BootstrapStyling::applyTo($grid);
-
-        $layout = new DataView(function () use ($grid) {
-            return "<div class='panel panel-default'>
-                <div class='panel-body'>$grid</div>
+        foreach($provider as $item) {
+            $view = new TemplateView('data_view/table', get_object_vars($item));
+            BootstrapStyling::applyTo($view);
+            $layout = new DataView(function () use ($view) {
+                $out = $view->render();
+                return "<div class='panel panel-default'>
+                <div class='panel-body'>$out</div>
             </div>";
-        });
-        return $layout->render();
+            });
+            return $layout->render();
+        }
     }
 }
