@@ -198,7 +198,7 @@ This command uses web-server bundled with PHP.
 Now, open [http://localhost:8000](http://localhost:8000) in the browser (for Windows users it will be opened automatically after starting web-server).
 
 ## Documentation
-
+* [Grids Cookbook](https://github.com/view-components/grids/blob/master/doc/cookbook.md)
 * [ViewComponents / Components Overview](https://github.com/view-components/view-components/blob/master/doc/components.md)
 * [ViewComponents / Cookbook](https://github.com/view-components/view-components/blob/master/doc/cookbook.md)
 
