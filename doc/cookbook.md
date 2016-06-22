@@ -25,7 +25,7 @@ $grid = new Grid($provider, [
 ]);
 ```
 
-Sometimes it can be useful to access to data row when rendering cell data.
+Sometimes it can be useful to access to data row when rendering cell content.
 For example: you want to render html links in table, but URIs stored in one column and titles in another.
 For this purpose $valueFormatter accepts also entire data row in second argument.
 
