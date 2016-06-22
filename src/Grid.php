@@ -5,6 +5,7 @@ namespace ViewComponents\Grids;
 use Nayjest\Collection\Extended\ObjectCollectionReadInterface;
 use RuntimeException;
 use ViewComponents\Grids\Component\Column;
+use ViewComponents\ViewComponents\Base\Compound\PartInterface;
 use ViewComponents\ViewComponents\Component\Html\Tag;
 use ViewComponents\ViewComponents\Component\ManagedList;
 use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
@@ -16,14 +17,14 @@ use ViewComponents\Grids\Component\SolidRow;
  */
 class Grid extends ManagedList
 {
+    use GridPartsAccessTrait;
+
     const TABLE_ID = 'table';
     const TABLE_HEADING_ID = 'table_heading';
     const TABLE_FOOTER_ID = 'table_footer';
     const TABLE_BODY_ID = 'table_body';
     const TITLE_ROW_ID = 'title_row';
     const CONTROL_ROW_ID = 'control_row';
-
-    use GridPartsAccessTrait;
 
     /** @var  mixed|null */
     protected $currentRow;
@@ -81,11 +82,21 @@ class Grid extends ManagedList
         return $this;
     }
 
+    /**
+     * @see \ViewComponents\ViewComponents\Component\ManagedList::makeDataInjector
+     *
+     * @return callable
+     */
     protected function makeDataInjector()
     {
         return [$this, 'setCurrentRow'];
     }
 
+    /**
+     * Creates and returns default compound components.
+     *
+     * @return PartInterface[]
+     */
     protected function makeDefaultComponents()
     {
         $components = parent::makeDefaultComponents();
