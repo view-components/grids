@@ -6,9 +6,13 @@ Grids Cookbook
 
 # Displaying links, images, etc. inside table cells
 
-[Column](https://github.com/view-components/grids/blob/master/src/Component/Column.php)::setValueFormatter(callable $valueFormatter) allows to specify function for formatting data before printing.
+`Column::setValueFormatter(callable $valueFormatter)` allows to specify function for formatting data before printing.
+
 $valueFormatter will accept cell value extracted from data row as first argument.
+
 Custom value formatter can be used to render links, image tags, etc.
+
+See [Column class](https://github.com/view-components/grids/blob/master/src/Component/Column.php).
 
 Example:
 ```php
