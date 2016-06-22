@@ -40,7 +40,7 @@ $column->setValueFormatter(function($name, $row) {
 # Modifying table cells
 
 It's possible to access data cell & title cell components from column.
-`Data cell component` renders 'TD' tags for associated column and `title cell component` renders 'TH' tags in table header for associated column.
+`Data cell component` renders 'TD' tags for associated column in each row and `title cell component` renders 'TH' tag in table header for associated column.
 By default there are instances of [Tag](https://github.com/view-components/view-components/blob/master/src/Component/Html/Tag.php) component,
 but they can be replaced to any component implementing [ContainerComponentInterface](https://github.com/view-components/view-components/blob/master/src/Base/ContainerComponentInterface.php). 
 
