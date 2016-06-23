@@ -129,6 +129,7 @@ class CsvExport extends Part
 
     protected function renderCsv()
     {
+        ob_clean(); // removes previous output from buffer if grid was rendered inside view
         $file = fopen('php://output', 'w');
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $this->getFileName() . '"');
