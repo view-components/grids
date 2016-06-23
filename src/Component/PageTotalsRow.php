@@ -51,7 +51,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
 
     protected $rowsProcessed = 0;
 
-    private $stopDataCollecting = false;
+    private $isTotalsCalculationFinished = false;
 
     /**
      * @var string
@@ -64,6 +64,9 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
      * Operations passed to first argument ($operations) may contain values
      * of PageTotalsRow::OPERATIN_* constants or Closure or null. Keys must be equal to target column id's
      * If $operations has no value for column, default operation will be used for that column.
+     *
+     * Closure passed to operations can accept
+     * accumulated value in first argument and current row value in second argument.
      *
      * @param array|string[] $operations (optional) keys are column id's and values are operations
      *                                   (see PageTotalsRow::OPERATION_* constants) or closures.
@@ -92,13 +95,23 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     }
 
     /**
-     * @return array
+     * Returns string prefixes for data printed in totals row for different operations.
+     *
+     * Keys are operations and values are prefixes.
+     *
+     * @return string[]
      */
     public function getValuePrefixes()
     {
         return $this->valuePrefixes;
     }
 
+    /**
+     * Sets string prefixes for data printed in totals row for different operations.
+     *
+     * @param string[] $valuePrefixes keys are operations and values are prefixes.
+     * @return $this
+     */
     public function setValuePrefixes(array $valuePrefixes)
     {
         $this->valuePrefixes = $valuePrefixes;
@@ -114,9 +127,8 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     {
         /** @var Grid $grid */
         $grid = $this->root;
-        $this->stopDataCollecting = true;
+        $this->isTotalsCalculationFinished = true;
         $tr = $grid->getRecordView();
-
         // set total_row as current grid row
         $lastRow = $grid->getCurrentRow();
         $grid->setCurrentRow($this->totalData);
@@ -157,28 +169,30 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         if ($this->totalData === null) {
             $this->totalData = new \stdClass();
         }
-        if (!is_numeric($value)) {
-            return;
-        }
         if (!property_exists($this->totalData, $field)) {
             $this->totalData->$field = 0;
         }
         $operation = $this->getOperation($field);
         switch ($operation) {
             case self::OPERATION_SUM:
+                if (!is_numeric($value)) {
+                    return;
+                }
                 $this->totalData->$field += $value;
                 break;
             case self::OPERATION_COUNT:
                 $this->totalData->$field = $this->rowsProcessed;
                 break;
             case self::OPERATION_AVG:
-                $sumFiled = "{$field}_sum_for_totals";
-                if (!property_exists($this->totalData, $sumFiled)) {
-                    $this->totalData->$sumFiled = 0;
+                $sumField = "{$field}_sum_for_totals";
+                if (!property_exists($this->totalData, $sumField)) {
+                    $this->totalData->$sumField = 0;
                 }
-                $this->totalData->$sumFiled += $value;
+                if (is_numeric($value)) {
+                    $this->totalData->$sumField += $value;
+                }
                 $this->totalData->$field = round(
-                    $this->totalData->$sumFiled / $this->rowsProcessed,
+                    $this->totalData->$sumField / $this->rowsProcessed,
                     2
                 );
                 break;
@@ -187,6 +201,9 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
                 break;
             default:
                 if ($operation instanceof Closure) {
+                    if (!property_exists($this->totalData, $field)) {
+                        $this->totalData->$field = 0;
+                    }
                     $this->totalData->$field = $operation($this->totalData->$field, $value);
                     break;
                 }
@@ -209,7 +226,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
 
     protected function processCurrentRow()
     {
-        if ($this->stopDataCollecting) {
+        if ($this->isTotalsCalculationFinished) {
             return;
         }
         $this->rowsProcessed++;
