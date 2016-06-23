@@ -56,6 +56,11 @@ class SolidRow extends Container
         return $this->rowTag;
     }
 
+    /**
+     * Renders component and returns output.
+     *
+     * @return string
+     */
     public function render()
     {
         $this->provideColspanAttribute();

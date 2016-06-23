@@ -5,6 +5,15 @@ namespace ViewComponents\Grids\Component;
 use ViewComponents\ViewComponents\Component\DataView;
 use ViewComponents\ViewComponents\Resource\ResourceManager;
 
+/**
+ * This component adds hidden rows after each existing table row
+ * and 'onclick' handlers that loads inner html of associated details row and displays it on click.
+ *
+ * AjaxDetailsRow includes jQuery on page if it was not included via view-components resource manager before.
+ * If jQuery included to your page not via resource manager, it's possible to tell resource manager to ignore it,
+ * see link below for instructions.
+ * @link https://github.com/view-components/view-components/blob/master/doc/cookbook.md
+ */
 class AjaxDetailsRow extends DetailsRow
 {
     protected $urlGenerator;
@@ -41,6 +50,11 @@ class AjaxDetailsRow extends DetailsRow
         return $this;
     }
 
+    /**
+     * Renders component and returns output.
+     *
+     * @return string
+     */
     public function render()
     {
         $this->view->setData(call_user_func($this->getUrlGenerator(), $this->getGrid()->getCurrentRow()));

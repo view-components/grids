@@ -104,10 +104,11 @@ class Column implements PartInterface
     public function getCurrentValue()
     {
         $func = $this->getValueCalculator();
+        $currentDataRow =  $this->getGrid()->getCurrentRow();
         if ($func !== null) {
-            return call_user_func($func, $this->getGrid()->getCurrentRow());
+            return call_user_func($func, $currentDataRow);
         } else {
-            return mp\getValue($this->getGrid()->getCurrentRow(), $this->getDataFieldName());
+            return mp\getValue($currentDataRow, $this->getDataFieldName());
         }
     }
 

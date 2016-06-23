@@ -11,6 +11,7 @@ use ViewComponents\ViewComponents\Base\ViewComponentInterface;
 use ViewComponents\ViewComponents\Component\CollectionView;
 use ViewComponents\ViewComponents\Component\Compound;
 use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Component\ManagedList;
 use ViewComponents\ViewComponents\Rendering\ViewTrait;
 
 /**
@@ -23,6 +24,8 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     }
     use ChildNodeTrait;
     use ViewTrait;
+
+    const ID = 'page_totals_row';
 
     const OPERATION_SUM = 'sum';
     const OPERATION_AVG = 'avg';
@@ -64,8 +67,8 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
      */
     public function __construct(array $operations = [], $defaultOperation = null)
     {
-        $this->id = 'page_totals_row';
-        $this->destinationParentId = 'list_container';
+        $this->id = static::ID;
+        $this->destinationParentId = ManagedList::LIST_CONTAINER_ID;
         $this->operations = $operations;
         $this->dataCollectingCallback = function () {
             if ($this->stopDataCollecting) {
@@ -110,6 +113,11 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         return $this;
     }
 
+    /**
+     * Renders tag and returns output.
+     *
+     * @return string
+     */
     public function render()
     {
         /** @var Grid $grid */
