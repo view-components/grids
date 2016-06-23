@@ -30,7 +30,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     const OPERATION_SUM = 'sum';
     const OPERATION_AVG = 'avg';
     const OPERATION_COUNT = 'count';
-    const OPERATION_IGNORE = null;
+    const OPERATION_IGNORE = 'ignore';
 
     protected $valuePrefixes = [
         self::OPERATION_SUM => 'Σ',
@@ -38,6 +38,11 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         self::OPERATION_COUNT => 'Count:'
     ];
 
+    /**
+     * Keys are column id's and values are operations (see PageTotalsRow::OPERATION_* constants).
+     *
+     * @var string[]|array
+     */
     protected $operations;
 
     protected $totalData;
@@ -45,8 +50,6 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     protected $cellObserver;
 
     protected $rowsProcessed = 0;
-
-    private $dataCollectingCallback;
 
     private $stopDataCollecting = false;
 
@@ -58,45 +61,34 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     /**
      * PageTotalsRow constructor.
      *
-     * Operations passed to first argument ($operations) can contain values
-     * of PageTotalsRow::OPERATIN_* constants or Closure or null.
-     * If $operations has no key for column, default operation will be used.
+     * Operations passed to first argument ($operations) may contain values
+     * of PageTotalsRow::OPERATIN_* constants or Closure or null. Keys must be equal to target column id's
+     * If $operations has no value for column, default operation will be used for that column.
      *
-     * @param array $operations keys are field names and values are operations
-     * @param string $defaultOperation
+     * @param array|string[] $operations (optional) keys are column id's and values are operations
+     *                                   (see PageTotalsRow::OPERATION_* constants) or closures.
+     * @param string|null $defaultOperation operation that will be used for column
+     *                                      if operation isn't specified for this column in first argument.
      */
     public function __construct(array $operations = [], $defaultOperation = null)
     {
         $this->id = static::ID;
         $this->destinationParentId = ManagedList::LIST_CONTAINER_ID;
         $this->operations = $operations;
-        $this->dataCollectingCallback = function () {
-            if ($this->stopDataCollecting) {
-                return;
-            }
-            $this->rowsProcessed++;
-            /** @var Grid $grid */
-            $grid = $this->root;
-            foreach ($grid->getColumns() as $column) {
-                $this->pushData($column->getId(), $column->getCurrentValue());
-            }
-        };
-
         if ($defaultOperation === null) {
             $defaultOperation = empty($operations) ? self::OPERATION_SUM : self::OPERATION_IGNORE;
         }
         $this->defaultOperation = $defaultOperation;
     }
 
+    /**
+     * @param Compound|Grid $root
+     * @param bool $prepend
+     */
     public function attachToCompound(Compound $root, $prepend = false)
     {
         $this->attachToCompoundInternal($root, $prepend);
-        /** @var CollectionView $collectionView */
-        $collectionView = $root->getComponent('collection_view');
-        $collectionView->setDataInjector(function ($dataRow, $collectionView) use ($root) {
-            call_user_func([$root, 'setCurrentRow'], $dataRow, $collectionView);
-            call_user_func($this->dataCollectingCallback);
-        });
+        $this->replaceGridDataInjector($root);
     }
 
     /**
@@ -213,5 +205,27 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         return array_key_exists($columnName, $this->operations)
             ? $this->operations[$columnName]
             : $this->defaultOperation;
+    }
+
+    protected function processCurrentRow()
+    {
+        if ($this->stopDataCollecting) {
+            return;
+        }
+        $this->rowsProcessed++;
+        /** @var Grid $grid */
+        $grid = $this->root;
+        foreach ($grid->getColumns() as $column) {
+            $this->pushData($column->getId(), $column->getCurrentValue());
+        }
+    }
+
+    protected function replaceGridDataInjector(Grid $grid)
+    {
+        /** @var CollectionView $collectionView */
+        $grid->getCollectionView()->setDataInjector(function ($dataRow) use ($grid) {
+            $grid->setCurrentRow($dataRow);
+            $this->processCurrentRow();
+        });
     }
 }

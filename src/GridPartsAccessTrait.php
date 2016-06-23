@@ -43,10 +43,10 @@ trait GridPartsAccessTrait
     /**
      * Sets component for rendering 'table' tag.
      *
-     * @param ComponentInterface $component
+     * @param ContainerComponentInterface $component
      * @return $this
      */
-    public function setTable(ComponentInterface $component)
+    public function setTable(ContainerComponentInterface $component)
     {
         return $this->setComponent($component, Grid::TABLE_ID, Grid::FORM_ID);
     }
@@ -62,10 +62,10 @@ trait GridPartsAccessTrait
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ViewComponentInterface $component
      * @return $this
      */
-    public function setTableHeading(ComponentInterface $component)
+    public function setTableHeading(ViewComponentInterface $component)
     {
         return $this->setComponent($component, Grid::TABLE_HEADING_ID, Grid::TABLE_ID);
     }
@@ -81,10 +81,10 @@ trait GridPartsAccessTrait
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ViewComponentInterface $component
      * @return $this
      */
-    public function setTableBody(ComponentInterface $component)
+    public function setTableBody(ViewComponentInterface $component)
     {
         return $this->setComponent($component, Grid::TABLE_BODY_ID, Grid::TABLE_ID);
     }
@@ -100,10 +100,10 @@ trait GridPartsAccessTrait
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ViewComponentInterface $component
      * @return $this
      */
-    public function setTableFooter(ComponentInterface $component)
+    public function setTableFooter(ViewComponentInterface $component)
     {
         return $this->setComponent($component, Grid::TABLE_FOOTER_ID, Grid::TABLE_ID);
     }
@@ -118,10 +118,10 @@ trait GridPartsAccessTrait
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ViewComponentInterface $component
      * @return $this
      */
-    public function setTitleRow(ComponentInterface $component)
+    public function setTitleRow(ViewComponentInterface $component)
     {
         return $this->setComponent($component, Grid::TITLE_ROW_ID, Grid::TABLE_HEADING_ID);
     }
@@ -135,37 +135,37 @@ trait GridPartsAccessTrait
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ContainerComponentInterface $component
      * @return $this
      */
-    public function setControlRow(ComponentInterface $component)
+    public function setControlRow(ContainerComponentInterface $component)
     {
         return $this->setComponent($component, Grid::CONTROL_ROW_ID, Grid::TABLE_HEADING_ID);
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ContainerComponentInterface $component
      * @return $this
      */
-    public function setControlContainer(ComponentInterface $component)
+    public function setControlContainer(ContainerComponentInterface $component)
     {
         return $this->setComponent($component, Grid::CONTROL_CONTAINER_ID, Grid::CONTROL_ROW_ID);
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ViewComponentInterface $component
      * @return $this
      */
-    public function setSubmitButton(ComponentInterface $component)
+    public function setSubmitButton(ViewComponentInterface $component)
     {
         return $this->setComponent($component, Grid::SUBMIT_BUTTON_ID, Grid::CONTROL_ROW_ID);
     }
 
     /**
-     * @param ComponentInterface $component
+     * @param ContainerComponentInterface $component
      * @return $this
      */
-    public function setListContainer(ComponentInterface $component)
+    public function setListContainer(ContainerComponentInterface $component)
     {
         return $this->setComponent($component, Grid::LIST_CONTAINER_ID, Grid::TABLE_BODY_ID);
     }
