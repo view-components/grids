@@ -7,6 +7,11 @@ use ViewComponents\ViewComponents\Service\ServiceContainer;
 use ViewComponents\ViewComponents\Service\ServiceId;
 use ViewComponents\ViewComponents\Service\ServiceProviderInterface;
 
+/**
+ * Grids service provider for view-components.
+ * 
+ * It's registered in bootstrap.php file that's autoloaded by composer.
+ */
 class ServiceProvider implements ServiceProviderInterface
 {
     public function register(ServiceContainer $container)
