@@ -8,11 +8,11 @@
 
 ### `Flexible Framework-agnostic Data Grids for PHP`
 
-This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids).
+##### This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids) (Data Grids Framework for Laravel).
 
 This package is framwork-agnostic in sense of both backend and frontend frameworks, i. e.:
- * You can use it with any PHP Framework. Integration packages are also available.
- * Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization
+ * You can use it with any PHP framework or without it. Integration packages will help you to use facilities of popular PHP frameworks.
+ * Don't worry about fitting markup to your favorite CSS framework. Just describe grid structure and add one of available customizations that will apply framework-specific modifications to markup.
 
 Project status: **beta** *since 2016-03-31*
 
