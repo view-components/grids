@@ -38,8 +38,8 @@ class TableCaption extends Tag implements PartInterface
     }
 
     /**
-     * This method is overridden for adding caption to beginning
-     * of parent container instead of default appending.
+     * This method is overridden in TableCaption class for placing caption to beginning
+     * of parent container instead of default appending (default value of $prepend argument changed).
      *
      * @param Compound $root
      * @param bool $prepend
