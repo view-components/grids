@@ -123,7 +123,7 @@ This kind of installation has additional requirements:
 Basic example:
 ```php
 $provider = new DbTableDataProvider($pdoConnection, 'my_table');
-$input = $input = new InputSource($_GET);
+$input = new InputSource($_GET);
 
 // create grid
 $grid = new Grid(
