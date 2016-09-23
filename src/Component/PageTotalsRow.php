@@ -141,6 +141,10 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
             $valueFormatters[$column->getId()] = $prevFormatter = $column->getValueFormatter();
             $column->setValueCalculator(null);
             $column->setValueFormatter(function ($value) use ($prevFormatter, $column) {
+                $operation = $this->getOperation($column->getId());
+                if ($operation === static::OPERATION_IGNORE){
+                    return null;
+                }
                 if ($prevFormatter) {
                     $value = call_user_func($prevFormatter, $value);
                 }
