@@ -39,7 +39,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
     ];
 
     /**
-     * Keys are column id's and values are operations (see PageTotalsRow::OPERATION_* constants).
+     * Keys are column id's and values are operations (PageTotalsRow::OPERATION_* constants  or closures).
      *
      * @var string[]|array
      */
@@ -133,7 +133,7 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
         $lastRow = $grid->getCurrentRow();
         $grid->setCurrentRow($this->totalData);
 
-        // modify columns
+        // modify columns, prepare it for rendering totals row
         $valueCalculators = [];
         $valueFormatters = [];
         foreach ($grid->getColumns() as $column) {
@@ -141,10 +141,11 @@ class PageTotalsRow implements PartInterface, ViewComponentInterface
             $valueFormatters[$column->getId()] = $prevFormatter = $column->getValueFormatter();
             $column->setValueCalculator(null);
             $column->setValueFormatter(function ($value) use ($prevFormatter, $column) {
-                if ($prevFormatter) {
+                $operation = $this->getOperation($column->getId());
+                if ($prevFormatter && !($operation === static::OPERATION_IGNORE || $operation instanceof Closure)) {
                     $value = call_user_func($prevFormatter, $value);
                 }
-                $operation = $this->getOperation($column->getId());
+                // Add value prefix if specified for operation
                 if ($value !== null && is_string($operation) && array_key_exists($operation, $this->valuePrefixes)) {
                     $value = $this->valuePrefixes[$operation] . '&nbsp;' . $value;
                 }
