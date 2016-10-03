@@ -132,6 +132,31 @@ class Controller
         return $this->page($grid->render(), 'Filters placed under column headers');
     }
 
+
+    public function demo3b()
+    {
+        $this->prepareTiming();
+
+        $provider = $this->getDataProvider();
+        $grid = new Grid($provider, [
+            new Column('id'),
+            new Column('name'),
+            new Column('role'),
+            new Column('action'),
+            new Part(
+                new Tag('tr',[], [
+                    (new Tag('td')),
+                    (new Tag('td'))->addChild(new FilterControl('name', FilterOperation::OPERATOR_EQ, new InputOption('name', $_GET))),
+                    (new Tag('td'))->addChild(new FilterControl('role', FilterOperation::OPERATOR_EQ, new InputOption('role', $_GET))),
+                    (new Tag('td'))->addChild(new Tag('input', ['type' => 'submit'])),
+                ]),
+                'control_row2',
+                'table_heading'
+            ),
+        ]);
+        return $this->page($grid->render(), 'Filters placed under column headers: alternative implementation');
+    }
+
     /**
      * Pagination
      *
