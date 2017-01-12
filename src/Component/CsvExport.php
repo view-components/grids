@@ -154,7 +154,12 @@ class CsvExport extends Part
 
     protected function escapeString($str)
     {
-        return str_replace('"', '\'', strip_tags(html_entity_decode($str)));
+        $str = html_entity_decode($str);
+        $str = strip_tags($str);
+        $str = str_replace('"', '\'', $str);
+        $str = preg_replace('/\s+/', ' ', $str);
+        $str = trim($str);
+        return $str;
     }
 
     /**
