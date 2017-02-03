@@ -10,7 +10,7 @@
 
 ##### This project is a successor of [nayjest/grids](https://github.com/Nayjest/Grids) (Data Grids Framework for Laravel).
 
-This package is framwork-agnostic in sense of both backend and frontend frameworks, i. e.:
+This package is framwork-agnostic in sense of both backend and frontend frameworks, i.e.:
  * You can use it with any PHP framework or without it. Integration packages will help you to use facilities of popular PHP frameworks.
  * Don't worry about fitting markup to your favorite CSS framework. Just describe grid structure and add one of available customizations that will apply framework-specific modifications to markup.
 
@@ -44,7 +44,7 @@ Project status: **beta** *since 2016-03-31*
 * Can be used with wide variety of data sources (php array, PDO database connection, Laravel ActiveRecord or QueryBuilder, Doctrine DBAL Query builder, etc)
 * Themes / Customizations / Styling
 * Can be used with any PHP framework, has integration packages for popular frameworks.
-* Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization. This package is framework-agnostic in sense of fronted frameworks and bundled with themes for Twitter Bootstrap, Foundation, Semantic UI
+* Don't worry about fitting markup for your favorite CSS framework. Just describe grid structure and components and then apply customization. This package is framework-agnostic in sense of frontend frameworks and bundled with themes for Twitter Bootstrap, Foundation, Semantic UI
 * Alot of components ready to use: filters, sorting, totals, row details, pagination, CSV export 
 * User-friendly for developers (documentation in progress)
 
@@ -130,7 +130,7 @@ $grid = new Grid(
     $provider,
     // all components are optional, you can specify only columns
     [
-        new TableCaption('My Grid')
+        new TableCaption('My Grid'),
         new Column('id'),
         new Column('name'),
         new Column('role'),
@@ -174,7 +174,7 @@ echo $grid;
 
 This package bundled with demo-application.
 
-Souce code of demos available [here](https://github.com/view-components/grids/blob/master/tests/webapp/Controller.php)
+Source code of demos available [here](https://github.com/view-components/grids/blob/master/tests/webapp/Controller.php)
 
 ### Working Demo Deployed to Heroku
 
@@ -186,7 +186,7 @@ Here you can see working demos: <http://vc-grids.herokuapp.com/>
 
 ### Running Demo Application Locally
 
-To run it locally, you must install this package as stand-alone project with dev-dependencis.
+To run it locally, you must install this package as stand-alone project with dev-dependencies.
 
 Then, run web-server from the package directory with the following command:
 
