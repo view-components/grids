@@ -82,9 +82,12 @@ class DetailsRow extends SolidRow implements PartInterface
             );
         }
         $tr->setAttribute('data-row-with-details', 1);
-        $this->getGrid()->children()
-            ->add($this->jquery, 1)
-            ->add($this->getScript());
+       
+        if(!$this->resourceManager->includedResources()->isIncluded($this->jquery->getAttribute('src'))){
+            $this->getGrid()->children()->add($this->jquery, 1);
+        }
+        $this->getGrid()->children()->add($this->getScript());
+        
         // fix zebra styled tables
         $this->parent()->addChild(new DataView('<tr style="display: none"></tr>'));
     }
