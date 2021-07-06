@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "php": "^5.5||^7",
+    "php": "^5.5||^7||^8",
     "view-components/view-components": "^0.25||^0.26.6",
     "nayjest/tree": "^3"
   },
